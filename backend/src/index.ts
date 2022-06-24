@@ -3,6 +3,8 @@ import { createHttpsServer, createHttpServer } from './utils/server';
 import routes from './routes';
 
 const app = express();
+app.use(express.json());
+
 const httpsServer = createHttpsServer(app);
 const httpServer = createHttpServer(app);
 

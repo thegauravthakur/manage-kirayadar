@@ -2,6 +2,9 @@ import { Express } from 'express';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
+import { PrismaClient } from '@prisma/client';
+
+export const prismaClient = new PrismaClient();
 
 export function createHttpsServer(app: Express) {
     const privateKey = fs.readFileSync('localhost-key.pem', 'utf8');
