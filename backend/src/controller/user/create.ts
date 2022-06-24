@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { prismaClient } from '../../utils/server';
-import { generatePasswordHash } from '../../utils/bcrypt';
+import { generateHash } from '../../utils/bcrypt';
 
 const UserData = z.object({
-    name: z.string({ required_error: '"name" is required' }),
+    name: z.string({ required_error: 'name is required' }),
     email: z
-        .string({ required_error: '"email" is required' })
-        .email({ message: '"email" is not present in correct format' }),
+        .string({ required_error: 'email is required' })
+        .email({ message: 'email is not present in correct format' }),
     password: z
-        .string({ required_error: '"password" is required' })
+        .string({ required_error: 'password is required' })
         .min(5, { message: 'password should have more than 5 characters' }),
 });
 
@@ -20,7 +20,7 @@ export async function createUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
         const { name, password, email } = req.body as z.infer<typeof UserData>;
-        const passwordHash = await generatePasswordHash(password);
+        const passwordHash = await generateHash(password);
         const user = await prismaClient.user.create({
             data: { name, email, passwordHash },
         });
