@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
-async function hashPassword(password: string) {
+export async function generatePasswordHash(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
         bcrypt.genSalt(saltRounds, function (err, salt) {
             if (err) reject(err);
