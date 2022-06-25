@@ -24,8 +24,6 @@ export const loader: LoaderFunction = async ({ request }) => {
         if (!user) return redirect('/login');
         return json({ user });
     } catch (error) {
-        let message = 'unknown error';
-        if (error instanceof Error) message = error.message;
-        return json(message, { status: 500 });
+        return redirect('/login');
     }
 };
