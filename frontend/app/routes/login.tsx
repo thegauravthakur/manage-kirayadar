@@ -19,9 +19,9 @@ interface ActionData {
 export default function Login() {
     const transition = useTransition();
     return (
-        <div className='h-screen flex justify-center items-center'>
+        <div className='h-screen flex justify-center items-center bg-slate-100'>
             <Form
-                className='border space-y-6 p-4 rounded-md w-full max-w-sm shadow'
+                className='border space-y-6 p-4 rounded-md w-full max-w-sm shadow bg-white'
                 method='post'
             >
                 <h1 className='text-2xl font-bold text-center text-blue-600'>
@@ -36,7 +36,8 @@ export default function Login() {
                             <h2>Email</h2>
                         </label>
                         <input
-                            className='border rounded-md w-full p-1.5'
+                            required
+                            className='border rounded-md w-full p-1.5 outline-none focus:ring bg-slate-100'
                             id='email'
                             name='email'
                             type='email'
@@ -47,7 +48,8 @@ export default function Login() {
                             <h2>Password</h2>
                         </label>
                         <input
-                            className='border rounded-md w-full p-1.5'
+                            required
+                            className='border rounded-md w-full p-1.5 outline-none focus:ring bg-slate-100'
                             id='password'
                             name='password'
                             type='password'
@@ -55,7 +57,6 @@ export default function Login() {
                     </div>
                     <button
                         className='w-full p-1.5 border rounded-md bg-blue-600 text-white'
-                        disabled={transition.state !== 'idle'}
                         type='submit'
                     >
                         submit
