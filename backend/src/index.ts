@@ -8,6 +8,11 @@ const app = express();
 app.use(express.json());
 app.use(CookieParser());
 
+app.use((req, res, next) => {
+    console.log(`Request: ${req.url}`);
+    next();
+});
+
 const httpsServer = createHttpsServer(app);
 const httpServer = createHttpServer(app);
 
