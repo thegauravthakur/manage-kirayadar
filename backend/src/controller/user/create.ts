@@ -20,11 +20,17 @@ export async function createUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
         const { name, password, email } = req.body as z.infer<typeof UserData>;
+        const doesUserExists = await prismaClient.user.findUnique({
+            where: { email },
+        });
+        if (doesUserExists)
+            return res.status(400).send(['user already exists!']);
         const passwordHash = await generateHash(password);
         const user = await prismaClient.user.create({
             data: { name, email, passwordHash },
         });
-        return res.json(user);
+        const { passwordHash: _, ...filteredUser } = user;
+        return res.json({ user: filteredUser });
     } catch (error) {
         if (error instanceof z.ZodError) {
             res.status(400).send(error.issues.map(({ message }) => message));

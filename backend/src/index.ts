@@ -1,10 +1,12 @@
 import express from 'express';
+import CookieParser from 'cookie-parser';
 import { createHttpsServer, createHttpServer } from './utils/server';
 import routes from './routes';
 import 'dotenv/config';
 
 const app = express();
 app.use(express.json());
+app.use(CookieParser());
 
 const httpsServer = createHttpsServer(app);
 const httpServer = createHttpServer(app);

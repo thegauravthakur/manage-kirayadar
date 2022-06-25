@@ -1,8 +1,15 @@
-import { Request, Response } from 'express';
+import { CookieOptions, Request, Response } from 'express';
 import { z } from 'zod';
 import { prismaClient } from '../../utils/server';
 import { compareHash } from '../../utils/bcrypt';
 import { signToken } from '../../utils/jwt';
+
+const cookieOptions: CookieOptions = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 86400000,
+    sameSite: 'none',
+};
 
 const UserData = z.object({
     email: z.string().email(),
@@ -23,7 +30,8 @@ export async function loginUser(req: Request, res: Response) {
         if (!result)
             return res.status(400).send('wrong combination of email/password');
         const { passwordHash, ...filteredUser } = user;
-        return res.json(signToken(filteredUser));
+        res.cookie('access_token', signToken(filteredUser), cookieOptions);
+        return res.json({ user: filteredUser });
     } catch (error) {
         if (error instanceof z.ZodError) {
             // a neat trick
