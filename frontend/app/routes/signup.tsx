@@ -1,9 +1,7 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction } from '@remix-run/node';
 import { Form, useTransition } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import { createEndpoint } from '../../utils/fetchHelper';
-import { accessToken } from '~/cookies';
-import { getCurrentUser } from '~/models/user.server';
 
 export interface User {
     id: number;
@@ -16,7 +14,7 @@ interface ActionData {
     errors?: string[];
 }
 
-export default function Login() {
+export default function Signup() {
     const transition = useTransition();
     return (
         <div className='h-screen flex justify-center items-center'>
@@ -25,12 +23,23 @@ export default function Login() {
                 method='post'
             >
                 <h1 className='text-2xl font-bold text-center text-blue-600'>
-                    Login Page
+                    Create your account
                 </h1>
                 <fieldset
                     className='space-y-4'
                     disabled={transition.state !== 'idle'}
                 >
+                    <div className='space-y-1.5'>
+                        <label htmlFor='name'>
+                            <h2>Name</h2>
+                        </label>
+                        <input
+                            className='border rounded-md w-full p-1.5'
+                            id='name'
+                            name='name'
+                            type='text'
+                        />
+                    </div>
                     <div className='space-y-1.5'>
                         <label htmlFor='email'>
                             <h2>Email</h2>
@@ -66,17 +75,12 @@ export default function Login() {
     );
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
-    const user = await getCurrentUser(request);
-    if (user) return redirect('/');
-    return json(null);
-};
-
 export const action: ActionFunction = async ({ request }) => {
     try {
+        await new Promise((res) => setTimeout(res, 5000));
         const formData = await request.formData();
         const userData = Object.fromEntries(formData);
-        const response = await fetch(createEndpoint('user/login'), {
+        const response = await fetch(createEndpoint('user/create'), {
             method: 'POST',
             body: JSON.stringify(userData),
             headers: {
@@ -89,12 +93,7 @@ export const action: ActionFunction = async ({ request }) => {
                 { status: response.status }
             );
         }
-        const { access_token } = await response.json();
-        return redirect('/', {
-            headers: {
-                'Set-Cookie': await accessToken.serialize(access_token),
-            },
-        });
+        return redirect('/login');
     } catch (error) {
         let message = 'unknown error';
         if (error instanceof Error) message = error.message;
