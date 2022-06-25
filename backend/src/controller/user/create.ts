@@ -4,7 +4,9 @@ import { prismaClient } from '../../utils/server';
 import { generateHash } from '../../utils/bcrypt';
 
 const UserData = z.object({
-    name: z.string({ required_error: 'name is required' }),
+    name: z
+        .string({ required_error: 'name is required' })
+        .min(1, 'name is required'),
     email: z
         .string({ required_error: 'email is required' })
         .email({ message: 'email is not present in correct format' }),

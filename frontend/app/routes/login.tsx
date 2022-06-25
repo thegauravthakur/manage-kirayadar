@@ -1,10 +1,9 @@
 import type { ActionFunction } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
-import { json } from '@remix-run/node';
-import type { Maybe } from '../../utils/types';
+import { Form, useTransition } from '@remix-run/react';
+import { json, redirect } from '@remix-run/node';
 import { createEndpoint } from '../../utils/fetchHelper';
 
-interface User {
+export interface User {
     id: number;
     email: string;
     name: string;
@@ -13,12 +12,10 @@ interface User {
 
 interface ActionData {
     errors?: string[];
-    user?: User;
 }
 
 export default function Login() {
-    const actionData = useActionData() as Maybe<ActionData>;
-    console.log(actionData);
+    const transition = useTransition();
     return (
         <div className='h-screen flex justify-center items-center'>
             <Form
@@ -28,7 +25,10 @@ export default function Login() {
                 <h1 className='text-2xl font-bold text-center text-blue-600'>
                     Login Page
                 </h1>
-                <fieldset className='space-y-4'>
+                <fieldset
+                    className='space-y-4'
+                    disabled={transition.state !== 'idle'}
+                >
                     <div className='space-y-1.5'>
                         <label htmlFor='name'>
                             <h2>Name</h2>
@@ -64,6 +64,7 @@ export default function Login() {
                     </div>
                     <button
                         className='w-full p-1.5 border rounded-md bg-blue-600 text-white'
+                        disabled={transition.state !== 'idle'}
                         type='submit'
                     >
                         submit
@@ -76,11 +77,12 @@ export default function Login() {
 
 export const action: ActionFunction = async ({ request }) => {
     try {
+        await new Promise((res) => setTimeout(res, 5000));
         const formData = await request.formData();
-        const object = Object.fromEntries(formData);
+        const userData = Object.fromEntries(formData);
         const response = await fetch(createEndpoint('user/create'), {
             method: 'POST',
-            body: JSON.stringify(object),
+            body: JSON.stringify(userData),
             headers: {
                 'content-type': 'application/json',
             },
@@ -91,7 +93,7 @@ export const action: ActionFunction = async ({ request }) => {
                 { status: response.status }
             );
         }
-        return json<ActionData>(await response.json());
+        return redirect('/');
     } catch (error) {
         let message = 'unknown error';
         if (error instanceof Error) message = error.message;
