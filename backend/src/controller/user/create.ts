@@ -26,19 +26,25 @@ export async function createUser(req: Request, res: Response) {
             where: { email },
         });
         if (doesUserExists)
-            return res.status(400).send(['user already exists!']);
+            return res
+                .status(400)
+                .json({ errorMessage: 'user already exists!', data: null });
         const passwordHash = await generateHash(password);
         const user = await prismaClient.user.create({
             data: { name, email, passwordHash },
         });
         const { passwordHash: _, ...filteredUser } = user;
-        return res.json({ user: filteredUser });
+        return res.json({ errorMessage: null, data: { user: filteredUser } });
     } catch (error) {
         if (error instanceof z.ZodError) {
-            res.status(400).send(error.issues.map(({ message }) => message));
+            res.status(400).json({
+                errorMessage: error.issues[0].message,
+                data: null,
+            });
         } else
-            res.status(500).send([
-                'Error occurred while creating a new account',
-            ]);
+            res.status(500).json({
+                errorMessage: 'Error occurred while creating a new account',
+                data: null,
+            });
     }
 }

@@ -1,3 +1,7 @@
+import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
+import { JSONResponse, postWithData } from '../helpers/fetchHelper';
+
 export interface User {
     id: number;
     email: string;
@@ -5,12 +9,27 @@ export interface User {
     avatarUrl: null;
 }
 
+interface FormData {
+    email: string;
+    password: string;
+}
+
 export default function Login() {
+    const { register, handleSubmit } = useForm<FormData>();
+    const mutation = useMutation(async (formData: FormData) => {
+        const response = await postWithData('api/auth/login', formData);
+        const result: JSONResponse = await response.json();
+        if (!response.ok) throw result;
+        return result;
+    });
+    const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
+
     return (
         <div className='h-screen flex justify-center items-center bg-slate-100'>
             <form
                 className='border space-y-6 p-4 rounded-md w-full max-w-sm shadow bg-white'
                 method='post'
+                onSubmit={onSubmit}
             >
                 <h1 className='text-2xl font-bold text-center text-blue-600'>
                     Login Page
@@ -21,11 +40,10 @@ export default function Login() {
                             <h2>Email</h2>
                         </label>
                         <input
-                            required
                             className='border rounded-md w-full p-1.5 outline-none focus:ring bg-slate-100'
                             id='email'
-                            name='email'
                             type='email'
+                            {...register('email', { required: true })}
                         />
                     </div>
                     <div className='space-y-1.5'>
@@ -36,8 +54,8 @@ export default function Login() {
                             required
                             className='border rounded-md w-full p-1.5 outline-none focus:ring bg-slate-100'
                             id='password'
-                            name='password'
                             type='password'
+                            {...register('password', { required: true })}
                         />
                     </div>
                     <button

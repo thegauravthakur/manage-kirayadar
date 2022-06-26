@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 import { useMutation } from 'react-query';
+import { createEndpoint, postWithData } from '../helpers/fetchHelper';
+import { useRouter } from 'next/router';
 
 export interface User {
     id: number;
@@ -17,7 +18,19 @@ interface FormData {
 
 export default function Signup() {
     const { register, handleSubmit } = useForm<FormData>();
-    const onSubmit = handleSubmit((data) => {});
+    const router = useRouter();
+    const mutation = useMutation(
+        async (formData: FormData) => {
+            const response = await postWithData(
+                createEndpoint('user/create'),
+                formData
+            );
+            const result = await response.json();
+            if (!response.ok) throw result;
+        },
+        { onSuccess: () => router.push('/login') }
+    );
+    const onSubmit = handleSubmit((data) => mutation.mutate(data));
     return (
         <div className='h-screen flex justify-center items-center bg-slate-100'>
             <form

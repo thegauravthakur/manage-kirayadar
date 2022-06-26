@@ -18,24 +18,34 @@ export async function loginUser(req: Request, res: Response) {
         const { password, email } = req.body as z.infer<typeof UserData>;
         const user = await prismaClient.user.findUnique({ where: { email } });
         if (!user)
-            return res
-                .status(400)
-                .send(['wrong combination of email/password']);
+            return res.status(400).json({
+                errorMessage: 'wrong combination of email/password',
+                data: null,
+            });
         const result = await compareHash(password, user.passwordHash ?? '');
         if (!result)
-            return res
-                .status(400)
-                .send(['wrong combination of email/password']);
+            return res.status(400).json({
+                errorMessage: 'wrong combination of email/password',
+                data: null,
+            });
         const { passwordHash, ...filteredUser } = user;
         const access_token = signToken(filteredUser);
-        return res.json({ user: filteredUser, access_token });
+        return res.json({
+            data: { user: filteredUser, access_token },
+            errorMessage: null,
+        });
     } catch (error) {
         if (error instanceof z.ZodError) {
             // a neat trick
-            res.status(400).send(['wrong combination of email/password']);
+            res.status(400).send({
+                errorMessage: 'wrong combination of email/password',
+                data: null,
+            });
         } else
-            res.status(500).send([
-                'An error occurred while logging in, please try again later',
-            ]);
+            res.status(500).json({
+                errorMessage:
+                    'An error occurred while logging in, please try again later',
+                data: null,
+            });
     }
 }

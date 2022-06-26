@@ -1,5 +1,6 @@
 import express from 'express';
 import CookieParser from 'cookie-parser';
+import Cors from 'cors';
 import { createHttpsServer, createHttpServer } from './utils/server';
 import routes from './routes';
 import 'dotenv/config';
@@ -7,6 +8,7 @@ import 'dotenv/config';
 const app = express();
 app.use(express.json());
 app.use(CookieParser());
+app.use(Cors({ origin: 'http://localhost:3000' }));
 
 app.use((req, res, next) => {
     console.log(`Request: ${req.url}`);
