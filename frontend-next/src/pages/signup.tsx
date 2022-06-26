@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { createEndpoint, postWithData } from '../helpers/fetchHelper';
 import { useRouter } from 'next/router';
+import { createNewUser, getCurrentUser } from '../helpers/userHelper';
+import { GetServerSideProps } from 'next';
+import { getCookie } from 'cookies-next';
 
 export interface User {
     id: number;
@@ -20,14 +22,7 @@ export default function Signup() {
     const { register, handleSubmit } = useForm<FormData>();
     const router = useRouter();
     const mutation = useMutation(
-        async (formData: FormData) => {
-            const response = await postWithData(
-                createEndpoint('user/create'),
-                formData
-            );
-            const result = await response.json();
-            if (!response.ok) throw result;
-        },
+        async (formData: FormData) => createNewUser(formData),
         { onSuccess: () => router.push('/login') }
     );
     const onSubmit = handleSubmit((data) => mutation.mutate(data));
@@ -85,3 +80,21 @@ export default function Signup() {
         </div>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+    try {
+        const accessToken = getCookie('accessToken', { req, res });
+        if (accessToken) {
+            const result = await getCurrentUser(accessToken as string);
+            if (result.data?.user)
+                return {
+                    redirect: {
+                        destination: '/',
+                        permanent: false,
+                    },
+                };
+        }
+    } catch (error) {}
+
+    return { props: {} };
+};

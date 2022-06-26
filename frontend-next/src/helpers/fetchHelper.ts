@@ -5,13 +5,12 @@ export function createEndpoint(endpoint: string) {
 }
 
 export async function fetchWithToken(endpoint: string, token: string) {
-    const response = await fetch(endpoint, {
+    return await fetch(endpoint, {
         headers: {
             Authorization: `bearer ${token}`,
             'Content-Type': 'application/json',
         },
     });
-    return response.json();
 }
 
 export interface JSONResponse<T = null> {

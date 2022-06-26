@@ -7,5 +7,5 @@ export function signToken(payload: any) {
 }
 
 export function verifyToken(token: string) {
-    return jwt.verify(token, process.env.TOKEN_SECRET!);
+    return jwt.verify(token, process.env.TOKEN_SECRET!, {});
 }

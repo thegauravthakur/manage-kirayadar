@@ -4,7 +4,8 @@ import {
     JSONResponse,
     postWithData,
 } from '../../../helpers/fetchHelper';
-import { setCookie } from 'nookies';
+import { setCookies } from 'cookies-next';
+import { cookiesConfig } from '../../../helpers/cookiesHelper';
 
 interface Response {
     access_token: string;
@@ -22,10 +23,14 @@ export default async function handler(
         );
         const result: JSONResponse<Response> = await response.json();
         if (!response.ok) {
-            res.status(response.status).json(result);
+            return res.status(response.status).json(result);
         }
-        setCookie({ res }, 'access_token', result.data?.access_token ?? '');
-        res.json({ errorMessage: null, data: null });
+        setCookies('accessToken', result.data?.access_token ?? '', {
+            res,
+            req,
+            ...cookiesConfig,
+        });
+        return res.json({ errorMessage: null, data: null });
     } catch (error) {
         res.status(500).json({
             errorMessage: 'somethning went worng! please try again',

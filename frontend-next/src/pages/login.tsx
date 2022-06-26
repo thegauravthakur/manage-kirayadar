@@ -1,13 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { JSONResponse, postWithData } from '../helpers/fetchHelper';
-
-export interface User {
-    id: number;
-    email: string;
-    name: string;
-    avatarUrl: null;
-}
+import { GetServerSideProps } from 'next';
+import { getCookie } from 'cookies-next';
+import { getCurrentUser } from '../helpers/userHelper';
+import { useRouter } from 'next/router';
 
 interface FormData {
     email: string;
@@ -15,13 +12,17 @@ interface FormData {
 }
 
 export default function Login() {
+    const router = useRouter();
     const { register, handleSubmit } = useForm<FormData>();
-    const mutation = useMutation(async (formData: FormData) => {
-        const response = await postWithData('api/auth/login', formData);
-        const result: JSONResponse = await response.json();
-        if (!response.ok) throw result;
-        return result;
-    });
+    const mutation = useMutation(
+        async (formData: FormData) => {
+            const response = await postWithData('api/auth/login', formData);
+            const result: JSONResponse = await response.json();
+            if (!response.ok) throw result;
+            return result;
+        },
+        { onSuccess: () => router.push('/') }
+    );
     const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
 
     return (
@@ -69,3 +70,21 @@ export default function Login() {
         </div>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+    try {
+        const accessToken = getCookie('accessToken', { req, res });
+        if (accessToken) {
+            const result = await getCurrentUser(accessToken as string);
+            if (result.data?.user)
+                return {
+                    redirect: {
+                        destination: '/',
+                        permanent: false,
+                    },
+                };
+        }
+    } catch (error) {}
+
+    return { props: {} };
+};
