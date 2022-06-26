@@ -4,14 +4,7 @@ import {
     JSONResponse,
     postWithData,
 } from './fetchHelper';
-import { useRouter } from 'next/router';
-
-export interface User {
-    id: number;
-    email: string;
-    avatarUrl: string | null;
-    name: string;
-}
+import type { User } from '../types';
 
 export async function createNewUser(formData: unknown) {
     const response = await postWithData(

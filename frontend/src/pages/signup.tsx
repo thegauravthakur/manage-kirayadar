@@ -5,13 +5,6 @@ import { createNewUser, getCurrentUser } from '../helpers/userHelper';
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
 
-export interface User {
-    id: number;
-    email: string;
-    name: string;
-    avatarUrl: null;
-}
-
 interface FormData {
     name: string;
     email: string;

@@ -1,5 +1,3 @@
-import { global } from 'styled-jsx/css';
-
 export function createEndpoint(endpoint: string) {
     return `http://localhost:4242/${endpoint}`;
 }
