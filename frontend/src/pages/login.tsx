@@ -1,72 +1,53 @@
-import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
-import { JSONResponse, postWithData } from '../helpers/fetchHelper';
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
 import { getCurrentUser } from '../helpers/userHelper';
-import { useRouter } from 'next/router';
-
-interface FormData {
-    email: string;
-    password: string;
-}
+import { SocialLoginButton } from '../components/SocialLoginButton';
+import {
+    AiOutlineGithub,
+    AiOutlineGoogle,
+    AiOutlineMail,
+} from 'react-icons/ai';
+import clsx from 'clsx';
+import { LoginFormDialog } from '../components/LoginFormDialog';
+import { useState } from 'react';
 
 export default function Login() {
-    const router = useRouter();
-    const { register, handleSubmit } = useForm<FormData>();
-    const mutation = useMutation(
-        async (formData: FormData) => {
-            const response = await postWithData('api/auth/login', formData);
-            const result: JSONResponse = await response.json();
-            if (!response.ok) throw result;
-            return result;
-        },
-        { onSuccess: () => router.push('/') }
-    );
-    const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
-
+    const [showDialog, setShowDialog] = useState(false);
     return (
-        <div className='h-screen flex justify-center items-center bg-slate-100'>
-            <form
-                className='border space-y-6 p-4 rounded-md w-full max-w-sm shadow bg-white'
-                method='post'
-                onSubmit={onSubmit}
-            >
-                <h1 className='text-2xl font-bold text-center text-blue-600'>
-                    Login Page
-                </h1>
-                <fieldset className='space-y-4'>
-                    <div className='space-y-1.5'>
-                        <label htmlFor='email'>
-                            <h2>Email</h2>
-                        </label>
-                        <input
-                            className='border rounded-md w-full p-1.5 outline-none focus:ring bg-slate-100'
-                            id='email'
-                            type='email'
-                            {...register('email', { required: true })}
-                        />
-                    </div>
-                    <div className='space-y-1.5'>
-                        <label htmlFor='password'>
-                            <h2>Password</h2>
-                        </label>
-                        <input
-                            required
-                            className='border rounded-md w-full p-1.5 outline-none focus:ring bg-slate-100'
-                            id='password'
-                            type='password'
-                            {...register('password', { required: true })}
-                        />
-                    </div>
-                    <button
-                        className='w-full p-1.5 border rounded-md bg-blue-600 text-white'
-                        type='submit'
-                    >
-                        submit
-                    </button>
-                </fieldset>
-            </form>
+        <div
+            className={clsx(
+                'h-screen p-2 md:p-5 bg-slate-50',
+                'flex flex-col space-y-7'
+            )}
+        >
+            <h1 className={clsx('text-xl font-bold')}>Manage Kirayadar</h1>
+            <div className='space-y-7 flex h-full items-center justify-center flex-col'>
+                <h2 className={clsx('text-center font-semibold text-xl')}>
+                    Login to your account
+                </h2>
+                <SocialLoginButton
+                    TrailingWidget={AiOutlineGoogle}
+                    isLoading={false}
+                    text='Continue with Google'
+                    onClick={async () => {}}
+                />
+                <SocialLoginButton
+                    TrailingWidget={AiOutlineGithub}
+                    isLoading={false}
+                    text='Continue with GitHub'
+                    onClick={async () => {}}
+                />
+                <SocialLoginButton
+                    TrailingWidget={AiOutlineMail}
+                    isLoading={false}
+                    text='Continue with Email'
+                    onClick={() => setShowDialog(true)}
+                />
+                <LoginFormDialog
+                    setShowDialog={setShowDialog}
+                    showDialog={showDialog}
+                />
+            </div>
         </div>
     );
 }
