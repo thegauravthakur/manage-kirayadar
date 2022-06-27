@@ -35,7 +35,6 @@ export default function SignupStepOneForm({
     const onSubmit = handleSubmit((formData) => {
         userDetails.current = { ...userDetails.current, ...formData };
         setFormStep((formStep) => formStep + 1);
-        console.log(userDetails.current);
     });
     return (
         <form className='space-y-6 py-3 w-full flex-1' onSubmit={onSubmit}>

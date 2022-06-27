@@ -29,7 +29,7 @@ export default function Signup() {
                     TrailingWidget={AiOutlineGoogle}
                     isLoading={false}
                     text='Continue with Google'
-                    onClick={async () => {}}
+                    onClick={() => {}}
                 />
                 <SocialLoginButton
                     TrailingWidget={AiOutlineGithub}
