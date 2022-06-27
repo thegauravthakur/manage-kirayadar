@@ -1,8 +1,8 @@
-import { sendEmail } from '../../controller/otp/send';
+import { generateOTP } from '../../controller/otp/generate';
 
 const express = require('express');
 const router = express.Router();
 
-router.post('/send', sendEmail);
+router.post('/generate', generateOTP);
 
 export default router;

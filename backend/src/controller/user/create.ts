@@ -13,6 +13,7 @@ const UserData = z.object({
     password: z
         .string({ required_error: 'password is required' })
         .min(5, { message: 'password should have more than 5 characters' }),
+    otp: z.string().length(6),
 });
 
 /*
@@ -21,7 +22,9 @@ const UserData = z.object({
 export async function createUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
-        const { name, password, email } = req.body as z.infer<typeof UserData>;
+        const { name, password, email, otp } = req.body as z.infer<
+            typeof UserData
+        >;
         const doesUserExists = await prismaClient.user.findUnique({
             where: { email },
         });
@@ -29,6 +32,14 @@ export async function createUser(req: Request, res: Response) {
             return res
                 .status(400)
                 .json({ errorMessage: 'user already exists!', data: null });
+        const otpEntry = await prismaClient.otp.findUnique({
+            where: { email },
+        });
+        if (otpEntry?.otp !== Number(otp))
+            return res
+                .status(400)
+                .json({ errorMessage: 'wrong OTP', data: null });
+
         const passwordHash = await generateHash(password);
         const user = await prismaClient.user.create({
             data: { name, email, passwordHash },

@@ -1,13 +1,11 @@
 import nodemailer from 'nodemailer';
-import { Request, Response } from 'express';
 
 interface SendEmailProps {
     to: string;
     otp: number;
 }
 
-export async function sendEmail(req: Request, res: Response) {
-    const { to, otp } = req.body as SendEmailProps;
+export async function sendEmail({ otp, to }: SendEmailProps) {
     let transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: 587,
@@ -22,9 +20,7 @@ export async function sendEmail(req: Request, res: Response) {
         from: '"Manage Kirayadar" <no-reply@managekirayadar.com>', // sender address
         to,
         subject: 'Your OTP to login to Manage Kirayadar', // Subject line
-        text: `${otp} is your OTP to login to INDmoney`,
-        html: `<b>${otp} is your OTP to login to INDmoney</b>`, // html body
+        text: `${otp} is your OTP to login to Manage Kirayadar`,
+        html: `<b>${otp} is your OTP to login to Manage Kirayadar</b>`, // html body
     });
-
-    res.send('email sent');
 }

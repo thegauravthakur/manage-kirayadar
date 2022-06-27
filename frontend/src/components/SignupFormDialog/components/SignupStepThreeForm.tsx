@@ -4,6 +4,13 @@ import { UserDetails } from '../SignupFormDialog';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
+import { useMutation } from 'react-query';
+import {
+    createEndpoint,
+    JSONResponse,
+    postWithData,
+} from '../../../helpers/fetchHelper';
+import { useRouter } from 'next/router';
 
 interface SignupStepTwoFormProps {
     userDetails: MutableRefObject<UserDetails>;
@@ -24,6 +31,7 @@ export function SignupStepThreeForm({
     setFormStep,
     userDetails,
 }: SignupStepTwoFormProps) {
+    const router = useRouter();
     const {
         register,
         handleSubmit,
@@ -32,8 +40,20 @@ export function SignupStepThreeForm({
     } = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
-    const onSubmit = handleSubmit(() => {
-        console.log(userDetails.current);
+    const mutation = useMutation(
+        async (otp: string) => {
+            const response = await postWithData(createEndpoint('user/create'), {
+                ...userDetails.current,
+                otp,
+            });
+            const result: JSONResponse = await response.json();
+            if (!response.ok) throw result;
+            return result;
+        },
+        { onSuccess: () => router.push('/') }
+    );
+    const onSubmit = handleSubmit(({ otp }) => {
+        mutation.mutate(otp);
     });
     useEffect(() => {
         setFocus('otp');
@@ -48,8 +68,8 @@ export function SignupStepThreeForm({
                                 Confirm your email
                             </h2>
                             <p className='text-sm'>
-                                Please enter the code we sent to
-                                adfsadf@gmail.com
+                                Please enter the code we sent to{' '}
+                                {userDetails.current.email}
                             </p>
                         </label>
                         <input

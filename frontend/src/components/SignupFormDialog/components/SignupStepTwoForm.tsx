@@ -1,8 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { Dispatch, MutableRefObject, SetStateAction, useEffect } from 'react';
 import { UserDetails } from '../SignupFormDialog';
-import { z } from 'zod';
 import clsx from 'clsx';
+import { createEndpoint, postWithData } from '../../../helpers/fetchHelper';
+import { useMutation } from 'react-query';
 
 interface FormData {
     password: string;
@@ -31,9 +32,17 @@ export function SignupStepTwoForm({
         formState: { errors },
         watch,
     } = useForm<FormData>();
-    const onSubmit = handleSubmit(({ confirmPassword, ...rest }) => {
+    const mutation = useMutation(
+        async (data: UserDetails) => {
+            await postWithData(createEndpoint('otp/generate'), {
+                email: data.email,
+            });
+        },
+        { onSuccess: () => setFormStep((step) => step + 1) }
+    );
+    const onSubmit = handleSubmit(async ({ confirmPassword, ...rest }) => {
         userDetails.current = { ...userDetails.current, ...rest };
-        setFormStep((step) => step + 1);
+        mutation.mutate(userDetails.current);
     });
     useEffect(() => {
         setFocus('password');
@@ -78,7 +87,11 @@ export function SignupStepTwoForm({
                             placeholder='Re-enter password'
                             type='password'
                             {...register('confirmPassword', {
-                                required: true,
+                                required: {
+                                    value: true,
+                                    message:
+                                        'Confirm password field is required',
+                                },
                                 validate: (val: string) => {
                                     if (watch('password') != val) {
                                         return 'Passwords do no match';
@@ -99,7 +112,7 @@ export function SignupStepTwoForm({
                             className='py-1.5 px-3 border rounded-lg bg-blue-600 text-white outline-none focus:ring text-right text-sm'
                             type='submit'
                         >
-                            Next
+                            {mutation.isLoading ? 'Sending OTP' : 'Next'}
                         </button>
                     </div>
                 </div>

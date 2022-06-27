@@ -17,3 +17,9 @@ model User {
   avatarUrl String?
   name String
 }
+
+model Otp {
+  id Int @default(autoincrement()) @id
+  email String @unique
+  otp Int
+}

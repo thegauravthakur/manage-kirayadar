@@ -18,20 +18,23 @@ export interface UserDetails {
     password: string;
 }
 
+const initialValues = {
+    name: '',
+    email: '',
+    password: '',
+};
+
 export function SignupFormDialog({
     setShowDialog,
     showDialog,
 }: SignUpDialogProps) {
     const dialogFormRef = useRef<HTMLDivElement>(null);
     const [formStep, setFormStep] = useState(1);
-    const userDetails = useRef<UserDetails>({
-        name: '',
-        email: '',
-        password: '',
-    });
+    const userDetails = useRef<UserDetails>({ ...initialValues });
     useClickAwayListener(() => {
         setShowDialog(false);
         setFormStep(1);
+        userDetails.current = { ...initialValues };
     }, dialogFormRef);
 
     if (!showDialog) return null;
@@ -60,6 +63,7 @@ export function SignupFormDialog({
                         onClick={() => {
                             setShowDialog(false);
                             setFormStep(1);
+                            userDetails.current = { ...initialValues };
                         }}
                     >
                         <AiOutlineClose fontSize={18} />
