@@ -6,11 +6,22 @@ import { useEffect } from 'react';
 import clsx from 'clsx';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CustomError } from '../../../types';
+import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'email' }),
     password: z.string().min(1),
 });
+
+type FormSchema = z.infer<typeof formSchema>;
+
+async function loginUser(formData: FormSchema) {
+    const response = await postWithData('api/auth/login', formData);
+    const result: JSONResponse = await response.json();
+    if (!response.ok) throw result;
+    return result;
+}
 
 const inputClasses = (condition: boolean) =>
     clsx(
@@ -25,19 +36,20 @@ export function LoginForm() {
         handleSubmit,
         setFocus,
         formState: { errors },
-    } = useForm<z.infer<typeof formSchema>>({
+    } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
     });
-    console.log(errors);
-
+    const snackbar = useSnackbar();
     const mutation = useMutation(
-        async (formData: z.infer<typeof formSchema>) => {
-            const response = await postWithData('api/auth/login', formData);
-            const result: JSONResponse = await response.json();
-            if (!response.ok) throw result;
-            return result;
-        },
-        { onSuccess: () => router.push('/') }
+        async (formData: FormSchema) => loginUser(formData),
+        {
+            async onSuccess() {
+                await router.push('/');
+            },
+            onError(error: CustomError) {
+                if (error.errorMessage) snackbar.show(error.errorMessage);
+            },
+        }
     );
     const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
 

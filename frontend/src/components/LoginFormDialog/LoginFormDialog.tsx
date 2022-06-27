@@ -1,9 +1,7 @@
 import { AiOutlineClose } from 'react-icons/ai';
-import { useMutation } from 'react-query';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import ReactFocusLock from 'react-focus-lock';
-import { useClickAwayListener } from '../../hooks/useClickAwayListener';
 import clsx from 'clsx';
 import { LoginForm } from './components/LoginForm';
 
@@ -15,17 +13,11 @@ export function LoginFormDialog({
     setShowDialog,
     showDialog,
 }: SignUpDialogProps) {
-    const dialogFormRef = useRef<HTMLDivElement>(null);
-    useClickAwayListener(() => {
-        setShowDialog(false);
-    }, dialogFormRef);
-
     if (!showDialog) return null;
 
     const content = (
         <ReactFocusLock>
             <div
-                ref={dialogFormRef}
                 className={clsx(
                     'border absolute shadow-lg rounded-lg',
                     'w-full max-w-sm top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white'
