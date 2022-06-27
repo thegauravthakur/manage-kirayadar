@@ -2,7 +2,6 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ReactFocusLock from 'react-focus-lock';
-import { useClickAwayListener } from '../../hooks/useClickAwayListener';
 import clsx from 'clsx';
 import SignupStepOneForm from './components/SignupStepOneForm';
 import { SignupStepTwoForm } from './components/SignupStepTwoForm';
@@ -28,21 +27,14 @@ export function SignupFormDialog({
     setShowDialog,
     showDialog,
 }: SignUpDialogProps) {
-    const dialogFormRef = useRef<HTMLDivElement>(null);
     const [formStep, setFormStep] = useState(1);
     const userDetails = useRef<UserDetails>({ ...initialValues });
-    useClickAwayListener(() => {
-        setShowDialog(false);
-        setFormStep(1);
-        userDetails.current = { ...initialValues };
-    }, dialogFormRef);
 
     if (!showDialog) return null;
 
     const content = (
         <ReactFocusLock>
             <div
-                ref={dialogFormRef}
                 className={clsx(
                     'border absolute shadow-lg rounded-lg',
                     'w-full max-w-lg h-[400px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white flex flex-col'

@@ -11,6 +11,8 @@ import {
     postWithData,
 } from '../../../helpers/fetchHelper';
 import { useRouter } from 'next/router';
+import { CustomError } from '../../../types';
+import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 
 interface SignupStepTwoFormProps {
     userDetails: MutableRefObject<UserDetails>;
@@ -21,16 +23,23 @@ const formSchema = z.object({
     otp: z.string().length(6, 'OTP should be 6 digit'),
 });
 
+async function createUser(userDetails: UserDetails, otp: string) {
+    const response = await postWithData(createEndpoint('user/create'), {
+        ...userDetails,
+        otp,
+    });
+    const result: JSONResponse = await response.json();
+    if (!response.ok) throw result;
+    return result;
+}
+
 const inputClasses = (condition: boolean) =>
     clsx(
         'outline-offset-0 outline-1 border rounded-md w-full outline-none focus:outline-blue-600 p-1.5 bg-slate-100 text-sm',
         { 'outline outline-rose-300 focus:outline-rose-300': condition }
     );
 
-export function SignupStepThreeForm({
-    setFormStep,
-    userDetails,
-}: SignupStepTwoFormProps) {
+export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
     const router = useRouter();
     const {
         register,
@@ -40,17 +49,17 @@ export function SignupStepThreeForm({
     } = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
+    const { show } = useSnackbar();
     const mutation = useMutation(
-        async (otp: string) => {
-            const response = await postWithData(createEndpoint('user/create'), {
-                ...userDetails.current,
-                otp,
-            });
-            const result: JSONResponse = await response.json();
-            if (!response.ok) throw result;
-            return result;
-        },
-        { onSuccess: () => router.push('/') }
+        async (otp: string) => createUser(userDetails.current, otp),
+        {
+            onSuccess: () => router.push('/'),
+            onError(error: CustomError) {
+                if (error.errorMessage) {
+                    show(error.errorMessage);
+                }
+            },
+        }
     );
     const onSubmit = handleSubmit(({ otp }) => {
         mutation.mutate(otp);
