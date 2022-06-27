@@ -1,31 +1,31 @@
 import create from 'zustand';
 
 interface SnackBarState {
-    message: string[];
+    messages: string[];
     show: (message: string) => void;
     hide: (index: number) => void;
     hideLast: () => void;
 }
 
 export const useSnackbar = create<SnackBarState>((set) => ({
-    message: [],
+    messages: [],
     show: (value) => {
         return set((prevState) => ({
             ...prevState,
-            message: [value, ...prevState.message],
+            messages: [value, ...prevState.messages],
         }));
     },
     hide: (index) => {
         return set((prevState) => ({
             ...prevState,
-            message: prevState.message.filter((_, i) => i !== index),
+            messages: prevState.messages.filter((_, i) => i !== index),
         }));
     },
     hideLast: () =>
         set((state) => ({
             ...state,
-            message: state.message.filter(
-                (_, i) => i !== state.message.length - 1
+            messages: state.messages.filter(
+                (_, i) => i !== state.messages.length - 1
             ),
         })),
 }));

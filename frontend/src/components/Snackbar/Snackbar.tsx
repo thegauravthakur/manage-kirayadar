@@ -3,10 +3,10 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { SnackbarItem } from './components/SnackbarItem';
 
 export function Snackbar() {
-    const { message } = useSnackbar();
+    const { messages } = useSnackbar();
     return (
         <TransitionGroup className='absolute w-max mx-auto left-0 right-0 flex flex-col items-center space-y-2 pt-10'>
-            {message.map((value, index) => (
+            {messages.map((value, index) => (
                 <CSSTransition
                     key={value}
                     classNames='transition'
