@@ -1,6 +1,6 @@
-import { createUser } from '../../controller/user/create';
-import { loginUser } from '../../controller/user/login';
-import { currentUser } from '../../controller/user/current';
+import { createUser } from '../controller/user/create.controller';
+import { loginUser } from '../controller/user/login.controller';
+import { currentUser } from '../controller/user/current.controller';
 
 const express = require('express');
 const router = express.Router();

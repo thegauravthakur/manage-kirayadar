@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { prismaClient } from '../../utils/server';
-import { sendEmail } from './send';
+import { sendEmail } from './send.controller';
 
 export async function generateOTP(req: Request, res: Response) {
     const { email } = req.body;
