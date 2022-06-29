@@ -9,7 +9,7 @@ export async function generateOTP(req: Request, res: Response) {
         where: { email },
     });
     if (otpAlreadyExists) {
-        prismaClient.otp.update({ where: { email }, data: { otp } });
+        await prismaClient.otp.update({ where: { email }, data: { otp } });
     } else {
         await prismaClient.otp.create({ data: { otp, email } });
     }

@@ -16,19 +16,22 @@ export async function loginUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
         const { password, email } = req.body as z.infer<typeof UserData>;
-        const user = await prismaClient.user.findUnique({ where: { email } });
+        const user = await prismaClient.user.findUnique({
+            where: { email },
+            include: { password: true },
+        });
         if (!user)
             return res.status(400).json({
                 errorMessage: 'wrong combination of email/password',
                 data: null,
             });
-        const result = await compareHash(password, user.passwordHash ?? '');
+        const result = await compareHash(password, user.password?.hash ?? '');
         if (!result)
             return res.status(400).json({
                 errorMessage: 'wrong combination of email/password',
                 data: null,
             });
-        const { passwordHash, ...filteredUser } = user;
+        const { password: p, ...filteredUser } = user;
         const access_token = signToken(filteredUser);
         return res.json({
             data: { user: filteredUser, access_token },

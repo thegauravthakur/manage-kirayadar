@@ -13,7 +13,7 @@ datasource db {
 model User {
   id Int @default(autoincrement()) @id
   email String @unique
-  passwordHash String?
+  password Password?
   avatarUrl String?
   name String
 }
@@ -22,4 +22,11 @@ model Otp {
   id Int @default(autoincrement()) @id
   email String @unique
   otp Int
+}
+
+model Password {
+  id Int @default(autoincrement()) @id
+  hash String
+  user User @relation(fields: [userId], references: [id])
+  userId Int
 }

@@ -35,6 +35,7 @@ export async function createUser(req: Request, res: Response) {
         const otpEntry = await prismaClient.otp.findUnique({
             where: { email },
         });
+        console.log(otpEntry?.otp, otp);
         if (otpEntry?.otp !== Number(otp))
             return res
                 .status(400)
@@ -42,10 +43,9 @@ export async function createUser(req: Request, res: Response) {
 
         const passwordHash = await generateHash(password);
         const user = await prismaClient.user.create({
-            data: { name, email, passwordHash },
+            data: { name, email, password: { create: { hash: passwordHash } } },
         });
-        const { passwordHash: _, ...filteredUser } = user;
-        return res.json({ errorMessage: null, data: { user: filteredUser } });
+        return res.json({ errorMessage: null, data: { user } });
     } catch (error) {
         if (error instanceof z.ZodError) {
             res.status(400).json({
