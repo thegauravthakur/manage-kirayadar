@@ -1,9 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import {
-    createEndpoint,
-    JSONResponse,
-    postWithData,
-} from '../../../helpers/fetchHelper';
 import { removeCookies, setCookies } from 'cookies-next';
 import { cookiesConfig } from '../../../helpers/cookiesHelper';
 
