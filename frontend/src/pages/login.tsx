@@ -25,24 +25,21 @@ export default function Login() {
                 <h2 className={clsx('text-center font-semibold text-xl')}>
                     Login to your account
                 </h2>
-                <SocialLoginButton
-                    TrailingWidget={AiOutlineGoogle}
-                    isLoading={false}
-                    text='Continue with Google'
-                    onClick={async () => {}}
-                />
-                <SocialLoginButton
-                    TrailingWidget={AiOutlineGithub}
-                    isLoading={false}
-                    text='Continue with GitHub'
-                    onClick={async () => {}}
-                />
-                <SocialLoginButton
-                    TrailingWidget={AiOutlineMail}
-                    isLoading={false}
-                    text='Continue with Email'
+                <button className='btn btn-primary gap-2 w-full max-w-xs'>
+                    <AiOutlineGoogle size={24} />
+                    Continue with Google
+                </button>
+                <button className='btn btn-primary gap-2 w-full max-w-xs'>
+                    <AiOutlineGithub size={24} />
+                    Continue with Github
+                </button>
+                <button
+                    className='btn btn-primary gap-2 w-full max-w-xs'
                     onClick={() => setShowDialog(true)}
-                />
+                >
+                    <AiOutlineMail size={24} />
+                    Continue with Email
+                </button>
                 <LoginFormDialog
                     setShowDialog={setShowDialog}
                     showDialog={showDialog}
