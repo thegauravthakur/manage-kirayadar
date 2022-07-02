@@ -17,7 +17,7 @@ export function LoginFormDialog({
 
     return (
         <ReactFocusLock>
-            <div className='modal modal-open'>
+            <div className={clsx('modal', { 'modal-open': showDialog })}>
                 <div className='modal-box'>
                     <div className={clsx('flex items-center px-4 py-2.5')}>
                         <h2

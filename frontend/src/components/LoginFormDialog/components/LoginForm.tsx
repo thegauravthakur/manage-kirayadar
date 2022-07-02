@@ -10,8 +10,8 @@ import { CustomError } from '../../../types';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 
 const formSchema = z.object({
-    email: z.string().email({ message: 'email' }),
-    password: z.string().min(1),
+    email: z.string().email({ message: 'email not properly formatted' }),
+    password: z.string().min(1, 'password is required'),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -22,12 +22,6 @@ async function loginUser(formData: FormSchema) {
     if (!response.ok) throw result;
     return result;
 }
-
-const inputClasses = (condition: boolean) =>
-    clsx(
-        'outline-offset-0 outline-1 border rounded-md w-full outline-none focus:outline-blue-600 p-1.5 bg-slate-100 text-sm',
-        { 'outline outline-rose-300 focus:outline-rose-300': condition }
-    );
 
 export function LoginForm() {
     const router = useRouter();
@@ -59,42 +53,55 @@ export function LoginForm() {
 
     return (
         <form
-            className='space-y-6 p-4 rounded-md w-full max-w-sm mx-auto'
+            className='p-4 rounded-md w-full max-w-sm mx-auto'
             method='post'
             onSubmit={onSubmit}
         >
-            <fieldset className='space-y-4 text-sm'>
-                <div className='space-y-1.5'>
-                    <label htmlFor='email'>
-                        <h2>Email</h2>
-                    </label>
-                    <input
-                        className={inputClasses(!!errors.email)}
-                        id='email'
-                        type='email'
-                        {...register('email')}
-                    />
-                    <p className='text-rose-600 text-sm'>
-                        {errors.email && errors.email.message}
-                    </p>
-                </div>
-                <div className='space-y-1.5'>
-                    <label htmlFor='password'>
-                        <h2>Password</h2>
-                    </label>
-                    <input
-                        required
-                        className={inputClasses(!!errors.password)}
-                        id='password'
-                        type='password'
-                        {...register('password')}
-                    />
-                    <p className='text-rose-600 text-sm'>
-                        {errors.password && errors.password.message}
-                    </p>
-                </div>
+            <fieldset>
+                <label className='label' htmlFor='email'>
+                    <span className='label-text'>What is your email?</span>
+                </label>
+                <input
+                    className={clsx(
+                        'input input-bordered input-primary input-md w-full',
+                        { 'input-error': !!errors.email }
+                    )}
+                    id='email'
+                    placeholder='Your email...'
+                    type='email'
+                    {...register('email')}
+                />
+                <label className='label'>
+                    {errors.email && (
+                        <span className='label-text-alt text-error'>
+                            {errors.email.message}
+                        </span>
+                    )}
+                </label>
+                <label className='label' htmlFor='password'>
+                    <span className='label-text'>What is your password?</span>
+                </label>
+                <input
+                    className={clsx(
+                        'input input-bordered input-primary input-md w-full',
+                        { 'input-error': !!errors.password }
+                    )}
+                    id='password'
+                    placeholder='Your password...'
+                    type='password'
+                    {...register('password')}
+                />
+                <label className='label'>
+                    {errors.password && (
+                        <span className='label-text-alt text-error'>
+                            {errors.password.message}
+                        </span>
+                    )}
+                </label>
                 <button
-                    className='w-full p-1.5 border rounded-md bg-blue-600 text-white'
+                    className={clsx('btn btn-primary btn-block', {
+                        loading: mutation.isLoading,
+                    })}
                     type='submit'
                 >
                     Login
