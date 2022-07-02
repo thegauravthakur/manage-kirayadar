@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { JSONResponse, postWithData } from '../../../helpers/fetchHelper';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 import clsx from 'clsx';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,7 +23,12 @@ async function loginUser(formData: FormSchema) {
     return result;
 }
 
-export function LoginForm() {
+interface LoginFormProps {
+    showDialog: boolean;
+    formRef: RefObject<HTMLFormElement>;
+}
+
+export function LoginForm({ formRef, showDialog }: LoginFormProps) {
     const router = useRouter();
     const {
         register,
@@ -48,11 +53,12 @@ export function LoginForm() {
     const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
 
     useEffect(() => {
-        setFocus('email');
-    }, [setFocus]);
+        if (showDialog) setFocus('email');
+    }, [setFocus, showDialog]);
 
     return (
         <form
+            ref={formRef}
             className='p-4 rounded-md w-full max-w-sm mx-auto'
             method='post'
             onSubmit={onSubmit}

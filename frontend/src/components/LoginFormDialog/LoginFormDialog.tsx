@@ -13,7 +13,7 @@ export function LoginFormDialog({
     setShowDialog,
     showDialog,
 }: SignUpDialogProps) {
-    // if (!showDialog) return null;
+    const formRef = useRef<HTMLFormElement>(null);
 
     return (
         <ReactFocusLock>
@@ -31,6 +31,7 @@ export function LoginFormDialog({
                             className='btn btn-circle btn-sm btn-outline'
                             type='button'
                             onClick={() => {
+                                if (formRef.current) formRef.current.reset();
                                 setShowDialog(false);
                             }}
                         >
@@ -38,7 +39,7 @@ export function LoginFormDialog({
                         </button>
                     </div>
                     <hr />
-                    <LoginForm />
+                    <LoginForm formRef={formRef} showDialog={showDialog} />
                 </div>
             </div>
         </ReactFocusLock>
