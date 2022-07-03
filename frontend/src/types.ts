@@ -16,3 +16,8 @@ export interface Property {
     address: string;
     ownerId: number;
 }
+
+export interface Response<T> {
+    errorMessage: string;
+    data: T;
+}

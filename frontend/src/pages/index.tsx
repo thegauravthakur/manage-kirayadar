@@ -4,19 +4,23 @@ import { getCurrentUser } from '../helpers/userHelper';
 import { AddNewPropertyCard } from '../components/AddNewPropertyCard';
 import { useProperties } from '../hooks/useProperties';
 import { HiOutlineArrowSmRight } from 'react-icons/hi';
+import Link from 'next/link';
 
 interface PropertyCardProps {
     name: string;
     address: string;
+    id: number;
 }
-function PropertyCard({ name, address }: PropertyCardProps) {
+function PropertyCard({ name, address, id }: PropertyCardProps) {
     return (
         <div className='card w-full max-w-sm bg-base-100 shadow-xl'>
             <div className='card-body'>
                 <h2 className='card-title'>{name}</h2>
                 <p className='text-neutral'>{address}</p>
                 <div className='card-actions justify-end'>
-                    <button className='btn btn-primary'>manage</button>
+                    <Link href={`/property/${id}`}>
+                        <a className='btn btn-primary'>manage</a>
+                    </Link>
                 </div>
             </div>
         </div>
@@ -30,7 +34,12 @@ const Home: NextPage = () => {
             <div className='flex space-x-6'>
                 <AddNewPropertyCard />
                 {properties?.slice(0, 2).map(({ id, name, address }) => (
-                    <PropertyCard key={id} address={address} name={name} />
+                    <PropertyCard
+                        key={id}
+                        address={address}
+                        id={id}
+                        name={name}
+                    />
                 ))}
                 {properties && properties.length > 2 && (
                     <button className='btn btn-circle btn-primary btn-sm btn-outline self-center'>
