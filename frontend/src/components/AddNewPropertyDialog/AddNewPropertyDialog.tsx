@@ -5,11 +5,7 @@ import { z } from 'zod';
 import { useMutation, useQueryClient } from 'react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AiOutlineClose } from 'react-icons/ai';
-import {
-    createEndpoint,
-    postWithData,
-    postWithToken,
-} from '../../helpers/fetchHelper';
+import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
 import { Session, useSession } from '../../hooks/useSession';
 import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../types';

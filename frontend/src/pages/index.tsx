@@ -33,7 +33,7 @@ const Home: NextPage = () => {
                     <PropertyCard key={id} address={address} name={name} />
                 ))}
                 {properties && properties.length > 2 && (
-                    <button className='btn btn-circle btn-sm btn-outline self-center'>
+                    <button className='btn btn-circle btn-primary btn-sm btn-outline self-center'>
                         <HiOutlineArrowSmRight fontSize={28} />
                     </button>
                 )}
