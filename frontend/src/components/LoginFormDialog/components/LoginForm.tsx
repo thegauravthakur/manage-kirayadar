@@ -46,7 +46,8 @@ export function LoginForm({ formRef, showDialog }: LoginFormProps) {
                 await router.push('/');
             },
             onError(error: CustomError) {
-                if (error.errorMessage) snackbar.show(error.errorMessage);
+                if (error.errorMessage)
+                    snackbar.show(error.errorMessage, 'error');
             },
         }
     );

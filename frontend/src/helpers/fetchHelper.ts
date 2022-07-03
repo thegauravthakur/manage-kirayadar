@@ -25,3 +25,18 @@ export async function postWithData(endpoint: string, data: unknown) {
         },
     });
 }
+
+export async function postWithToken(
+    endpoint: string,
+    token: string,
+    data: unknown
+) {
+    return await fetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            Authorization: `bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+}

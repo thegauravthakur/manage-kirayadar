@@ -1,20 +1,61 @@
-import { useSnackbar } from '../../hooks/zustand/useSnackbar';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { SnackbarItem } from './components/SnackbarItem';
+import { SnackBarState, useSnackbar } from '../../hooks/zustand/useSnackbar';
+import {
+    HiOutlineCheckCircle,
+    HiExclamationCircle,
+    HiInformationCircle,
+} from 'react-icons/hi';
+import { useEffect } from 'react';
+import { IconType } from 'react-icons';
+import { AiOutlineClose } from 'react-icons/ai';
+import clsx from 'clsx';
+
+const typeIconMapping: Record<SnackBarState['type'], IconType> = {
+    success: HiOutlineCheckCircle,
+    error: HiExclamationCircle,
+    info: HiInformationCircle,
+};
+const typeClassMapping: Record<SnackBarState['type'], string> = {
+    success: 'alert-success',
+    info: 'alert-info',
+    error: 'alert-error',
+};
 
 export function Snackbar() {
-    const { messages } = useSnackbar();
+    const { type, hide, message } = useSnackbar();
+    const Icon = typeIconMapping[type];
+    const alertClass = typeClassMapping[type];
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            hide();
+        }, 5000);
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [hide, message]);
+
+    if (!message) return null;
+
     return (
-        <TransitionGroup className='absolute w-max mx-auto left-0 right-0 flex flex-col items-center space-y-2 pt-10'>
-            {messages.map((value, index) => (
-                <CSSTransition
-                    key={value}
-                    classNames='transition'
-                    timeout={1000}
+        <div
+            className={clsx(
+                'alert absolute z-[9999] w-auto left-0 right-0 m-5 max-w-4xl mx-auto',
+                alertClass
+            )}
+        >
+            <div>
+                <Icon fontSize={28} />
+                <span>{message}</span>
+            </div>
+            <div className='flex-none'>
+                <button
+                    className='btn btn-circle btn-sm btn-outline'
+                    type='button'
+                    onClick={hide}
                 >
-                    <SnackbarItem key={value} index={index} value={value} />
-                </CSSTransition>
-            ))}
-        </TransitionGroup>
+                    <AiOutlineClose fontSize={18} />
+                </button>
+            </div>
+        </div>
     );
 }

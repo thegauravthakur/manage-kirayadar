@@ -2,11 +2,23 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { getCookie } from 'cookies-next';
 import { getCurrentUser } from '../helpers/userHelper';
 import { AddNewPropertyCard } from '../components/AddNewPropertyCard';
+import { useSnackbar } from '../hooks/zustand/useSnackbar';
 
 const Home: NextPage = () => {
+    const { show } = useSnackbar();
     return (
         <div className='p-5'>
             <AddNewPropertyCard />
+            <button
+                onClick={() =>
+                    show(
+                        'You are doing great' + Date.now(),
+                        Date.now() % 2 == 0 ? 'error' : 'success'
+                    )
+                }
+            >
+                click me
+            </button>
         </div>
     );
 };

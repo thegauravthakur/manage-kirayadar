@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
 import { getCurrentUser } from '../helpers/userHelper';
-import { SocialLoginButton } from '../components/SocialLoginButton';
 import {
     AiOutlineGithub,
     AiOutlineGoogle,

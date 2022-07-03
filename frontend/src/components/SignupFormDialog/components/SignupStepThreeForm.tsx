@@ -56,7 +56,7 @@ export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
             onSuccess: () => router.push('/'),
             onError(error: CustomError) {
                 if (error.errorMessage) {
-                    show(error.errorMessage);
+                    show(error.errorMessage, 'error');
                 }
             },
         }
