@@ -2,23 +2,42 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { getCookie } from 'cookies-next';
 import { getCurrentUser } from '../helpers/userHelper';
 import { AddNewPropertyCard } from '../components/AddNewPropertyCard';
-import { useSnackbar } from '../hooks/zustand/useSnackbar';
+import { useProperties } from '../hooks/useProperties';
+import { HiOutlineArrowSmRight } from 'react-icons/hi';
 
-const Home: NextPage = () => {
-    const { show } = useSnackbar();
+interface PropertyCardProps {
+    name: string;
+    address: string;
+}
+function PropertyCard({ name, address }: PropertyCardProps) {
     return (
-        <div className='p-5'>
-            <AddNewPropertyCard />
-            <button
-                onClick={() =>
-                    show(
-                        'You are doing great' + Date.now(),
-                        Date.now() % 2 == 0 ? 'error' : 'success'
-                    )
-                }
-            >
-                click me
-            </button>
+        <div className='card w-full max-w-sm bg-base-100 shadow-xl'>
+            <div className='card-body'>
+                <h2 className='card-title'>{name}</h2>
+                <p className='text-neutral'>{address}</p>
+                <div className='card-actions justify-end'>
+                    <button className='btn btn-primary'>manage</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+const Home: NextPage = () => {
+    const { properties } = useProperties();
+    return (
+        <div className='p-5 space-y-5'>
+            <h1 className='text-2xl font-semibold'>Manage your properties</h1>
+            <div className='flex space-x-6'>
+                <AddNewPropertyCard />
+                {properties?.slice(0, 2).map(({ id, name, address }) => (
+                    <PropertyCard key={id} address={address} name={name} />
+                ))}
+                {properties && properties.length > 2 && (
+                    <button className='btn btn-circle btn-sm btn-outline self-center'>
+                        <HiOutlineArrowSmRight fontSize={28} />
+                    </button>
+                )}
+            </div>
         </div>
     );
 };

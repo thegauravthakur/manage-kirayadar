@@ -9,3 +9,10 @@ export interface CustomError {
     errorMessage: string;
     data: null;
 }
+
+export interface Property {
+    id: number;
+    name: string;
+    address: string;
+    ownerId: number;
+}

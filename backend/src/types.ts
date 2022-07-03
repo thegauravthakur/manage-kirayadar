@@ -4,3 +4,10 @@ export interface User {
     avatarUrl: string | null;
     name: string;
 }
+
+export interface Property {
+    id: number;
+    name: string;
+    address: string;
+    ownerId: number;
+}

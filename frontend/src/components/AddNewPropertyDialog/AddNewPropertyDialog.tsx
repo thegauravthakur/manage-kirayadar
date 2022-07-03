@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import clsx from 'clsx';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AiOutlineClose } from 'react-icons/ai';
 import {
@@ -55,6 +55,7 @@ export function AddNewPropertyDialog({
     } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
     });
+    const queryClient = useQueryClient();
     const { session } = useSession();
     const { show } = useSnackbar();
     const mutation = useMutation(
@@ -64,8 +65,9 @@ export function AddNewPropertyDialog({
         {
             onError: (error: CustomError) =>
                 show(error.errorMessage ?? '', 'error'),
-            onSuccess: () => {
+            onSuccess: async () => {
                 show('created a new property', 'success');
+                await queryClient.invalidateQueries('properties');
                 setShowDialog(false);
             },
         }
