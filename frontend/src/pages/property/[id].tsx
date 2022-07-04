@@ -4,58 +4,12 @@ import { getCurrentUser } from '../../helpers/userHelper';
 import { createEndpoint, fetchWithToken } from '../../helpers/fetchHelper';
 import { Property, Response } from '../../types';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
-import { useState } from 'react';
-import clsx from 'clsx';
+import { CollapsableFloorSection } from '../../components/CollapsableFloorSection';
 
 interface DetailedPropertyProps {
     property: Property;
 }
 
-function SpaceCard() {
-    return (
-        <div className='shadow border p-5 rounded-xl flex items-center justify-between'>
-            <div>
-                <h3 className='text-lg font-semibold text-secondary'>
-                    202 - A
-                </h3>
-                <p>First floor</p>
-            </div>
-            <button className='btn btn-outline btn-primary btn-sm'>
-                Manage
-            </button>
-        </div>
-    );
-}
-
-function CollapsableFloor() {
-    const [isExpanded, setIsExpanded] = useState(true);
-    return (
-        <div className={clsx('space-y-5')}>
-            <button
-                className='btn btn-outline btn-primary gap-3'
-                onClick={() => setIsExpanded(!isExpanded)}
-            >
-                First Floor
-                {isExpanded ? (
-                    <BiChevronDown size={22} />
-                ) : (
-                    <BiChevronUp size={22} />
-                )}
-            </button>
-            {isExpanded && (
-                <div className={clsx('grid grid-cols-2 gap-5 p-0')}>
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
-                </div>
-            )}
-        </div>
-    );
-}
 export default function DetailedProperty({ property }: DetailedPropertyProps) {
     return (
         <div className='p-5 space-y-5'>
@@ -66,9 +20,9 @@ export default function DetailedProperty({ property }: DetailedPropertyProps) {
                     Add New Space
                 </button>
             </div>
-            <CollapsableFloor />
-            <CollapsableFloor />
-            <CollapsableFloor />
+            <CollapsableFloorSection />
+            <CollapsableFloorSection />
+            <CollapsableFloorSection />
         </div>
     );
 }
