@@ -5,17 +5,23 @@ import { createEndpoint, fetchWithToken } from '../../helpers/fetchHelper';
 import { Property, Response } from '../../types';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { CollapsableFloorSection } from '../../components/CollapsableFloorSection';
+import { AddNewSpaceDialog } from '../../components/AddNewSpaceDialog';
+import { useState } from 'react';
 
 interface DetailedPropertyProps {
     property: Property;
 }
 
 export default function DetailedProperty({ property }: DetailedPropertyProps) {
+    const [showDialog, setShowDialog] = useState(false);
     return (
         <div className='p-5 space-y-5'>
             <div className='flex justify-between'>
                 <h1 className='text-2xl font-semibold'>{property.name}</h1>
-                <button className='btn btn-primary btn-wide gap-2'>
+                <button
+                    className='btn btn-primary btn-wide gap-2'
+                    onClick={() => setShowDialog(true)}
+                >
                     <AiOutlinePlus size={22} />
                     Add New Space
                 </button>
@@ -23,6 +29,12 @@ export default function DetailedProperty({ property }: DetailedPropertyProps) {
             <CollapsableFloorSection />
             <CollapsableFloorSection />
             <CollapsableFloorSection />
+            <div>
+                <AddNewSpaceDialog
+                    setShowDialog={setShowDialog}
+                    showDialog={showDialog}
+                />
+            </div>
         </div>
     );
 }
