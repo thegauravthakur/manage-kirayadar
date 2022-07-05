@@ -43,10 +43,12 @@ export default function Signup() {
                     text='Continue with Email'
                     onClick={() => setShowDialog(true)}
                 />
-                <SignupFormDialog
-                    setShowDialog={setShowDialog}
-                    showDialog={showDialog}
-                />
+                <div>
+                    <SignupFormDialog
+                        setShowDialog={setShowDialog}
+                        showDialog={showDialog}
+                    />
+                </div>
             </div>
         </div>
     );
