@@ -7,6 +7,8 @@ import { useMutation } from 'react-query';
 import { AiOutlineClose } from 'react-icons/ai';
 import { createEmptyArray, numberToWord } from '../../helpers/pageHelper';
 import { FormLabel } from '../FormLabel';
+import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
+import { useSession } from '../../hooks/useSession';
 
 const formSchema = z.object({
     name: z.string().min(2, 'name should have at least 2 letter'),
@@ -19,12 +21,25 @@ interface AddNewSpaceDialogProps {
     showDialog: boolean;
     setShowDialog: Dispatch<SetStateAction<boolean>>;
     totalFloors: number;
+    propertyId: number;
+}
+
+async function createNewSpace(
+    formData: FormSchema,
+    token: string,
+    propertyId: number
+) {
+    await postWithToken(createEndpoint('space/add'), token, {
+        ...formData,
+        propertyId,
+    });
 }
 
 export function AddNewSpaceDialog({
     showDialog,
     setShowDialog,
     totalFloors,
+    propertyId,
 }: AddNewSpaceDialogProps) {
     const emptyArray = createEmptyArray(totalFloors - 1);
     const {
@@ -35,9 +50,12 @@ export function AddNewSpaceDialog({
     } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
     });
-    const mutation = useMutation(async () => {});
+    const { session } = useSession();
+    const mutation = useMutation(async (formData: FormSchema) => {
+        await createNewSpace(formData, session.token, propertyId);
+    });
     const onSubmit = handleSubmit((formData) => {
-        console.log(formData);
+        mutation.mutate(formData);
     });
     return (
         <div
@@ -62,7 +80,7 @@ export function AddNewSpaceDialog({
                 <FormLabel
                     errorText={errors.name?.message}
                     id='name'
-                    labelText='What is name of this property'
+                    labelText='What is the name for this space?'
                 >
                     <input
                         className={clsx(

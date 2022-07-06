@@ -31,6 +31,7 @@ export default function DetailedProperty({ property }: DetailedPropertyProps) {
             <CollapsableFloorSection />
             <div>
                 <AddNewSpaceDialog
+                    propertyId={property.id}
                     setShowDialog={setShowDialog}
                     showDialog={showDialog}
                     totalFloors={property.totalFloors}
