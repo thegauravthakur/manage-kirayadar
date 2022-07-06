@@ -1,24 +1,26 @@
 import { Request, Response } from 'express';
 import { prismaClient } from '../../utils/server';
 import { z } from 'zod';
+import { getUserFromToken } from '../../middleware/protected';
+import { User } from '../../types';
 
 const propertySchema = z.object({
-    ownerId: z.number({ required_error: 'Owner Id is required' }),
     name: z.string().min(1, 'Name is required'),
+    totalFloors: z.number().min(1, 'total floors should be more than 1'),
     address: z.string().min(1, 'Address is required'),
 });
 
 export async function addNewProperty(req: Request, res: Response) {
     try {
-        console.log({ body: req.body });
+        const user = (await getUserFromToken(req)) as User;
         propertySchema.parse(req.body);
-        const { ownerId, address, name } = req.body as z.infer<
+        const { address, name, totalFloors } = req.body as z.infer<
             typeof propertySchema
         >;
         const property = await prismaClient.property.create({
-            data: { ownerId, address, name },
+            data: { address, name, totalFloors, ownerId: user.id },
         });
-        res.json({ errorMessage: null, data: { property } });
+        return res.json({ errorMessage: null, data: { property } });
     } catch (error) {
         if (error instanceof z.ZodError) {
             res.status(400).json({

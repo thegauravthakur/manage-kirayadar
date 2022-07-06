@@ -12,7 +12,7 @@ model User {
   email String @unique
   password Password?
   avatarUrl String?
-  tenant Tenant?
+  tenant Tenant[]
   properties Property[]
   name String
 }
@@ -36,6 +36,7 @@ model Property {
   address String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
+  totalFloors Int
   spaces Space[]
 }
 

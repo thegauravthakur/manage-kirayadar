@@ -19,20 +19,20 @@ interface AddNewPropertyDialogProps {
 const formSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     address: z.string().min(1, 'Address is required'),
+    totalFloors: z.number().min(1, 'Property should contain at least 1 floor'),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
 
 async function createNewProperty(
     formData: FormSchema,
-    { user, token }: Session['session']
+    { token }: Session['session']
 ) {
     const response = await postWithToken(
         createEndpoint('property/add'),
         token,
         {
             ...formData,
-            ownerId: user?.id,
         }
     );
     const result = await response.json();
@@ -107,6 +107,27 @@ export function AddNewPropertyDialog({
                     <label className='label'>
                         <span className='label-text-alt text-error'>
                             {errors.name && errors.name.message} &nbsp;
+                        </span>
+                    </label>
+                    <label className='label' htmlFor='totalFloors'>
+                        <span className='label-text'>
+                            How many floors are there?
+                        </span>
+                    </label>
+                    <input
+                        className={clsx(
+                            'input input-bordered input-primary input-md w-full',
+                            { 'input-error': !!errors.totalFloors }
+                        )}
+                        id='totalFloors'
+                        placeholder='total number of floors...'
+                        type='text'
+                        {...register('totalFloors', { valueAsNumber: true })}
+                    />
+                    <label className='label'>
+                        <span className='label-text-alt text-error'>
+                            {errors.totalFloors && errors.totalFloors.message}{' '}
+                            &nbsp;
                         </span>
                     </label>
                     <label className='label' htmlFor='address'>

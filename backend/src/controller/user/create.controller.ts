@@ -35,7 +35,6 @@ export async function createUser(req: Request, res: Response) {
         const otpEntry = await prismaClient.otp.findUnique({
             where: { email },
         });
-        console.log(otpEntry?.otp, otp);
         if (otpEntry?.otp !== Number(otp))
             return res
                 .status(400)
