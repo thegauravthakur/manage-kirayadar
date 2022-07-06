@@ -33,6 +33,7 @@ export default function DetailedProperty({ property }: DetailedPropertyProps) {
                 <AddNewSpaceDialog
                     setShowDialog={setShowDialog}
                     showDialog={showDialog}
+                    totalFloors={property.totalFloors}
                 />
             </div>
         </div>

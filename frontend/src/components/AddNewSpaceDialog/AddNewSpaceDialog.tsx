@@ -5,10 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from 'react-query';
 import { AiOutlineClose } from 'react-icons/ai';
+import { createEmptyArray, numberToWord } from '../../helpers/pageHelper';
+import { FormLabel } from '../FormLabel';
 
 const formSchema = z.object({
-    email: z.string().email({ message: 'email not properly formatted' }),
-    password: z.string().min(1, 'password is required'),
+    name: z.string().min(2, 'name should have at least 2 letter'),
+    floor: z.number().min(1, ''),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -16,12 +18,15 @@ type FormSchema = z.infer<typeof formSchema>;
 interface AddNewSpaceDialogProps {
     showDialog: boolean;
     setShowDialog: Dispatch<SetStateAction<boolean>>;
+    totalFloors: number;
 }
 
 export function AddNewSpaceDialog({
     showDialog,
     setShowDialog,
+    totalFloors,
 }: AddNewSpaceDialogProps) {
+    const emptyArray = createEmptyArray(totalFloors - 1);
     const {
         register,
         handleSubmit,
@@ -31,7 +36,9 @@ export function AddNewSpaceDialog({
         resolver: zodResolver(formSchema),
     });
     const mutation = useMutation(async () => {});
-    const onSubmit = handleSubmit(() => {});
+    const onSubmit = handleSubmit((formData) => {
+        console.log(formData);
+    });
     return (
         <div
             className={clsx('modal', {
@@ -52,51 +59,51 @@ export function AddNewSpaceDialog({
                         <AiOutlineClose fontSize={18} />
                     </button>
                 </div>
-                <label className='label' htmlFor='name'>
-                    <span className='label-text'>
-                        What is name of this property?
-                    </span>
-                </label>
-                <input
-                    className={clsx(
-                        'input input-bordered input-primary input-md w-full',
-                        { 'input-error': !!errors.email }
-                    )}
+                <FormLabel
+                    errorText={errors.name?.message}
                     id='name'
-                    placeholder='Enter a name...'
-                    type='text'
-                    {...register('email')}
-                />
-                <label className='label'>
-                    <span className='label-text-alt text-error'>
-                        {errors.email && errors.email.message} &nbsp;
-                    </span>
-                </label>
-                <label className='label' htmlFor='address'>
-                    <span className='label-text'>How many beds are there?</span>
-                </label>
-                <input
-                    className={clsx(
-                        'input input-bordered input-primary input-md w-full',
-                        { 'input-error': !!errors.password }
-                    )}
-                    id='address'
-                    placeholder='Enter city name...'
-                    type='text'
-                    {...register('password')}
-                />
-                <label className='label'>
-                    <span className='label-text-alt text-error'>
-                        {errors.password && errors.password.message} &nbsp;
-                    </span>
-                </label>
+                    labelText='What is name of this property'
+                >
+                    <input
+                        className={clsx(
+                            'input input-bordered input-primary input-md w-full',
+                            { 'input-error': !!errors.name }
+                        )}
+                        id='name'
+                        placeholder='Enter a name...'
+                        type='text'
+                        {...register('name')}
+                    />
+                </FormLabel>
+                <FormLabel
+                    errorText={errors.floor?.message}
+                    id='floor'
+                    labelText='What floor is this space on?'
+                >
+                    <select
+                        className={clsx(
+                            'select select-primary font-normal w-full',
+                            {
+                                'select-error': !!errors.floor,
+                            }
+                        )}
+                        defaultValue={1}
+                        {...register('floor', { valueAsNumber: true })}
+                    >
+                        {emptyArray.map((value) => (
+                            <option key={value} value={value + 1}>
+                                {numberToWord(value + 1)} floor
+                            </option>
+                        ))}
+                    </select>
+                </FormLabel>
                 <button
                     className={clsx('btn btn-primary btn-block', {
                         loading: mutation.isLoading,
                     })}
                     type='submit'
                 >
-                    create new property
+                    create new space
                 </button>
             </form>
         </div>

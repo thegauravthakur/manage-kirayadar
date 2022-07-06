@@ -14,7 +14,7 @@ export interface Property {
     id: number;
     name: string;
     address: string;
-    ownerId: number;
+    totalFloors: number;
 }
 
 export interface Response<T> {

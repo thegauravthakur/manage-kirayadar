@@ -46,6 +46,7 @@ model Space {
   property Property @relation(fields: [propertyId], references: [id])
   propertyId Int
   tenants Tenant[]
+  floor Int
 }
 
 model Tenant {
