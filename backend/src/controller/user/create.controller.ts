@@ -16,9 +16,6 @@ const UserData = z.object({
     otp: z.string().length(6),
 });
 
-/*
- * Controller responsible for creating a new user
- */
 export async function createUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
