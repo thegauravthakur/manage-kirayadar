@@ -30,7 +30,7 @@ export function CollapsableFloorSection({
             {isExpanded && (
                 <div className={clsx('grid grid-cols-2 gap-5 p-0')}>
                     {spaces.map((space) => (
-                        <SpaceCard key={space.id} />
+                        <SpaceCard key={space.id} space={space} />
                     ))}
                 </div>
             )}

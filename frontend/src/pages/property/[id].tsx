@@ -12,6 +12,7 @@ import { CollapsableFloorSection } from '../../components/CollapsableFloorSectio
 import { AddNewSpaceDialog } from '../../components/AddNewSpaceDialog';
 import { useState } from 'react';
 import { groupBy } from '../../helpers/pageHelper';
+import { useSpaces } from '../../hooks/react-query/useSpaces';
 
 interface DetailedPropertyProps {
     property: Property;
@@ -20,10 +21,11 @@ interface DetailedPropertyProps {
 
 export default function DetailedProperty({
     property,
-    spaces,
+    spaces: initialSpaces,
 }: DetailedPropertyProps) {
     const [showDialog, setShowDialog] = useState(false);
-    const spacesPerFloor = groupBy(spaces, (space) => space.floor);
+    const { spaces } = useSpaces(property.id, initialSpaces);
+    const spacesPerFloor = groupBy(spaces ?? [], (space) => space.floor);
     return (
         <div className='p-5 space-y-5'>
             <div className='flex justify-between'>

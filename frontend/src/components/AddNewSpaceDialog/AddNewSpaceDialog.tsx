@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { AiOutlineClose } from 'react-icons/ai';
 import { createEmptyArray, numberToWord } from '../../helpers/pageHelper';
 import { FormLabel } from '../FormLabel';
@@ -51,9 +51,19 @@ export function AddNewSpaceDialog({
         resolver: zodResolver(formSchema),
     });
     const { session } = useSession();
-    const mutation = useMutation(async (formData: FormSchema) => {
-        await createNewSpace(formData, session.token, propertyId);
-    });
+    const queryClient = useQueryClient();
+    const mutation = useMutation(
+        async (formData: FormSchema) => {
+            await createNewSpace(formData, session.token, propertyId);
+        },
+        {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(['spaces', propertyId]);
+                reset();
+                setShowDialog(false);
+            },
+        }
+    );
     const onSubmit = handleSubmit((formData) => {
         mutation.mutate(formData);
     });
