@@ -1,6 +1,15 @@
+import { unknown } from 'zod';
+
 export function createEmptyArray(length: number) {
     const emptyArray = Array.from(Array.from({ length }).keys());
     return emptyArray;
+}
+
+export function groupBy<T>(array: T[], predicate: (v: T) => string | number) {
+    return array.reduce((acc, value) => {
+        (acc[predicate(value)] ||= []).push(value);
+        return acc;
+    }, {} as { [key: string | number]: T[] });
 }
 
 export function numberToWord(number: number) {

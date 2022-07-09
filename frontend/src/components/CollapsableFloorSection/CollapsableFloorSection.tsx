@@ -2,8 +2,17 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { SpaceCard } from './components/SpaceCard';
+import { Space } from '../../types';
+import { numberToWord } from '../../helpers/pageHelper';
 
-export function CollapsableFloorSection() {
+interface CollapsableFloorSectionProps {
+    floor: number;
+    spaces: Space[];
+}
+export function CollapsableFloorSection({
+    spaces,
+    floor,
+}: CollapsableFloorSectionProps) {
     const [isExpanded, setIsExpanded] = useState(true);
     return (
         <div className={clsx('space-y-5')}>
@@ -11,7 +20,7 @@ export function CollapsableFloorSection() {
                 className='btn btn-outline btn-primary gap-3'
                 onClick={() => setIsExpanded(!isExpanded)}
             >
-                First Floor
+                {numberToWord(floor)} floor
                 {isExpanded ? (
                     <BiChevronDown size={22} />
                 ) : (
@@ -20,12 +29,9 @@ export function CollapsableFloorSection() {
             </button>
             {isExpanded && (
                 <div className={clsx('grid grid-cols-2 gap-5 p-0')}>
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
-                    <SpaceCard />
+                    {spaces.map((space) => (
+                        <SpaceCard key={space.id} />
+                    ))}
                 </div>
             )}
         </div>

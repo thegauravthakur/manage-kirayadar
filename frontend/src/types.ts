@@ -17,6 +17,13 @@ export interface Property {
     totalFloors: number;
 }
 
+export interface Space {
+    id: number;
+    floor: number;
+    name: string;
+    propertyId: number;
+}
+
 export interface Response<T> {
     errorMessage: string;
     data: T;
