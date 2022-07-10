@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
 import { createEndpoint, postWithToken } from '../../../../helpers/fetchHelper';
 import { Response, Space, Tenant } from '../../../../types';
+import { AppBar } from '../../../../components/AppBar';
 
 interface SpaceProps {
     space: Space;
@@ -10,9 +11,15 @@ interface SpaceProps {
 }
 function Space({ space, tenants }: SpaceProps) {
     return (
-        <div className='p-5 space-y-5'>
-            <h2 className='text-3xl font-bold'>{space.name}</h2>
-            <TenantInformationSection initialTenants={tenants} space={space} />
+        <div className='bg-base-200 min-h-screen space-y-5'>
+            <AppBar />
+            <div className='p-5 space-y-5'>
+                <h2 className='text-3xl font-bold'>{space.name}</h2>
+                <TenantInformationSection
+                    initialTenants={tenants}
+                    space={space}
+                />
+            </div>
         </div>
     );
 }

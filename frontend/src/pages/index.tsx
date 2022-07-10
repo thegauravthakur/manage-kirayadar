@@ -6,20 +6,13 @@ import { useProperties } from '../hooks/useProperties';
 import { HiOutlineArrowSmRight } from 'react-icons/hi';
 import { PropertyCard } from '../components/PropertyCard';
 import Link from 'next/link';
+import { AppBar } from '../components/AppBar';
 
 const Home: NextPage = () => {
     const { properties } = useProperties();
     return (
-        <div className='bg-base-200 min-h-screen'>
-            <div className='bg-base-100 px-5 py-2 mb-5'>
-                <div className='flex-1'>
-                    <Link href='/'>
-                        <a className='btn btn-ghost normal-case text-xl text-primary'>
-                            Manage Kirayadar
-                        </a>
-                    </Link>
-                </div>
-            </div>
+        <div className='bg-base-200 min-h-screen space-y-5'>
+            <AppBar />
             <div className='p-5 space-y-5'>
                 <h1 className='text-2xl font-semibold'>
                     Manage your properties

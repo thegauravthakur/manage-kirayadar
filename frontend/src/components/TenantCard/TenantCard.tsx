@@ -5,7 +5,7 @@ interface TenantCardProps {
 }
 export function TenantCard({ tenant }: TenantCardProps) {
     return (
-        <div className='shadow border p-5 rounded-xl flex items-center justify-between'>
+        <div className='shadow border p-5 rounded-xl flex items-center justify-between bg-base-100'>
             <div>
                 <h3 className='text-lg font-semibold text-secondary'>
                     {tenant.name}
