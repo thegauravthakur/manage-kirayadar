@@ -2,9 +2,20 @@ import { TenantCard } from '../TenantCard';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AddNewTenantDialog } from '../AddNewTenantDialog';
 import { useState } from 'react';
+import { Space, Tenant } from '../../types';
+import { useTenants } from '../../hooks/react-query/useTenants';
 
-export function TenantInformationSection() {
+interface TenantInformationSectionProps {
+    space: Space;
+    initialTenants: Tenant[];
+}
+
+export function TenantInformationSection({
+    space,
+    initialTenants,
+}: TenantInformationSectionProps) {
     const [showModal, setShowModal] = useState(false);
+    const { tenants } = useTenants(space.id, initialTenants);
     return (
         <section className='space-y-5'>
             <div className='flex justify-between'>
@@ -20,16 +31,15 @@ export function TenantInformationSection() {
                 </button>
             </div>
             <div className='grid grid-cols-3 gap-5'>
-                <TenantCard />
-                <TenantCard />
-                <TenantCard />
-                <TenantCard />
-                <TenantCard />
+                {tenants?.map((tenant) => (
+                    <TenantCard key={tenant.id} tenant={tenant} />
+                ))}
             </div>
             <div>
                 <AddNewTenantDialog
                     setShowDialog={setShowModal}
                     showDialog={showModal}
+                    spaceId={space.id}
                 />
             </div>
         </section>

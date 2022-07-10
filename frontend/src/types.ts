@@ -24,6 +24,13 @@ export interface Space {
     propertyId: number;
 }
 
+export interface Tenant {
+    id: number;
+    name: string;
+    email: string;
+    userId?: number;
+}
+
 export interface Response<T> {
     errorMessage: string;
     data: T;

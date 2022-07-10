@@ -1,18 +1,18 @@
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
-import { getCurrentUser } from '../../helpers/userHelper';
+import { getCurrentUser } from '../../../helpers/userHelper';
 import {
     createEndpoint,
     fetchWithToken,
     postWithToken,
-} from '../../helpers/fetchHelper';
-import { Property, Response, Space } from '../../types';
+} from '../../../helpers/fetchHelper';
+import { Property, Response, Space } from '../../../types';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { CollapsableFloorSection } from '../../components/CollapsableFloorSection';
-import { AddNewSpaceDialog } from '../../components/AddNewSpaceDialog';
+import { CollapsableFloorSection } from '../../../components/CollapsableFloorSection';
+import { AddNewSpaceDialog } from '../../../components/AddNewSpaceDialog';
 import { useState } from 'react';
-import { groupBy } from '../../helpers/pageHelper';
-import { useSpaces } from '../../hooks/react-query/useSpaces';
+import { groupBy } from '../../../helpers/pageHelper';
+import { useSpaces } from '../../../hooks/react-query/useSpaces';
 
 interface DetailedPropertyProps {
     property: Property;
@@ -64,7 +64,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     res,
     query,
 }) => {
-    const { id: propertyId } = query;
+    const { propertyId } = query;
     const redirect = { redirect: { destination: '/login', permanent: false } };
     try {
         const accessToken = getCookie('accessToken', { req, res });

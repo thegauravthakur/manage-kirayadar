@@ -17,7 +17,9 @@ export function SpaceCard({ space }: SpaceCardProps) {
             </div>
             <button
                 className='btn btn-outline btn-primary btn-sm'
-                onClick={() => router.push(`/space/${space.id}`)}
+                onClick={() =>
+                    router.push(`${router.asPath}/space/${space.id}`)
+                }
             >
                 Manage
             </button>

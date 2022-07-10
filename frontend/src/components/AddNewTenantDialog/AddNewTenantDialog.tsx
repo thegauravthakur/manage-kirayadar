@@ -2,15 +2,17 @@ import { Dispatch, SetStateAction } from 'react';
 import clsx from 'clsx';
 import { AiOutlineClose } from 'react-icons/ai';
 import { FormLabel } from '../FormLabel';
-import { numberToWord } from '../../helpers/pageHelper';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
+import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
+import { useSession } from '../../hooks/useSession';
 
 interface AddNewTenantDialogProps {
     showDialog: boolean;
     setShowDialog: Dispatch<SetStateAction<boolean>>;
+    spaceId: number;
 }
 
 const formSchema = z.object({
@@ -20,9 +22,24 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
+async function addNewTenant(
+    formSchema: FormSchema,
+    token: string,
+    spaceId: number
+) {
+    const response = await postWithToken(createEndpoint('tenant/add'), token, {
+        ...formSchema,
+        spaceId,
+    });
+    const data = await response.json();
+    if (!response.ok) throw data;
+    return data;
+}
+
 export function AddNewTenantDialog({
     showDialog,
     setShowDialog,
+    spaceId,
 }: AddNewTenantDialogProps) {
     const {
         register,
@@ -32,9 +49,22 @@ export function AddNewTenantDialog({
     } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
     });
-    const mutation = useMutation(async () => {});
-    const onSubmit = handleSubmit(() => {
-        mutation.mutate();
+    const { session } = useSession();
+    const queryClient = useQueryClient();
+    const mutation = useMutation(
+        async (formData: FormSchema) => {
+            await addNewTenant(formData, session.token, spaceId);
+        },
+        {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(['tenants', spaceId]);
+                reset();
+                setShowDialog(false);
+            },
+        }
+    );
+    const onSubmit = handleSubmit((formData) => {
+        mutation.mutate(formData);
     });
     return (
         <div
