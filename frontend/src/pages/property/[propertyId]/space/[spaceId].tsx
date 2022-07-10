@@ -1,7 +1,6 @@
 import { TenantInformationSection } from '../../../../components/TenantInformationSection';
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
-import { getCurrentUser } from '../../../../helpers/userHelper';
 import { createEndpoint, postWithToken } from '../../../../helpers/fetchHelper';
 import { Response, Space, Tenant } from '../../../../types';
 
@@ -21,41 +20,51 @@ function Space({ space, tenants }: SpaceProps) {
 export const getServerSideProps: GetServerSideProps = async ({
     req,
     res,
-    query,
+    query: { spaceId, propertyId },
 }) => {
-    const { spaceId, propertyId } = query;
-    const redirect = { redirect: { destination: '/login', permanent: false } };
+    const redirect = { redirect: { destination: '/', permanent: false } };
     try {
-        const accessToken = getCookie('accessToken', { req, res });
+        const accessToken = getCookie('accessToken', { req, res }) as string;
         if (!accessToken) return redirect;
         if (accessToken) {
-            const result = await getCurrentUser(accessToken as string);
-            if (!result.data?.user) return redirect;
-            const spaceResponse = await postWithToken(
-                createEndpoint(`space/get/`),
-                accessToken as string,
-                { propertyId: Number(propertyId) }
+            const space = await getSpace(
+                accessToken,
+                Number(propertyId),
+                Number(spaceId)
             );
-            const { data } = (await spaceResponse.json()) as Response<{
-                spaces: Space[];
-            }>;
-            const validSpace = data.spaces.find(
-                (space) => space.id === Number(spaceId)
-            );
-            if (validSpace) {
-                const tenantsResponse = await postWithToken(
-                    createEndpoint('tenant/get'),
-                    accessToken as string,
-                    { spaceId: Number(spaceId) }
-                );
-                const { data } = await tenantsResponse.json();
-                return { props: { space: validSpace, tenants: data.tenants } };
-            } else return redirect;
+            if (space) {
+                const tenants = await getTenants(accessToken, Number(spaceId));
+                return { props: { space, tenants } };
+            } else return { notFound: true };
         }
-    } catch (error) {
-        return redirect;
-    }
+    } catch (error) {}
     return { notFound: true };
 };
+
+async function getSpace(
+    accessToken: string,
+    propertyId: number,
+    spaceId: number
+) {
+    const spaceResponse = await postWithToken(
+        createEndpoint(`space/get/`),
+        accessToken,
+        { propertyId }
+    );
+    const { data } = (await spaceResponse.json()) as Response<{
+        spaces: Space[];
+    }>;
+    return data.spaces.find((space) => space.id === spaceId);
+}
+
+async function getTenants(accessToken: string, spaceId: number) {
+    const tenantsResponse = await postWithToken(
+        createEndpoint('tenant/get'),
+        accessToken,
+        { spaceId }
+    );
+    const { data } = await tenantsResponse.json();
+    return data.tenants;
+}
 
 export default Space;
