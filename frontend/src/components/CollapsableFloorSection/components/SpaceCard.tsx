@@ -1,10 +1,12 @@
 import { Space } from '../../../types';
 import { numberToWord } from '../../../helpers/pageHelper';
+import { useRouter } from 'next/router';
 
 interface SpaceCardProps {
     space: Space;
 }
 export function SpaceCard({ space }: SpaceCardProps) {
+    const router = useRouter();
     return (
         <div className='shadow border p-5 rounded-xl flex items-center justify-between'>
             <div>
@@ -13,7 +15,10 @@ export function SpaceCard({ space }: SpaceCardProps) {
                 </h3>
                 <p>{numberToWord(space.floor)} floor</p>
             </div>
-            <button className='btn btn-outline btn-primary btn-sm'>
+            <button
+                className='btn btn-outline btn-primary btn-sm'
+                onClick={() => router.push(`/space/${space.id}`)}
+            >
                 Manage
             </button>
         </div>
