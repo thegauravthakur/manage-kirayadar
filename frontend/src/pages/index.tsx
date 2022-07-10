@@ -7,11 +7,13 @@ import { HiOutlineArrowSmRight } from 'react-icons/hi';
 import { PropertyCard } from '../components/PropertyCard';
 import Link from 'next/link';
 import { AppBar } from '../components/AppBar';
+import { CustomHead } from '../components/CustomHead';
 
 const Home: NextPage = () => {
     const { properties } = useProperties();
     return (
         <div className='bg-base-200 min-h-screen space-y-5'>
+            <CustomHead title='Manage Kirayadar' />
             <AppBar />
             <div className='p-5 space-y-5'>
                 <h1 className='text-2xl font-semibold'>

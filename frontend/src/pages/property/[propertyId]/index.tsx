@@ -14,6 +14,7 @@ import { groupBy } from '../../../helpers/pageHelper';
 import { useSpaces } from '../../../hooks/react-query/useSpaces';
 import Link from 'next/link';
 import { AppBar } from '../../../components/AppBar';
+import { CustomHead } from '../../../components/CustomHead';
 
 interface DetailedPropertyProps {
     property: Property;
@@ -29,6 +30,7 @@ export default function DetailedProperty({
     const spacesPerFloor = groupBy(spaces ?? [], (space) => space.floor);
     return (
         <div className='bg-base-200 min-h-screen space-y-5'>
+            <CustomHead title={`Manage ${property.name}`} />
             <AppBar />
             <div className='p-5 space-y-5'>
                 <div className='flex justify-between'>

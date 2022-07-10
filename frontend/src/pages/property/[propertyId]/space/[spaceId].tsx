@@ -4,6 +4,7 @@ import { getCookie } from 'cookies-next';
 import { createEndpoint, postWithToken } from '../../../../helpers/fetchHelper';
 import { Response, Space, Tenant } from '../../../../types';
 import { AppBar } from '../../../../components/AppBar';
+import { CustomHead } from '../../../../components/CustomHead';
 
 interface SpaceProps {
     space: Space;
@@ -13,6 +14,7 @@ function Space({ space, tenants }: SpaceProps) {
     return (
         <div className='bg-base-200 min-h-screen space-y-5'>
             <AppBar />
+            <CustomHead title={`Manage ${space.name}`} />
             <div className='p-5 space-y-5'>
                 <h2 className='text-3xl font-bold'>{space.name}</h2>
                 <TenantInformationSection
