@@ -4,28 +4,8 @@ import { getCurrentUser } from '../helpers/userHelper';
 import { AddNewPropertyCard } from '../components/AddNewPropertyCard';
 import { useProperties } from '../hooks/useProperties';
 import { HiOutlineArrowSmRight } from 'react-icons/hi';
-import Link from 'next/link';
+import { PropertyCard } from '../components/PropertyCard';
 
-interface PropertyCardProps {
-    name: string;
-    address: string;
-    id: number;
-}
-function PropertyCard({ name, address, id }: PropertyCardProps) {
-    return (
-        <div className='card w-full max-w-sm bg-base-100 shadow-xl'>
-            <div className='card-body'>
-                <h2 className='card-title'>{name}</h2>
-                <p className='text-neutral'>{address}</p>
-                <div className='card-actions justify-end'>
-                    <Link href={`/property/${id}`}>
-                        <a className='btn btn-primary'>manage</a>
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
-}
 const Home: NextPage = () => {
     const { properties } = useProperties();
     return (
@@ -57,7 +37,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const redirect = { redirect: { destination: '/login', permanent: false } };
     try {
         const accessToken = getCookie('accessToken', { req, res });
-        console.log(accessToken);
         if (!accessToken) return redirect;
         if (accessToken) {
             const result = await getCurrentUser(accessToken as string);

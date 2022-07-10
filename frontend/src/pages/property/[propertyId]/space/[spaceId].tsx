@@ -24,7 +24,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     query,
 }) => {
     const { spaceId, propertyId } = query;
-    console.log(spaceId, propertyId);
     const redirect = { redirect: { destination: '/login', permanent: false } };
     try {
         const accessToken = getCookie('accessToken', { req, res });
