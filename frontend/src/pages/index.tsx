@@ -5,27 +5,41 @@ import { AddNewPropertyCard } from '../components/AddNewPropertyCard';
 import { useProperties } from '../hooks/useProperties';
 import { HiOutlineArrowSmRight } from 'react-icons/hi';
 import { PropertyCard } from '../components/PropertyCard';
+import Link from 'next/link';
 
 const Home: NextPage = () => {
     const { properties } = useProperties();
     return (
-        <div className='p-5 space-y-5'>
-            <h1 className='text-2xl font-semibold'>Manage your properties</h1>
-            <div className='flex space-x-6'>
-                <AddNewPropertyCard />
-                {properties?.slice(0, 2).map(({ id, name, address }) => (
-                    <PropertyCard
-                        key={id}
-                        address={address}
-                        id={id}
-                        name={name}
-                    />
-                ))}
-                {properties && properties.length > 2 && (
-                    <button className='btn btn-circle btn-primary btn-sm btn-outline self-center'>
-                        <HiOutlineArrowSmRight fontSize={28} />
-                    </button>
-                )}
+        <div className='bg-base-200 min-h-screen'>
+            <div className='bg-base-100 px-5 py-2 mb-5'>
+                <div className='flex-1'>
+                    <Link href='/'>
+                        <a className='btn btn-ghost normal-case text-xl text-primary'>
+                            Manage Kirayadar
+                        </a>
+                    </Link>
+                </div>
+            </div>
+            <div className='p-5 space-y-5'>
+                <h1 className='text-2xl font-semibold'>
+                    Manage your properties
+                </h1>
+                <div className='flex space-x-6'>
+                    <AddNewPropertyCard />
+                    {properties?.slice(0, 2).map(({ id, name, address }) => (
+                        <PropertyCard
+                            key={id}
+                            address={address}
+                            id={id}
+                            name={name}
+                        />
+                    ))}
+                    {properties && properties.length > 2 && (
+                        <button className='btn btn-circle btn-primary btn-sm btn-outline self-center'>
+                            <HiOutlineArrowSmRight fontSize={28} />
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );

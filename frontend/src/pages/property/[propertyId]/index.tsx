@@ -12,6 +12,7 @@ import { AddNewSpaceDialog } from '../../../components/AddNewSpaceDialog';
 import { useState } from 'react';
 import { groupBy } from '../../../helpers/pageHelper';
 import { useSpaces } from '../../../hooks/react-query/useSpaces';
+import Link from 'next/link';
 
 interface DetailedPropertyProps {
     property: Property;
@@ -26,33 +27,44 @@ export default function DetailedProperty({
     const { spaces } = useSpaces(property.id, initialSpaces);
     const spacesPerFloor = groupBy(spaces ?? [], (space) => space.floor);
     return (
-        <div className='p-5 space-y-5'>
-            <div className='flex justify-between'>
-                <h1 className='text-2xl font-semibold'>{property.name}</h1>
-                <button
-                    className='btn btn-primary btn-wide gap-2'
-                    onClick={() => setShowDialog(true)}
-                >
-                    <AiOutlinePlus size={22} />
-                    Add New Space
-                </button>
+        <div className='bg-base-200 min-h-screen'>
+            <div className='bg-base-100 px-5 py-2 mb-5'>
+                <div className='flex-1'>
+                    <Link href='/'>
+                        <a className='btn btn-ghost normal-case text-xl text-primary'>
+                            Manage Kirayadar
+                        </a>
+                    </Link>
+                </div>
             </div>
-            {Object.keys(spacesPerFloor).map((value) => {
-                return (
-                    <CollapsableFloorSection
-                        key={value}
-                        floor={Number(value)}
-                        spaces={spacesPerFloor[value]}
+            <div className='p-5 space-y-5'>
+                <div className='flex justify-between'>
+                    <h1 className='text-2xl font-semibold'>{property.name}</h1>
+                    <button
+                        className='btn btn-primary btn-wide gap-2'
+                        onClick={() => setShowDialog(true)}
+                    >
+                        <AiOutlinePlus size={22} />
+                        Add New Space
+                    </button>
+                </div>
+                {Object.keys(spacesPerFloor).map((value) => {
+                    return (
+                        <CollapsableFloorSection
+                            key={value}
+                            floor={Number(value)}
+                            spaces={spacesPerFloor[value]}
+                        />
+                    );
+                })}
+                <div>
+                    <AddNewSpaceDialog
+                        propertyId={property.id}
+                        setShowDialog={setShowDialog}
+                        showDialog={showDialog}
+                        totalFloors={property.totalFloors}
                     />
-                );
-            })}
-            <div>
-                <AddNewSpaceDialog
-                    propertyId={property.id}
-                    setShowDialog={setShowDialog}
-                    showDialog={showDialog}
-                    totalFloors={property.totalFloors}
-                />
+                </div>
             </div>
         </div>
     );

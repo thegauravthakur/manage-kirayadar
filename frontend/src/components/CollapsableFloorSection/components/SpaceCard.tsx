@@ -8,7 +8,7 @@ interface SpaceCardProps {
 export function SpaceCard({ space }: SpaceCardProps) {
     const router = useRouter();
     return (
-        <div className='shadow border p-5 rounded-xl flex items-center justify-between'>
+        <div className='shadow border p-5 rounded-xl flex items-center justify-between bg-base-100'>
             <div>
                 <h3 className='text-lg font-semibold text-secondary'>
                     {space.name}

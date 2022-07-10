@@ -17,7 +17,7 @@ export function CollapsableFloorSection({
     return (
         <div className={clsx('space-y-5')}>
             <button
-                className='btn btn-outline btn-primary gap-3'
+                className='btn btn-outline btn-primary gap-3 bg-base-100'
                 onClick={() => setIsExpanded(!isExpanded)}
             >
                 {numberToWord(floor)} floor
