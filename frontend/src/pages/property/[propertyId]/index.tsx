@@ -61,33 +61,39 @@ export default function DetailedProperty({
 export const getServerSideProps: GetServerSideProps = async ({
     req,
     res,
-    query,
+    query: { propertyId },
 }) => {
-    const { propertyId } = query;
     try {
-        const accessToken = getCookie('accessToken', { req, res });
+        const accessToken = getCookie('accessToken', { req, res }) as string;
         if (accessToken) {
-            const response = await fetchWithToken(
-                createEndpoint('property/get'),
-                accessToken as string
-            );
-            const { data } = (await response.json()) as Response<{
-                properties: Property[];
-            }>;
-            const property = data.properties.find(
-                ({ id }) => Number(id) === Number(propertyId)
-            );
+            const property = await getProperty(accessToken, Number(propertyId));
             if (property) {
-                const allSpacesResponse = await postWithToken(
-                    createEndpoint('space/get'),
-                    accessToken as string,
-                    { propertyId: property.id }
-                );
-                const { data } = await allSpacesResponse.json();
-                return { props: { property, spaces: data?.spaces } };
+                const spaces = await getSpaces(accessToken, property.id);
+                return { props: { property, spaces } };
             }
             return { notFound: true };
         }
     } catch (error) {}
     return { notFound: true };
 };
+
+async function getProperty(accessToken: string, propertyId: number) {
+    const response = await fetchWithToken(
+        createEndpoint('property/get'),
+        accessToken
+    );
+    const { data } = (await response.json()) as Response<{
+        properties: Property[];
+    }>;
+    return data.properties.find(({ id }) => id === propertyId);
+}
+
+async function getSpaces(accessToken: string, propertyId: number) {
+    const allSpacesResponse = await postWithToken(
+        createEndpoint('space/get'),
+        accessToken as string,
+        { propertyId }
+    );
+    const { data } = await allSpacesResponse.json();
+    return data?.spaces;
+}
