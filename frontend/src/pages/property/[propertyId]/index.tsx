@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
-import { getCurrentUser } from '../../../helpers/userHelper';
 import {
     createEndpoint,
     fetchWithToken,
@@ -65,13 +64,9 @@ export const getServerSideProps: GetServerSideProps = async ({
     query,
 }) => {
     const { propertyId } = query;
-    const redirect = { redirect: { destination: '/login', permanent: false } };
     try {
         const accessToken = getCookie('accessToken', { req, res });
-        if (!accessToken) return redirect;
         if (accessToken) {
-            const result = await getCurrentUser(accessToken as string);
-            if (!result.data?.user) return redirect;
             const response = await fetchWithToken(
                 createEndpoint('property/get'),
                 accessToken as string
@@ -93,8 +88,6 @@ export const getServerSideProps: GetServerSideProps = async ({
             }
             return { notFound: true };
         }
-    } catch (error) {
-        return redirect;
-    }
+    } catch (error) {}
     return { notFound: true };
 };
