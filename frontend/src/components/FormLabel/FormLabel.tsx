@@ -19,11 +19,13 @@ export function FormLabel({
                 <span className='label-text'>{labelText}</span>
             </label>
             {children}
-            <label className='label'>
-                <span className='label-text-alt text-error'>
-                    {errorText ?? ''} &nbsp;
-                </span>
-            </label>
+            {!!errorText && (
+                <label className='label'>
+                    <span className='label-text-alt text-error'>
+                        {errorText}
+                    </span>
+                </label>
+            )}
         </div>
     );
 }

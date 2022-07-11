@@ -10,6 +10,7 @@ import { Session, useSession } from '../../hooks/useSession';
 import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../types';
 import ReactFocusLock from 'focus-trap-react';
+import { FormLabel } from '../FormLabel';
 
 interface AddNewPropertyDialogProps {
     showDialog: boolean;
@@ -94,74 +95,56 @@ export function AddNewPropertyDialog({
                                 <AiOutlineClose fontSize={18} />
                             </button>
                         </div>
-                        <label className='label' htmlFor='name'>
-                            <span className='label-text'>
-                                What is name of this property?
-                            </span>
-                        </label>
-                        <input
-                            className={clsx(
-                                'input input-bordered input-primary input-md w-full',
-                                { 'input-error': !!errors.name }
-                            )}
+                        <FormLabel
+                            errorText={errors.name?.message}
                             id='name'
-                            placeholder='Enter a name...'
-                            type='text'
-                            {...register('name')}
-                        />
-                        {errors.name && (
-                            <label className='label'>
-                                <span className='label-text-alt text-error'>
-                                    {errors.name.message}
-                                </span>
-                            </label>
-                        )}
-                        <label className='label' htmlFor='totalFloors'>
-                            <span className='label-text'>
-                                How many floors are there?
-                            </span>
-                        </label>
-                        <input
-                            className={clsx(
-                                'input input-bordered input-primary input-md w-full',
-                                { 'input-error': !!errors.totalFloors }
-                            )}
+                            labelText='What is name of this property?'
+                        >
+                            <input
+                                className={clsx(
+                                    'input input-bordered input-primary input-md w-full',
+                                    { 'input-error': !!errors.name }
+                                )}
+                                id='name'
+                                placeholder='Enter a name...'
+                                type='text'
+                                {...register('name')}
+                            />
+                        </FormLabel>
+                        <FormLabel
+                            errorText={errors.totalFloors?.message}
                             id='totalFloors'
-                            placeholder='total number of floors...'
-                            type='text'
-                            {...register('totalFloors', {
-                                valueAsNumber: true,
-                            })}
-                        />
-                        {errors.totalFloors && (
-                            <label className='label'>
-                                <span className='label-text-alt text-error'>
-                                    {errors.totalFloors.message}
-                                </span>
-                            </label>
-                        )}
-                        <label className='label' htmlFor='address'>
-                            <span className='label-text'>
-                                Where is this property located?
-                            </span>
-                        </label>
-                        <input
-                            className={clsx(
-                                'input input-bordered input-primary input-md w-full',
-                                { 'input-error': !!errors.address }
-                            )}
+                            labelText='How many floors are there?'
+                        >
+                            <input
+                                className={clsx(
+                                    'input input-bordered input-primary input-md w-full',
+                                    { 'input-error': !!errors.totalFloors }
+                                )}
+                                id='totalFloors'
+                                placeholder='total number of floors...'
+                                type='text'
+                                {...register('totalFloors', {
+                                    valueAsNumber: true,
+                                })}
+                            />
+                        </FormLabel>
+                        <FormLabel
+                            errorText={errors.address?.message}
                             id='address'
-                            placeholder='Enter city name...'
-                            type='text'
-                            {...register('address')}
-                        />
-                        {errors.address && (
-                            <label className='label'>
-                                <span className='label-text-alt text-error'>
-                                    {errors.address.message}
-                                </span>
-                            </label>
-                        )}
+                            labelText='Where is this property located?'
+                        >
+                            <input
+                                className={clsx(
+                                    'input input-bordered input-primary input-md w-full',
+                                    { 'input-error': !!errors.address }
+                                )}
+                                id='address'
+                                placeholder='Enter city name...'
+                                type='text'
+                                {...register('address')}
+                            />
+                        </FormLabel>
                     </div>
                     <button
                         className={clsx('btn btn-primary btn-block', {

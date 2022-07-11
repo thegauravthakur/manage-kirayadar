@@ -73,58 +73,60 @@ export function AddNewSpaceDialog({
                 'modal-open': showDialog,
             })}
         >
-            <form className='modal-box' onSubmit={onSubmit}>
-                <div className='flex justify-between mb-5'>
-                    <h2 className='font-bold text-lg'>Add New Space</h2>
-                    <button
-                        className='btn btn-circle btn-sm btn-outline'
-                        type='reset'
-                        onClick={() => {
-                            reset();
-                            setShowDialog(false);
-                        }}
-                    >
-                        <AiOutlineClose fontSize={18} />
-                    </button>
-                </div>
-                <FormLabel
-                    errorText={errors.name?.message}
-                    id='name'
-                    labelText='What is the name for this space?'
-                >
-                    <input
-                        className={clsx(
-                            'input input-bordered input-primary input-md w-full',
-                            { 'input-error': !!errors.name }
-                        )}
+            <form className='modal-box space-y-5' onSubmit={onSubmit}>
+                <div>
+                    <div className='flex justify-between mb-5'>
+                        <h2 className='font-bold text-lg'>Add New Space</h2>
+                        <button
+                            className='btn btn-circle btn-sm btn-outline'
+                            type='reset'
+                            onClick={() => {
+                                reset();
+                                setShowDialog(false);
+                            }}
+                        >
+                            <AiOutlineClose fontSize={18} />
+                        </button>
+                    </div>
+                    <FormLabel
+                        errorText={errors.name?.message}
                         id='name'
-                        placeholder='Enter a name...'
-                        type='text'
-                        {...register('name')}
-                    />
-                </FormLabel>
-                <FormLabel
-                    errorText={errors.floor?.message}
-                    id='floor'
-                    labelText='What floor is this space on?'
-                >
-                    <select
-                        className={clsx(
-                            'select select-primary font-normal w-full',
-                            {
-                                'select-error': !!errors.floor,
-                            }
-                        )}
-                        defaultValue={1}
-                        {...register('floor', { valueAsNumber: true })}
+                        labelText='What is the name for this space?'
                     >
-                        {emptyArray.map((value) => (
-                            <option key={value} value={value + 1}>
-                                {numberToWord(value + 1)} floor
-                            </option>
-                        ))}
-                    </select>
-                </FormLabel>
+                        <input
+                            className={clsx(
+                                'input input-bordered input-primary input-md w-full',
+                                { 'input-error': !!errors.name }
+                            )}
+                            id='name'
+                            placeholder='Enter a name...'
+                            type='text'
+                            {...register('name')}
+                        />
+                    </FormLabel>
+                    <FormLabel
+                        errorText={errors.floor?.message}
+                        id='floor'
+                        labelText='What floor is this space on?'
+                    >
+                        <select
+                            className={clsx(
+                                'select select-primary font-normal w-full',
+                                {
+                                    'select-error': !!errors.floor,
+                                }
+                            )}
+                            defaultValue={1}
+                            {...register('floor', { valueAsNumber: true })}
+                        >
+                            {emptyArray.map((value) => (
+                                <option key={value} value={value + 1}>
+                                    {numberToWord(value + 1)} floor
+                                </option>
+                            ))}
+                        </select>
+                    </FormLabel>
+                </div>
                 <button
                     className={clsx('btn btn-primary btn-block', {
                         loading: mutation.isLoading,
