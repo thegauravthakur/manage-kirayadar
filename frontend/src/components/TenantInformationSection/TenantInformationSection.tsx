@@ -18,7 +18,7 @@ export function TenantInformationSection({
     const { tenants } = useTenants(space.id, initialTenants);
     return (
         <section className='space-y-5'>
-            <div className='flex justify-between'>
+            <div className='flex justify-between items-center'>
                 <h2 className='text-2xl font-semibold'>
                     Tenants in this space:
                 </h2>
