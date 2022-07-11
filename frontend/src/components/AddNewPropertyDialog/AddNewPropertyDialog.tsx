@@ -70,7 +70,7 @@ export function AddNewPropertyDialog({
     );
     const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
     return (
-        <ReactFocusLock>
+        <ReactFocusLock active={showDialog}>
             <div
                 className={clsx('modal', {
                     'modal-open': showDialog,
