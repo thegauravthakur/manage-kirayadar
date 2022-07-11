@@ -9,7 +9,7 @@ import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
 import { Session, useSession } from '../../hooks/useSession';
 import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../types';
-import ReactFocusLock from 'react-focus-lock';
+import ReactFocusLock from 'focus-trap-react';
 
 interface AddNewPropertyDialogProps {
     showDialog: boolean;

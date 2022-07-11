@@ -1,7 +1,7 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import ReactFocusLock from 'react-focus-lock';
+import FocusLock from 'focus-trap-react';
 import clsx from 'clsx';
 import SignupStepOneForm from './components/SignupStepOneForm';
 import { SignupStepTwoForm } from './components/SignupStepTwoForm';
@@ -33,7 +33,7 @@ export function SignupFormDialog({
     if (!showDialog) return null;
 
     const content = (
-        <ReactFocusLock>
+        <FocusLock>
             <div
                 className={clsx(
                     'border absolute shadow-lg rounded-lg',
@@ -81,7 +81,7 @@ export function SignupFormDialog({
                     />
                 )}
             </div>
-        </ReactFocusLock>
+        </FocusLock>
     );
 
     return document.body ? createPortal(content, document.body) : null;

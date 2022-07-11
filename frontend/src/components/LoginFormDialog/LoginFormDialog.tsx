@@ -1,7 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import ReactFocusLock from 'react-focus-lock';
+import ReactFocusLock from 'focus-trap-react';
 import clsx from 'clsx';
 import { LoginForm } from './components/LoginForm';
 
@@ -16,7 +15,7 @@ export function LoginFormDialog({
     const formRef = useRef<HTMLFormElement>(null);
 
     return (
-        <ReactFocusLock>
+        <ReactFocusLock active={showDialog}>
             <div className={clsx('modal', { 'modal-open': showDialog })}>
                 <div className='modal-box'>
                     <div className={clsx('flex items-center px-4 py-2.5')}>

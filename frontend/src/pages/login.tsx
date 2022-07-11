@@ -39,10 +39,12 @@ export default function Login() {
                     <AiOutlineMail size={24} />
                     Continue with Email
                 </button>
-                <LoginFormDialog
-                    setShowDialog={setShowDialog}
-                    showDialog={showDialog}
-                />
+                <div>
+                    <LoginFormDialog
+                        setShowDialog={setShowDialog}
+                        showDialog={showDialog}
+                    />
+                </div>
             </div>
         </div>
     );

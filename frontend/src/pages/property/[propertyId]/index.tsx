@@ -33,7 +33,7 @@ export default function DetailedProperty({
             <CustomHead title={`Manage ${property.name}`} />
             <AppBar />
             <div className='p-5 space-y-5'>
-                <div className='flex justify-between'>
+                <div className='flex justify-between items-center'>
                     <h1 className='text-2xl font-semibold'>{property.name}</h1>
                     <button
                         className='btn btn-primary btn-wide gap-2'
