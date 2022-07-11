@@ -47,6 +47,7 @@ export function AddNewPropertyDialog({
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
@@ -76,80 +77,92 @@ export function AddNewPropertyDialog({
                     'modal-open': showDialog,
                 })}
             >
-                <form className='modal-box' onSubmit={onSubmit}>
-                    <div className='flex justify-between mb-5'>
-                        <h2 className='font-bold text-lg'>Add New Property</h2>
-                        <button
-                            className='btn btn-circle btn-sm btn-outline'
-                            type='button'
-                            onClick={() => {
-                                setShowDialog(false);
-                            }}
-                        >
-                            <AiOutlineClose fontSize={18} />
-                        </button>
+                <form className='modal-box space-y-5' onSubmit={onSubmit}>
+                    <div className=''>
+                        <div className='flex justify-between mb-5'>
+                            <h2 className='font-bold text-lg'>
+                                Add New Property
+                            </h2>
+                            <button
+                                className='btn btn-circle btn-sm btn-outline'
+                                type='button'
+                                onClick={() => {
+                                    reset();
+                                    setShowDialog(false);
+                                }}
+                            >
+                                <AiOutlineClose fontSize={18} />
+                            </button>
+                        </div>
+                        <label className='label' htmlFor='name'>
+                            <span className='label-text'>
+                                What is name of this property?
+                            </span>
+                        </label>
+                        <input
+                            className={clsx(
+                                'input input-bordered input-primary input-md w-full',
+                                { 'input-error': !!errors.name }
+                            )}
+                            id='name'
+                            placeholder='Enter a name...'
+                            type='text'
+                            {...register('name')}
+                        />
+                        {errors.name && (
+                            <label className='label'>
+                                <span className='label-text-alt text-error'>
+                                    {errors.name.message}
+                                </span>
+                            </label>
+                        )}
+                        <label className='label' htmlFor='totalFloors'>
+                            <span className='label-text'>
+                                How many floors are there?
+                            </span>
+                        </label>
+                        <input
+                            className={clsx(
+                                'input input-bordered input-primary input-md w-full',
+                                { 'input-error': !!errors.totalFloors }
+                            )}
+                            id='totalFloors'
+                            placeholder='total number of floors...'
+                            type='text'
+                            {...register('totalFloors', {
+                                valueAsNumber: true,
+                            })}
+                        />
+                        {errors.totalFloors && (
+                            <label className='label'>
+                                <span className='label-text-alt text-error'>
+                                    {errors.totalFloors.message}
+                                </span>
+                            </label>
+                        )}
+                        <label className='label' htmlFor='address'>
+                            <span className='label-text'>
+                                Where is this property located?
+                            </span>
+                        </label>
+                        <input
+                            className={clsx(
+                                'input input-bordered input-primary input-md w-full',
+                                { 'input-error': !!errors.address }
+                            )}
+                            id='address'
+                            placeholder='Enter city name...'
+                            type='text'
+                            {...register('address')}
+                        />
+                        {errors.address && (
+                            <label className='label'>
+                                <span className='label-text-alt text-error'>
+                                    {errors.address.message}
+                                </span>
+                            </label>
+                        )}
                     </div>
-                    <label className='label' htmlFor='name'>
-                        <span className='label-text'>
-                            What is name of this property?
-                        </span>
-                    </label>
-                    <input
-                        className={clsx(
-                            'input input-bordered input-primary input-md w-full',
-                            { 'input-error': !!errors.name }
-                        )}
-                        id='name'
-                        placeholder='Enter a name...'
-                        type='text'
-                        {...register('name')}
-                    />
-                    <label className='label'>
-                        <span className='label-text-alt text-error'>
-                            {errors.name && errors.name.message} &nbsp;
-                        </span>
-                    </label>
-                    <label className='label' htmlFor='totalFloors'>
-                        <span className='label-text'>
-                            How many floors are there?
-                        </span>
-                    </label>
-                    <input
-                        className={clsx(
-                            'input input-bordered input-primary input-md w-full',
-                            { 'input-error': !!errors.totalFloors }
-                        )}
-                        id='totalFloors'
-                        placeholder='total number of floors...'
-                        type='text'
-                        {...register('totalFloors', { valueAsNumber: true })}
-                    />
-                    <label className='label'>
-                        <span className='label-text-alt text-error'>
-                            {errors.totalFloors && errors.totalFloors.message}{' '}
-                            &nbsp;
-                        </span>
-                    </label>
-                    <label className='label' htmlFor='address'>
-                        <span className='label-text'>
-                            Where is this property located?
-                        </span>
-                    </label>
-                    <input
-                        className={clsx(
-                            'input input-bordered input-primary input-md w-full',
-                            { 'input-error': !!errors.name }
-                        )}
-                        id='address'
-                        placeholder='Enter city name...'
-                        type='text'
-                        {...register('address')}
-                    />
-                    <label className='label'>
-                        <span className='label-text-alt text-error'>
-                            {errors.address && errors.address.message} &nbsp;
-                        </span>
-                    </label>
                     <button
                         className={clsx('btn btn-primary btn-block', {
                             loading: mutation.isLoading,
