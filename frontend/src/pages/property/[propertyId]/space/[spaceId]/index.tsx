@@ -1,10 +1,13 @@
-import { TenantInformationSection } from '../../../../components/TenantInformationSection';
+import { TenantInformationSection } from '../../../../../components/TenantInformationSection';
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
-import { createEndpoint, postWithToken } from '../../../../helpers/fetchHelper';
-import { Response, Space, Tenant } from '../../../../types';
-import { AppBar } from '../../../../components/AppBar';
-import { CustomHead } from '../../../../components/CustomHead';
+import {
+    createEndpoint,
+    postWithToken,
+} from '../../../../../helpers/fetchHelper';
+import { Response, Space, Tenant } from '../../../../../types';
+import { AppBar } from '../../../../../components/AppBar';
+import { CustomHead } from '../../../../../components/CustomHead';
 
 interface SpaceProps {
     space: Space;
