@@ -3,7 +3,6 @@ import { prismaClient } from '../../utils/server';
 import { z } from 'zod';
 import { getUserFromToken } from '../../middleware/protected';
 import { User } from '../../types';
-import propertyRoute from '../../routes/property.route';
 import { sendError } from '../../utils/shared';
 
 const propertySchema = z.object({
@@ -16,7 +15,7 @@ type PropertySchema = z.infer<typeof propertySchema>;
 
 export async function addNewProperty(req: Request, res: Response) {
     try {
-        const user = (await getUserFromToken(req)) as User;
+        const user = await getUserFromToken(req)!;
         propertySchema.parse(req.body);
         const { address, name, totalFloors } = req.body as PropertySchema;
         const property = await prismaClient.property.create({

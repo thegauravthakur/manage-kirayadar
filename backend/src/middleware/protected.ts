@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 import { verifyToken } from '../utils/jwt';
+import { User } from '../types';
 
 export function getUserFromToken(req: Request) {
     const authHeader = req.headers['authorization'];
@@ -10,7 +11,7 @@ export function getUserFromToken(req: Request) {
         z.string().parse(access_token);
         const user = verifyToken(access_token);
         if (!user) return null;
-        return user;
+        return user as User;
     } catch (error) {
         return null;
     }

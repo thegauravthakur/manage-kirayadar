@@ -1,5 +1,5 @@
 import { addNewProperty } from '../controller/property/addNewProperty';
-import { getAllProperties } from '../controller/property/getAllProperties.controller';
+import { getAllProperties } from '../controller/property/getAllProperties';
 
 const express = require('express');
 const router = express.Router();
