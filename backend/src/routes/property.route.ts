@@ -1,4 +1,4 @@
-import { addNewProperty } from '../controller/property/newProperty.controller';
+import { addNewProperty } from '../controller/property/addNewProperty';
 import { getAllProperties } from '../controller/property/getAllProperties.controller';
 
 const express = require('express');

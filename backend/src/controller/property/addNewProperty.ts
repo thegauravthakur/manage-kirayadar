@@ -3,6 +3,8 @@ import { prismaClient } from '../../utils/server';
 import { z } from 'zod';
 import { getUserFromToken } from '../../middleware/protected';
 import { User } from '../../types';
+import propertyRoute from '../../routes/property.route';
+import { sendError } from '../../utils/shared';
 
 const propertySchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -10,27 +12,19 @@ const propertySchema = z.object({
     address: z.string().min(1, 'Address is required'),
 });
 
+type PropertySchema = z.infer<typeof propertySchema>;
+
 export async function addNewProperty(req: Request, res: Response) {
     try {
         const user = (await getUserFromToken(req)) as User;
         propertySchema.parse(req.body);
-        const { address, name, totalFloors } = req.body as z.infer<
-            typeof propertySchema
-        >;
+        const { address, name, totalFloors } = req.body as PropertySchema;
         const property = await prismaClient.property.create({
             data: { address, name, totalFloors, ownerId: user.id },
         });
         return res.json({ errorMessage: null, data: { property } });
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            res.status(400).json({
-                errorMessage: error.issues[0].message,
-                data: null,
-            });
-        } else
-            res.status(500).json({
-                errorMessage: 'Error occurred while creating a new property',
-                data: null,
-            });
+        const message = 'An error occurred while creating a new property';
+        sendError(res, error, message);
     }
 }
