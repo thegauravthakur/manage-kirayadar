@@ -31,7 +31,10 @@ export async function addNewSpace(req: Request, res: Response) {
     }
 }
 
-async function isRequestingCorrectProperty(req: Request, propertyId: number) {
+export async function isRequestingCorrectProperty(
+    req: Request,
+    propertyId: number
+) {
     const user = await getUserFromToken(req)!;
     const property = await prismaClient.property.findUnique({
         where: { id: propertyId },
