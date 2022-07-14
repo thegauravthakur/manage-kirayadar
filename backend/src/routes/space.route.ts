@@ -1,4 +1,4 @@
-import { addNewSpace } from '../controller/space/newSpace.controller';
+import { addNewSpace } from '../controller/space/addNewSpace';
 import { getAllSpaces } from '../controller/space/getAllSpaces.controller';
 
 const express = require('express');
