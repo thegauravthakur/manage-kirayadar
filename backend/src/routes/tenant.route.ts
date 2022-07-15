@@ -1,5 +1,5 @@
 import { addNewTenant } from '../controller/tenant/addNewTenant';
-import { getAllTenants } from '../controller/tenant/getAllTenants.controller';
+import { getAllTenants } from '../controller/tenant/getAllTenants';
 
 const express = require('express');
 const router = express.Router();
