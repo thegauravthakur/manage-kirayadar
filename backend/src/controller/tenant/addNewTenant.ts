@@ -15,7 +15,7 @@ export async function addNewTenant(request: Request, response: Response) {
     try {
         bodySchema.parse(request.body);
         const { name, email, spaceId } = request.body as unknown as BodySchema;
-        const hasAccess = checkIfAccessOnSpace(request, Number(spaceId));
+        const hasAccess = await checkIfAccessOnSpace(request, spaceId);
         if (!hasAccess) return response.status(401).json('unauthorized!');
         const tenant = await prismaClient.tenant.create({
             data: { name, email, spaceId },
@@ -27,7 +27,7 @@ export async function addNewTenant(request: Request, response: Response) {
     }
 }
 
-async function checkIfAccessOnSpace(req: Request, spaceId: number) {
+export async function checkIfAccessOnSpace(req: Request, spaceId: number) {
     const user = getUserFromToken(req);
     const space = await prismaClient.space.findUnique({
         where: { id: spaceId },
