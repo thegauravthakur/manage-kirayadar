@@ -1,4 +1,4 @@
-import { addNewTenant } from '../controller/tenant/addNewTenant.controller';
+import { addNewTenant } from '../controller/tenant/addNewTenant';
 import { getAllTenants } from '../controller/tenant/getAllTenants.controller';
 
 const express = require('express');

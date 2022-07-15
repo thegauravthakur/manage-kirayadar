@@ -4,7 +4,6 @@ import { getAllSpaces } from '../controller/space/getAllSpaces';
 const express = require('express');
 const router = express.Router();
 
-// todo: add a auth middleware
 router.post('/add', addNewSpace);
 router.post('/get', getAllSpaces);
 
