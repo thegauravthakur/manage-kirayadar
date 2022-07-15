@@ -7,29 +7,76 @@ import { getCookie } from 'cookies-next';
 import { Tenant } from '../../../../../../types';
 import { AppBar } from '../../../../../../components/AppBar';
 import Image from 'next/image';
+import { AiOutlinePhone, AiOutlineMail, AiOutlineHome } from 'react-icons/ai';
+import { BsGlobe } from 'react-icons/bs';
 
 interface TenantViewProp {
     tenant: Tenant;
 }
 function TenantView({ tenant }: TenantViewProp) {
     return (
-        <div className='bg-base-200 min-h-screen'>
+        <div className='bg-base-200 min-h-screen flex flex-col'>
             <AppBar />
-            <div className='p-5 my-10 flex space-x-10 max-w-7xl mx-auto'>
-                <Image
-                    alt=''
-                    className='rounded-full'
-                    height={200}
-                    src='https://placeimg.com/200/200/people'
-                    width={200}
-                />
-                <div className='flex flex-col space-y-2 items-start justify-between'>
-                    <div>
-                        <h2 className='font-bold text-3xl'>{tenant.name}</h2>
-                        <p>{tenant.email}</p>
+            <div className='grid grid-cols-[400px_1fr] flex-1 p-5'>
+                <div className='space-y-5'>
+                    <div className='flex flex-col items-center space-y-5 shadow-md p-8 rounded-xl border bg-base-100'>
+                        <Image
+                            alt=''
+                            className='rounded-full'
+                            height={150}
+                            src='https://placeimg.com/150/150/people'
+                            width={150}
+                        />
+                        <div className='flex flex-col items-center'>
+                            <h2 className='text-2xl font-semibold text-primary'>
+                                {tenant.name}
+                            </h2>
+                            <p className='text-gray-500'>Some Placeholder</p>
+                            <p className='text-gray-500'>
+                                Some other long placeholder
+                            </p>
+                        </div>
+                        <div className='flex space-x-4'>
+                            <button className='btn btn-outline btn-wide max-w-[150px]'>
+                                Some
+                            </button>
+                            <button className='btn btn-primary btn-wide max-w-[150px]'>
+                                Text
+                            </button>
+                        </div>
                     </div>
-                    <button className='btn btn-outline'>Contact</button>
+                    <div className='flex flex-col shadow-md rounded-xl border bg-base-100'>
+                        <div className='flex items-center justify-between py-5 px-8 border-b'>
+                            <div className='flex items-center space-x-2'>
+                                <AiOutlinePhone size={25} />
+                                <p>Phone Number</p>
+                            </div>
+                            <p>945984****</p>
+                        </div>
+                        <div className='flex items-center justify-between py-5 px-8 border-b'>
+                            <div className='flex items-center space-x-2'>
+                                <AiOutlineMail size={25} />
+                                <p>E-Mail</p>
+                            </div>
+                            <p>{tenant.email}</p>
+                        </div>
+                        <div className='flex items-center justify-between py-5 px-8 border-b'>
+                            <div className='flex items-center space-x-2'>
+                                <AiOutlineHome size={25} />
+                                <p>Address</p>
+                            </div>
+                            <p>Kullu, Himachal Pradesh</p>
+                        </div>
+                        <div className='flex items-center justify-between py-5 px-8 border-b'>
+                            <div className='flex items-center space-x-2'>
+                                <BsGlobe size={25} />
+                                <p>Website</p>
+                            </div>
+                            <p>https://gauravthakur.in</p>
+                        </div>
+                    </div>
                 </div>
+                <div>right</div>
             </div>
         </div>
     );

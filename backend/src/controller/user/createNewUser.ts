@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 import { prismaClient } from '../../utils/server';
 import { generateHash } from '../../utils/bcrypt';
+import { sendError } from '../../utils/shared';
 
 const UserData = z.object({
     name: z
@@ -16,12 +17,12 @@ const UserData = z.object({
     otp: z.string().length(6),
 });
 
+type UserSchema = z.infer<typeof UserData>;
+
 export async function createUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
-        const { name, password, email, otp } = req.body as z.infer<
-            typeof UserData
-        >;
+        const { name, password, email, otp } = req.body as UserSchema;
         const doesUserExists = await prismaClient.user.findUnique({
             where: { email },
         });
@@ -43,15 +44,7 @@ export async function createUser(req: Request, res: Response) {
         });
         return res.json({ errorMessage: null, data: { user } });
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            res.status(400).json({
-                errorMessage: error.issues[0].message,
-                data: null,
-            });
-        } else
-            res.status(500).json({
-                errorMessage: 'Error occurred while creating a new account',
-                data: null,
-            });
+        const message = 'Error occurred while creating a new account';
+        sendError(res, error, message);
     }
 }

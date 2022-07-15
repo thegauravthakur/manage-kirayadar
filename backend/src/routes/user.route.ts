@@ -1,4 +1,4 @@
-import { createUser } from '../controller/user/create.controller';
+import { createUser } from '../controller/user/createNewUser';
 import { loginUser } from '../controller/user/login.controller';
 import { currentUser } from '../controller/user/current.controller';
 
