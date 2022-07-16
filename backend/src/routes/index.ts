@@ -4,6 +4,7 @@ import propertyRoute from './property.route';
 import { auth } from '../middleware/protected';
 import tenantRoute from './tenant.route';
 import spaceRoute from './space.route';
+import documentsRoute from './documents.route';
 const express = require('express');
 const router = express.Router();
 
@@ -12,5 +13,7 @@ router.use('/otp', otpRoute);
 router.use('/property', auth, propertyRoute);
 router.use('/space', auth, spaceRoute);
 router.use('/tenant', auth, tenantRoute);
+// todo: add auth middleware here
+router.use('/documents', documentsRoute);
 
 export default router;

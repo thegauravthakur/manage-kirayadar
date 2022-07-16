@@ -12,11 +12,6 @@ app.use(CookieParser());
 // todo: update the frontend uri, once ready
 app.use(Cors({ origin: 'http://localhost:3000' }));
 
-app.use((req, res, next) => {
-    console.log(`Request: ${req.url}`);
-    next();
-});
-
 const httpsServer = createHttpsServer(app);
 const httpServer = createHttpServer(app);
 

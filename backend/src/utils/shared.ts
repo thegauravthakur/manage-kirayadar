@@ -9,3 +9,7 @@ export function sendError(res: Response, error: unknown, errorMessage: string) {
         });
     } else res.status(500).json({ errorMessage, data: null });
 }
+
+type ENV = 'development' | 'production';
+export const env: 'development' | 'production' =
+    (process.env.NODE_ENV as ENV) || 'development';
