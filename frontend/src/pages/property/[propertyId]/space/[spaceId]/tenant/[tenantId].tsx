@@ -6,11 +6,9 @@ import {
 import { getCookie } from 'cookies-next';
 import { Tenant } from '../../../../../../types';
 import { AppBar } from '../../../../../../components/AppBar';
-import Image from 'next/image';
-import { AiOutlinePhone, AiOutlineMail, AiOutlineHome } from 'react-icons/ai';
-import { BsGlobe } from 'react-icons/bs';
 import { ProfileSection } from '../../../../../../components/ProfileSection';
-import { QuickInformation } from '../../../../../../components/QuickInformation/QuickInformation';
+import { QuickInformation } from '../../../../../../components/QuickInformation';
+import { DocumentsSection } from '../../../../../../components/DocumentsSection';
 
 interface TenantViewProp {
     tenant: Tenant;
@@ -24,8 +22,13 @@ function TenantView({ tenant }: TenantViewProp) {
                     <ProfileSection name={tenant.name} />
                     <QuickInformation email={tenant.email} />
                 </div>
-                <div className='flex border items-center justify-center bg-base-100 shadow-md rounded-xl'>
-                    <p className='text-center'>coming soon...</p>
+                <div className='flex'>
+                    <div className='grid grid-cols-2 w-full'>
+                        <DocumentsSection />
+                        <div className='flex items-center justify-center'>
+                            <p>coming soon</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
