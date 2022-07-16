@@ -17,19 +17,12 @@ function TenantView({ tenant }: TenantViewProp) {
     return (
         <div className='bg-base-200 min-h-screen flex flex-col'>
             <AppBar />
-            <div className='grid grid-cols-[400px_1fr] flex-1 p-5 gap-x-5'>
-                <div className='space-y-5'>
+            <div className='p-5 space-y-5'>
+                <div className='flex space-x-5'>
                     <ProfileSection name={tenant.name} />
-                    <QuickInformation email={tenant.email} />
+                    <DocumentsSection />
                 </div>
-                <div className='flex'>
-                    <div className='grid grid-cols-2 w-full'>
-                        <DocumentsSection />
-                        <div className='flex items-center justify-center'>
-                            <p>coming soon</p>
-                        </div>
-                    </div>
-                </div>
+                <QuickInformation email={tenant.email} />
             </div>
         </div>
     );

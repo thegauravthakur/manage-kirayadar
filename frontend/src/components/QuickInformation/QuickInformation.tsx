@@ -8,7 +8,7 @@ interface QuickInformationProps {
 }
 export function QuickInformation({ email }: QuickInformationProps) {
     return (
-        <div className='flex flex-col shadow-md rounded-xl border bg-base-100'>
+        <div className='flex flex-col shadow-md rounded-xl border bg-base-100 max-w-sm'>
             <QuickInformationItem
                 Icon={AiOutlinePhone}
                 tileType='Phone Number'

@@ -2,7 +2,7 @@ import { DocumentListItem } from './components/DocumentListItem';
 
 export function DocumentsSection() {
     return (
-        <div className='bg-base-100 h-max p-5 space-y-2 rounded-xl shadow-md'>
+        <div className='bg-base-100 p-5 space-y-2 rounded-xl shadow-md w-full max-w-md'>
             <h2 className='text-xl text-primary font-semibold'>Documents</h2>
             <ul>
                 <DocumentListItem name='Adhaar Card' />
