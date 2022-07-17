@@ -13,3 +13,8 @@ export function sendError(res: Response, error: unknown, errorMessage: string) {
 type ENV = 'development' | 'production';
 export const env: 'development' | 'production' =
     (process.env.NODE_ENV as ENV) || 'development';
+
+export function getFileExtension(name: string) {
+    let last_dot = name.lastIndexOf('.');
+    return name.slice(last_dot + 1);
+}

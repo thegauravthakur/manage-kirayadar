@@ -7,9 +7,7 @@ const Bucket = env === 'development' ? 'manage-kirayadar-dev' : '';
 export async function uploadFileToS3(Body: Body, Key: string) {
     return new Promise((resolve, reject) => {
         const s3 = new S3();
-        // todo: update production bucket here
         s3.upload({ Key, Body, Bucket }, function (err, data) {
-            console.log(err);
             if (err) reject(err);
             resolve(data);
         });

@@ -27,7 +27,7 @@ export function DocumentListItem({
     const { session } = useSession();
     const { show } = useSnackbar();
     const mutation = useMutation(
-        async (handles: unknown) => uploadFile(handles),
+        async (handles: unknown) => uploadFile(handles, 'adhaar'),
         {
             onSuccess: () => show('file uploaded successfully!', 'success'),
             onError: (data: CustomError) => show(data?.errorMessage, 'error'),

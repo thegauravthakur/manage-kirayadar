@@ -43,10 +43,11 @@ export async function postWithToken(
     });
 }
 
-export async function uploadFile(handles: unknown) {
-    const [files] = await fromEvent(handles);
+export async function uploadFile(handles: unknown, fileName: string) {
+    const [file] = (await fromEvent(handles)) as [File];
     const formData = new FormData();
-    formData.append('document', files as File);
+    formData.append('document', file as File);
+    formData.append('name', fileName);
     const response = await fetch(createEndpoint('documents/uploadFile'), {
         method: 'POST',
         body: formData,
