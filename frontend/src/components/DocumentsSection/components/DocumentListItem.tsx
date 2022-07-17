@@ -1,5 +1,20 @@
 import clsx from 'clsx';
 import { AiOutlineDownload, AiOutlineEdit } from 'react-icons/ai';
+import { useSession } from '../../../hooks/useSession';
+import { uploadFile } from '../../../helpers/fetchHelper';
+import { useMutation } from 'react-query';
+import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
+import { CustomError } from '../../../types';
+async function showFilePicker() {
+    try {
+        return await (window as any).showOpenFilePicker({
+            multiple: false,
+            types: [{ accept: { 'image/*': [] } }],
+        });
+    } catch (error) {
+        return null;
+    }
+}
 
 interface DocumentListItemProps {
     name: string;
@@ -9,6 +24,15 @@ export function DocumentListItem({
     name,
     isLast = false,
 }: DocumentListItemProps) {
+    const { session } = useSession();
+    const { show } = useSnackbar();
+    const mutation = useMutation(
+        async (handles: unknown) => uploadFile(handles),
+        {
+            onSuccess: () => show('file uploaded successfully!', 'success'),
+            onError: (data: CustomError) => show(data?.errorMessage, 'error'),
+        }
+    );
     return (
         <li
             className={clsx(
@@ -21,7 +45,13 @@ export function DocumentListItem({
                 <button className='btn btn-circle btn-sm btn-ghost'>
                     <AiOutlineDownload size={25} />
                 </button>
-                <button className='btn btn-circle btn-sm btn-ghost'>
+                <button
+                    className='btn btn-circle btn-sm btn-ghost'
+                    onClick={async () => {
+                        const handles = await showFilePicker();
+                        if (handles) await mutation.mutate(handles);
+                    }}
+                >
                     <AiOutlineEdit size={25} />
                 </button>
             </div>

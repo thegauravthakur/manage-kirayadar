@@ -1,6 +1,5 @@
 import { AiOutlineHome, AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
 import { BsGlobe } from 'react-icons/bs';
-import { IconType } from 'react-icons';
 import { QuickInformationItem } from './components/QuickInformationItem';
 
 interface QuickInformationProps {

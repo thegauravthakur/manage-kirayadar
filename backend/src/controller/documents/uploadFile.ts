@@ -5,7 +5,6 @@ import { sendError } from '../../utils/shared';
 export async function uploadFile(request: Request, response: Response) {
     try {
         if (request.file) {
-            console.log(request.file);
             await uploadFileToS3(
                 request.file.buffer,
                 request.file.originalname

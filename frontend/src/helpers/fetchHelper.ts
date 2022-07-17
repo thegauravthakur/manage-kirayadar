@@ -1,3 +1,5 @@
+import { fromEvent } from 'file-selector';
+
 export function createEndpoint(endpoint: string) {
     return `http://localhost:4242/${endpoint}`;
 }
@@ -39,4 +41,17 @@ export async function postWithToken(
             'Content-Type': 'application/json',
         },
     });
+}
+
+export async function uploadFile(handles: unknown) {
+    const [files] = await fromEvent(handles);
+    const formData = new FormData();
+    formData.append('document', files as File);
+    const response = await fetch(createEndpoint('documents/uploadFile'), {
+        method: 'POST',
+        body: formData,
+    });
+    const data = await response.json();
+    if (!response.ok) throw data;
+    return data;
 }
