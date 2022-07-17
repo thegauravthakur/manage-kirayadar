@@ -43,14 +43,25 @@ export async function postWithToken(
     });
 }
 
-export async function uploadFile(handles: unknown, fileName: string) {
+export async function uploadFile(
+    token: string,
+    handles: unknown,
+    fileName: string,
+    { propertyId, spaceId, tenantId }: any
+) {
     const [file] = (await fromEvent(handles)) as [File];
     const formData = new FormData();
     formData.append('document', file as File);
     formData.append('name', fileName);
+    formData.append('propertyId', propertyId);
+    formData.append('spaceId', spaceId);
+    formData.append('tenantId', tenantId);
     const response = await fetch(createEndpoint('documents/uploadFile'), {
         method: 'POST',
         body: formData,
+        headers: {
+            Authorization: `bearer ${token}`,
+        },
     });
     const data = await response.json();
     if (!response.ok) throw data;

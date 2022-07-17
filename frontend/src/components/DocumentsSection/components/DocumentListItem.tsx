@@ -5,6 +5,7 @@ import { uploadFile } from '../../../helpers/fetchHelper';
 import { useMutation } from 'react-query';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../../types';
+import { useRouter } from 'next/router';
 async function showFilePicker() {
     try {
         return await (window as any).showOpenFilePicker({
@@ -26,8 +27,10 @@ export function DocumentListItem({
 }: DocumentListItemProps) {
     const { session } = useSession();
     const { show } = useSnackbar();
+    const queryParams = useRouter().query;
     const mutation = useMutation(
-        async (handles: unknown) => uploadFile(handles, 'adhaar'),
+        async (handles: unknown) =>
+            uploadFile(session.token, handles, name, queryParams),
         {
             onSuccess: () => show('file uploaded successfully!', 'success'),
             onError: (data: CustomError) => show(data?.errorMessage, 'error'),

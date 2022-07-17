@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { uploadFileToS3 } from '../../utils/S3';
 import { getFileExtension, sendError } from '../../utils/shared';
+import { getUserFromToken } from '../../middleware/protected';
+import { z } from 'zod';
+import { hasAccessOnSpaceAndProperty } from '../../utils/jwt';
 
 function safeFileName(name: string) {
     return name
@@ -11,15 +14,39 @@ function safeFileName(name: string) {
         })
         .join('');
 }
+
+const bodySchema = z.object({
+    name: z.string().min(2, 'minimum length of document name should be 2'),
+    spaceId: z.string(),
+    tenantId: z.string(),
+    propertyId: z.string(),
+});
+
+type BodySchema = z.infer<typeof bodySchema>;
+
 export async function uploadFile(request: Request, response: Response) {
     try {
-        const { name } = request.body;
+        bodySchema.parse(request.body);
+        const { name, spaceId, tenantId, propertyId } =
+            request.body as BodySchema;
+        const hasAccess = hasAccessOnSpaceAndProperty(
+            request,
+            Number(propertyId),
+            Number(spaceId)
+        );
+        if (!hasAccess) {
+            response
+                .status(401)
+                .json({ errorMessage: 'unauthorized!', data: null });
+        }
+        const user = getUserFromToken(request)!;
+        const path = `user/${user.id}/property/${propertyId}/space/${spaceId}/tenant/${tenantId}/documents`;
         const safeName = safeFileName(name);
         if (request.file) {
-            const extension = getFileExtension(safeName);
+            const extension = getFileExtension(request.file.originalname);
             await uploadFileToS3(
                 request.file.buffer,
-                `documents/${safeName}.${extension}`
+                `${path}/${safeName}.${extension}`
             );
             return response.json({
                 errorMessage: null,
