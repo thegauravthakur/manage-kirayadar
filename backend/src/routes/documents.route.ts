@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post('/uploadFile', upload.single('document'), uploadFile);
 router.get('/fetchFile', getFileFromS3);
-router.get('/allDocuments', getAllDocuments);
+router.post('/allDocuments', getAllDocuments);
 
 export default router;

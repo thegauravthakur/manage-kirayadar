@@ -13,18 +13,18 @@ export function verifyToken(token: string) {
     return jwt.verify(token, process.env.TOKEN_SECRET!, {});
 }
 
-export async function hasAccessOnSpaceAndProperty(
-    req: Request,
-    propertyId: number,
-    spaceId: number
-) {
+export async function hasAccessOnTenant(req: Request, tenantId: number) {
     const user = getUserFromToken(req)!;
-    const property = await prismaClient.property.findFirst({
-        where: { ownerId: user.id, id: propertyId },
+    const tenant = await prismaClient.tenant.findUnique({
+        where: { id: tenantId },
     });
-    if (!property) return null;
+    if (!tenant) return false;
     const space = await prismaClient.space.findFirst({
-        where: { propertyId: propertyId, id: spaceId },
+        where: { id: tenant.spaceId },
     });
-    return !!space;
+    if (!space) return false;
+    const property = await prismaClient.property.findFirst({
+        where: { ownerId: user.id, id: space.propertyId },
+    });
+    return !!property;
 }

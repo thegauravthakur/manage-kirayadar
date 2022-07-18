@@ -1,11 +1,17 @@
 import clsx from 'clsx';
 import { AiOutlineDownload, AiOutlineEdit } from 'react-icons/ai';
 import { useSession } from '../../../hooks/useSession';
-import { uploadFile } from '../../../helpers/fetchHelper';
-import { useMutation } from 'react-query';
+import {
+    createEndpoint,
+    fetchWithToken,
+    postWithToken,
+    uploadFile,
+} from '../../../helpers/fetchHelper';
+import { useMutation, useQuery } from 'react-query';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../../types';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 async function showFilePicker() {
     try {
         return await (window as any).showOpenFilePicker({
@@ -15,6 +21,24 @@ async function showFilePicker() {
     } catch (error) {
         return null;
     }
+}
+function useDocuments(tenantId: number) {
+    const { session } = useSession();
+    const { data: documents, isLoading } = useQuery(
+        ['documents', tenantId],
+        async () => {
+            const response = await postWithToken(
+                createEndpoint('documents/allDocuments'),
+                session.token,
+                { tenantId }
+            );
+            const data = await response.json();
+            if (!response.ok) throw data;
+            return data;
+        },
+        { enabled: !!session.token }
+    );
+    return { documents, isLoading };
 }
 
 interface DocumentListItemProps {
@@ -28,6 +52,8 @@ export function DocumentListItem({
     const { session } = useSession();
     const { show } = useSnackbar();
     const queryParams = useRouter().query;
+    const { documents } = useDocuments(Number(queryParams.tenantId));
+    console.log({ documents });
     const mutation = useMutation(
         async (handles: unknown) =>
             uploadFile(session.token, handles, name, queryParams),
@@ -36,6 +62,12 @@ export function DocumentListItem({
             onError: (data: CustomError) => show(data?.errorMessage, 'error'),
         }
     );
+    // useEffect(() => {
+    //     fetch(createEndpoint('documents/allDocuments')).then(async (d) => {
+    //         const data = await d.json();
+    //         console.log(data);
+    //     });
+    // }, []);
     return (
         <li
             className={clsx(

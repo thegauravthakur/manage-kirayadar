@@ -1,15 +1,21 @@
 import type { Request, Response } from 'express';
-import S3 from 'aws-sdk/clients/s3';
+import { prismaClient } from '../../utils/server';
+import { z } from 'zod';
+import { hasAccessOnTenant } from '../../utils/jwt';
+
+const bodySchema = z.object({
+    tenantId: z.string(),
+});
+type BodySchema = z.infer<typeof bodySchema>;
+
 export async function getAllDocuments(req: Request, res: Response) {
-    const s3 = new S3();
-    s3.listObjects(
-        {
-            Bucket: 'manage-kirayadar-dev',
-            Prefix: 'user/1/property/2/space/18/tenant/3/documents',
-        },
-        (err, data) => {
-            const filter = data.Contents?.map((c) => c.Key);
-            res.json(filter);
-        }
-    );
+    const { tenantId } = req.body as BodySchema;
+    const hasAccess = await hasAccessOnTenant(req, Number(tenantId));
+    if (!hasAccess)
+        res.status(401).json({ data: null, errorMessage: 'unauthorized!' });
+    const documents = await prismaClient.document.findMany({
+        where: { tenantId: Number(tenantId) },
+        select: { name: true, id: true },
+    });
+    res.json({ data: { documents }, errorMessage: null });
 }

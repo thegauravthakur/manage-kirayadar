@@ -3,7 +3,8 @@ import { uploadFileToS3 } from '../../utils/S3';
 import { getFileExtension, sendError } from '../../utils/shared';
 import { getUserFromToken } from '../../middleware/protected';
 import { z } from 'zod';
-import { hasAccessOnSpaceAndProperty } from '../../utils/jwt';
+import { hasAccessOnTenant } from '../../utils/jwt';
+import { prismaClient } from '../../utils/server';
 
 function safeFileName(name: string) {
     return name
@@ -29,11 +30,7 @@ export async function uploadFile(request: Request, response: Response) {
         bodySchema.parse(request.body);
         const { name, spaceId, tenantId, propertyId } =
             request.body as BodySchema;
-        const hasAccess = hasAccessOnSpaceAndProperty(
-            request,
-            Number(propertyId),
-            Number(spaceId)
-        );
+        const hasAccess = hasAccessOnTenant(request, Number(tenantId));
         if (!hasAccess) {
             response
                 .status(401)
@@ -44,10 +41,17 @@ export async function uploadFile(request: Request, response: Response) {
         const safeName = safeFileName(name);
         if (request.file) {
             const extension = getFileExtension(request.file.originalname);
-            await uploadFileToS3(
+            const data = await uploadFileToS3(
                 request.file.buffer,
                 `${path}/${safeName}.${extension}`
             );
+            await prismaClient.document.create({
+                data: {
+                    name: safeName,
+                    tenantId: Number(tenantId),
+                    key: data.Key,
+                },
+            });
             return response.json({
                 errorMessage: null,
                 data: null,
