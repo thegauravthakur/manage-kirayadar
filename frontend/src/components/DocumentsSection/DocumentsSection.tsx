@@ -16,7 +16,7 @@ export function DocumentsSection() {
         return !(documents ?? []).some((document) => document.name === doc);
     });
     return (
-        <div className='bg-base-100 p-5 space-y-2 rounded-xl shadow-md w-full max-w-md'>
+        <div className='bg-base-100 p-5 space-y-2 rounded-xl shadow-md w-full max-w-md relative'>
             <h2 className='text-xl text-primary font-semibold'>Documents</h2>
             <ul>
                 {documents?.map(({ name, id }) => (

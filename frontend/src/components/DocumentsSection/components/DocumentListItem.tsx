@@ -1,5 +1,9 @@
 import clsx from 'clsx';
-import { AiOutlineDownload, AiOutlineEdit } from 'react-icons/ai';
+import {
+    AiOutlineDownload,
+    AiOutlineEdit,
+    AiOutlineLoading,
+} from 'react-icons/ai';
 import { useSession } from '../../../hooks/useSession';
 import {
     createEndpoint,
@@ -75,40 +79,50 @@ export function DocumentListItem({
     );
 
     return (
-        <li
-            className={clsx(
-                { 'border-b': !isLast },
-                'flex items-center justify-between py-2'
-            )}
-        >
-            <p>{name}</p>
-            <div className='space-x-2'>
-                {showDownloadButton && (
+        <>
+            <li
+                className={clsx(
+                    { 'border-b': !isLast },
+                    'flex items-center justify-between py-2'
+                )}
+            >
+                <p>{name}</p>
+                <div className='space-x-2'>
+                    {showDownloadButton && (
+                        <button
+                            className='btn btn-circle btn-sm btn-ghost'
+                            onClick={async () => {
+                                if (documentId) {
+                                    const blob = await fetchMutation(
+                                        Number(queryParams.tenantId),
+                                        documentId
+                                    );
+                                    downloadFile(blob, name);
+                                }
+                            }}
+                        >
+                            <AiOutlineDownload size={25} />
+                        </button>
+                    )}
                     <button
                         className='btn btn-circle btn-sm btn-ghost'
                         onClick={async () => {
-                            if (documentId) {
-                                const blob = await fetchMutation(
-                                    Number(queryParams.tenantId),
-                                    documentId
-                                );
-                                downloadFile(blob, name);
-                            }
+                            const handles = await showFilePicker();
+                            if (handles) await mutation.mutate(handles);
                         }}
                     >
-                        <AiOutlineDownload size={25} />
+                        <AiOutlineEdit size={25} />
                     </button>
-                )}
-                <button
-                    className='btn btn-circle btn-sm btn-ghost'
-                    onClick={async () => {
-                        const handles = await showFilePicker();
-                        if (handles) await mutation.mutate(handles);
-                    }}
-                >
-                    <AiOutlineEdit size={25} />
-                </button>
-            </div>
-        </li>
+                </div>
+            </li>
+            {mutation.isLoading && (
+                <div className='absolute left-0 right-0 h-full top-0 bg-opacity-10 bg-base-100 flex items-center justify-center'>
+                    <AiOutlineLoading
+                        className='animate-spin text-primary'
+                        size={30}
+                    />
+                </div>
+            )}
+        </>
     );
 }
