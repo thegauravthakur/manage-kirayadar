@@ -1,28 +1,7 @@
 import { DocumentListItem } from './components/DocumentListItem';
-import { useSession } from '../../hooks/useSession';
-import { useQuery } from 'react-query';
-import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
 import { useRouter } from 'next/router';
-import type { Document } from '../../types';
+import { useDocuments } from '../../hooks/react-query/useDocuments';
 
-function useDocuments(tenantId: number) {
-    const { session } = useSession();
-    const { data: documents, isLoading } = useQuery<Document[]>(
-        ['documents', tenantId],
-        async () => {
-            const response = await postWithToken(
-                createEndpoint('documents/allDocuments'),
-                session.token,
-                { tenantId }
-            );
-            const { data } = await response.json();
-            if (!response.ok) throw data;
-            return data.documents;
-        },
-        { enabled: !!session.token }
-    );
-    return { documents, isLoading };
-}
 const staticDocuments = [
     'Adhaar Card',
     'PAN Card',
