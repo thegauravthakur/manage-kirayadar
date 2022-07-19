@@ -6,7 +6,7 @@ import {
     postWithToken,
     uploadFile,
 } from '../../../helpers/fetchHelper';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../../types';
 import { useRouter } from 'next/router';
@@ -55,6 +55,7 @@ export function DocumentListItem({
     documentId = null,
 }: DocumentListItemProps) {
     const { session } = useSession();
+    const queryClient = useQueryClient();
     const { show } = useSnackbar();
     const queryParams = useRouter().query;
 
@@ -62,7 +63,13 @@ export function DocumentListItem({
         async (handles: unknown) =>
             uploadFile(session.token, handles, name, queryParams),
         {
-            onSuccess: () => show('file uploaded successfully!', 'success'),
+            onSuccess: async () => {
+                await queryClient.invalidateQueries([
+                    'documents',
+                    Number(queryParams.tenantId),
+                ]);
+                show('file uploaded successfully!', 'success');
+            },
             onError: (data: CustomError) => show(data?.errorMessage, 'error'),
         }
     );
