@@ -35,3 +35,8 @@ export interface Response<T> {
     errorMessage: string;
     data: T;
 }
+
+export interface Document {
+    name: string;
+    id: number;
+}

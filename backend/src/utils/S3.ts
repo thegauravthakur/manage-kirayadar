@@ -19,9 +19,7 @@ export async function uploadFileToS3(
     });
 }
 
-export function sendFileFromS3(res: Response) {
+export function sendFileFromS3(res: Response, key: string) {
     const s3 = new S3();
-    s3.getObject({ Key: 'house-image.jpg', Bucket })
-        .createReadStream()
-        .pipe(res);
+    s3.getObject({ Key: key, Bucket }).createReadStream().pipe(res);
 }
