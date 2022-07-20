@@ -38,10 +38,14 @@ function downloadFile(blob: Blob, fileName: string) {
     link.parentNode?.removeChild(link);
 }
 
-async function fetchMutation(tenantId: number, documentId: number) {
+async function fetchMutation(
+    tenantId: number,
+    documentId: number,
+    token: string
+) {
     const response = await postWithToken(
         createEndpoint('documents/fetchFile'),
-        '',
+        token,
         { tenantId, documentId }
     );
     return response.blob();
@@ -84,10 +88,8 @@ export function DocumentListItem({
             if (documentId)
                 await postWithToken(
                     createEndpoint('documents/deleteFile'),
-                    '',
-                    {
-                        documentId,
-                    }
+                    session.token,
+                    { documentId }
                 );
         },
         {
@@ -119,7 +121,8 @@ export function DocumentListItem({
                                 if (documentId) {
                                     const blob = await fetchMutation(
                                         Number(queryParams.tenantId),
-                                        documentId
+                                        documentId,
+                                        session.token
                                     );
                                     downloadFile(blob, name);
                                 }

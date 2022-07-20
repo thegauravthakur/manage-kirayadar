@@ -6,7 +6,7 @@ import { hasAccessOnDocument } from '../../utils/jwt';
 import { sendError } from '../../utils/shared';
 
 const bodySchema = z.object({
-    documentId: z.string({ required_error: 'documentId is required' }),
+    documentId: z.number({ required_error: 'documentId is required' }),
 });
 type BodySchema = z.infer<typeof bodySchema>;
 

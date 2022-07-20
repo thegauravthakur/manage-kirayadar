@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { uploadFileToS3 } from '../../utils/S3';
+import { deleteFileFromS3, uploadFileToS3 } from '../../utils/S3';
 import { getFileExtension, sendError } from '../../utils/shared';
 import { getUserFromToken } from '../../middleware/protected';
 import { z } from 'zod';
@@ -25,6 +25,22 @@ const bodySchema = z.object({
 
 type BodySchema = z.infer<typeof bodySchema>;
 
+async function checkIfAlreadyExists(tenantId: number, safeName: string) {
+    const document = await prismaClient.document.findFirst({
+        where: { tenantId: tenantId, name: safeName },
+    });
+    if (document) {
+        await deleteFileFromS3(document.key);
+        await prismaClient.document.delete({
+            where: { id: document.id },
+        });
+    }
+}
+
+async function createDocument(name: string, tenantId: number, key: string) {
+    await prismaClient.document.create({ data: { name, tenantId, key } });
+}
+
 export async function uploadFile(request: Request, response: Response) {
     try {
         bodySchema.parse(request.body);
@@ -40,22 +56,14 @@ export async function uploadFile(request: Request, response: Response) {
         const path = `user/${user.id}/property/${propertyId}/space/${spaceId}/tenant/${tenantId}/documents`;
         const safeName = safeFileName(name);
         if (request.file) {
-            const extension = getFileExtension(request.file.originalname);
-            const data = await uploadFileToS3(
-                request.file.buffer,
-                `${path}/${safeName}.${extension}`
-            );
-            await prismaClient.document.create({
-                data: {
-                    name: safeName,
-                    tenantId: Number(tenantId),
-                    key: data.Key,
-                },
-            });
-            return response.json({
-                errorMessage: null,
-                data: null,
-            });
+            const { originalname, buffer } = request.file;
+            // first checkIf file already exists!
+            await checkIfAlreadyExists(Number(tenantId), safeName);
+            const extension = getFileExtension(originalname);
+            const key = `${path}/${safeName}.${extension}`;
+            const data = await uploadFileToS3(buffer, key);
+            await createDocument(safeName, Number(tenantId), data.Key);
+            return response.json({ errorMessage: null, data: null });
         } else {
             return response
                 .status(400)

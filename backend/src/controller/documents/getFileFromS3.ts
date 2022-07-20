@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { sendFileFromS3 } from '../../utils/S3';
 import { sendError } from '../../utils/shared';
 import { prismaClient } from '../../utils/server';
-import { string, z } from 'zod';
+import { number, z } from 'zod';
 import { hasAccessOnDocument, hasAccessOnTenant } from '../../utils/jwt';
 
 const bodySchema = z.object({
-    documentId: string({ required_error: 'documentId is required' }),
-    tenantId: string({ required_error: 'tenantId is required' }),
+    documentId: number({ required_error: 'documentId is required' }),
+    tenantId: number({ required_error: 'tenantId is required' }),
 });
 
 type BodySchema = z.infer<typeof bodySchema>;
@@ -17,8 +17,8 @@ export async function getFileFromS3(request: Request, response: Response) {
         bodySchema.parse(request.body);
         const { documentId, tenantId } = request.body as BodySchema;
         const hasAccess =
-            (await hasAccessOnTenant(request, Number(tenantId))) &&
-            (await hasAccessOnDocument(request, Number(documentId)));
+            (await hasAccessOnTenant(request, tenantId)) &&
+            (await hasAccessOnDocument(request, documentId));
         if (!hasAccess) {
             return response
                 .status(401)
