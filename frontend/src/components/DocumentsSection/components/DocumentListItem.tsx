@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import {
     AiOutlineDownload,
     AiOutlineEdit,
-    AiOutlineLoading,
+    AiOutlineDelete,
 } from 'react-icons/ai';
 import { useSession } from '../../../hooks/useSession';
 import {
@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../../types';
 import { useRouter } from 'next/router';
+import { LoadingWrapper } from '../../LoadingWrapper';
 
 async function showFilePicker() {
     try {
@@ -113,16 +114,14 @@ export function DocumentListItem({
                     >
                         <AiOutlineEdit size={25} />
                     </button>
+                    {showDownloadButton && (
+                        <button className='btn btn-circle btn-sm btn-ghost'>
+                            <AiOutlineDelete size={25} />
+                        </button>
+                    )}
                 </div>
             </li>
-            {mutation.isLoading && (
-                <div className='absolute left-0 right-0 h-full top-0 bg-opacity-10 bg-base-100 flex items-center justify-center'>
-                    <AiOutlineLoading
-                        className='animate-spin text-primary'
-                        size={30}
-                    />
-                </div>
-            )}
+            {mutation.isLoading && <LoadingWrapper />}
         </>
     );
 }
