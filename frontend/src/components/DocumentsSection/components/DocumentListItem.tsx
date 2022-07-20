@@ -79,6 +79,29 @@ export function DocumentListItem({
         }
     );
 
+    const deleteMutation = useMutation(
+        async () => {
+            if (documentId)
+                await postWithToken(
+                    createEndpoint('documents/deleteFile'),
+                    '',
+                    {
+                        documentId,
+                    }
+                );
+        },
+        {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries([
+                    'documents',
+                    Number(queryParams.tenantId),
+                ]);
+                show('file uploaded successfully!', 'success');
+            },
+            onError: (data: CustomError) => show(data?.errorMessage, 'error'),
+        }
+    );
+
     return (
         <>
             <li
@@ -115,13 +138,20 @@ export function DocumentListItem({
                         <AiOutlineEdit size={25} />
                     </button>
                     {showDownloadButton && (
-                        <button className='btn btn-circle btn-sm btn-ghost'>
+                        <button
+                            className='btn btn-circle btn-sm btn-ghost'
+                            onClick={() => {
+                                deleteMutation.mutate();
+                            }}
+                        >
                             <AiOutlineDelete size={25} />
                         </button>
                     )}
                 </div>
             </li>
-            {mutation.isLoading && <LoadingWrapper />}
+            {(mutation.isLoading || deleteMutation.isLoading) && (
+                <LoadingWrapper />
+            )}
         </>
     );
 }

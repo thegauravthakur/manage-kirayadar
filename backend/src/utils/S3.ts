@@ -23,3 +23,13 @@ export function sendFileFromS3(res: Response, key: string) {
     const s3 = new S3();
     s3.getObject({ Key: key, Bucket }).createReadStream().pipe(res);
 }
+
+export function deleteFileFromS3(Key: string) {
+    const s3 = new S3();
+    return new Promise((resolve, reject) => {
+        s3.deleteObject({ Key, Bucket }, (err, data) => {
+            if (err) reject(err);
+            resolve(data);
+        });
+    });
+}

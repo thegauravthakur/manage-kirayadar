@@ -28,3 +28,11 @@ export async function hasAccessOnTenant(req: Request, tenantId: number) {
     });
     return !!property;
 }
+
+export async function hasAccessOnDocument(req: Request, documentId: number) {
+    const document = await prismaClient.document.findUnique({
+        where: { id: Number(documentId) },
+    });
+    if (!document) return false;
+    return hasAccessOnTenant(req, document.tenantId);
+}
