@@ -28,7 +28,7 @@ export async function getFileFromS3(request: Request, response: Response) {
             where: { id: Number(documentId), tenantId: Number(tenantId) },
         });
         if (document) {
-            response.attachment('sample.png');
+            response.attachment(document.key.split('/').at(-1));
             sendFileFromS3(response, document.key);
         } else
             response

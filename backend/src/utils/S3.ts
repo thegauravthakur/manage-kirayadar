@@ -19,9 +19,9 @@ export async function uploadFileToS3(
     });
 }
 
-export function sendFileFromS3(res: Response, key: string) {
+export function sendFileFromS3(res: Response, Key: string) {
     const s3 = new S3();
-    s3.getObject({ Key: key, Bucket }).createReadStream().pipe(res);
+    s3.getObject({ Key, Bucket }).createReadStream().pipe(res);
 }
 
 export function deleteFileFromS3(Key: string) {
