@@ -13,7 +13,6 @@ router.use('/otp', otpRoute);
 router.use('/property', auth, propertyRoute);
 router.use('/space', auth, spaceRoute);
 router.use('/tenant', auth, tenantRoute);
-// todo: add auth middleware here
-router.use('/documents', documentsRoute);
+router.use('/documents', auth, documentsRoute);
 
 export default router;
