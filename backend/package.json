@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node ./dist/index.js\"",
-    "postinstall": "mkcert -install && mkcert localhost"
+    "start": "tsc-watch --onSuccess \"node ./dist/index.js\""
   },
   "devDependencies": {
     "@gauravcodes/prettier-config": "^1.0.0",

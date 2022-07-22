@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+#  install:
+#    runtime-versions:
+#      java: corretto11
+  build:
+    commands:
+      - npm run
+      - echo Build started on `date`
+      - mvn install
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - target/messageUtil-1.0.jar

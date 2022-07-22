@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import userRoute from './user.route';
 import otpRoute from './otp.route';
 import propertyRoute from './property.route';
@@ -14,5 +15,8 @@ router.use('/property', auth, propertyRoute);
 router.use('/space', auth, spaceRoute);
 router.use('/tenant', auth, tenantRoute);
 router.use('/documents', auth, documentsRoute);
+router.use('/', function (req: Request, res: Response) {
+    res.send('hey');
+});
 
 export default router;
