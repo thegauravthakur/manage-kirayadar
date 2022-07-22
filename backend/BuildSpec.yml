@@ -7,6 +7,7 @@ phases:
   pre_build:
     commands:
       - npm install --prefix ./backend
+      - npx prisma generate
   build:
     commands:
       - npm run build --prefix ./backend
