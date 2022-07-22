@@ -6,11 +6,11 @@ phases:
 #      java: corretto11
   pre_build:
     commands:
-      - npm install
+      - npm install --prefix ./backend
   build:
     commands:
-      - npm run build
+      - npm run build --prefix ./backend
 artifacts:
   files:
     - '**/*'
-  base-directory: './dist'
+  base-directory: './backend/dist'
