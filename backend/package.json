@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node ./dist/index.js\"",
+    "start": "node ./dist/index.js",
+    "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc --build"
   },
   "devDependencies": {
