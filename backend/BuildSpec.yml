@@ -4,14 +4,13 @@ phases:
 #  install:
 #    runtime-versions:
 #      java: corretto11
+  pre_build:
+    commands:
+      - npm install
   build:
     commands:
-      - npm run
-      - echo Build started on `date`
-      - mvn install
-  post_build:
-    commands:
-      - echo Build completed on `date`
+      - npm run build
 artifacts:
   files:
-    - target/messageUtil-1.0.jar
+    - '**/*'
+  base-directory: './dist'
