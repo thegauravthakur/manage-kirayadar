@@ -1,9 +1,9 @@
 version: 0.2
 
 phases:
-#  install:
-#    runtime-versions:
-#      java: corretto11
+  install:
+    runtime-versions:
+      nodejs: 16
   pre_build:
     commands:
       - npm install --prefix ./backend
