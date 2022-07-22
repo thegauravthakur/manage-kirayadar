@@ -7,10 +7,10 @@ import { PrismaClient } from '@prisma/client';
 export const prismaClient = new PrismaClient();
 
 export function createHttpsServer(app: Express) {
-    const privateKey = fs.readFileSync('localhost-key.pem', 'utf8');
-    const certificate = fs.readFileSync('localhost.pem', 'utf8');
-    const credentials = { key: privateKey, cert: certificate };
-    return https.createServer(credentials, app);
+    // const privateKey = fs.readFileSync('localhost-key.pem', 'utf8');
+    // const certificate = fs.readFileSync('localhost.pem', 'utf8');
+    // const credentials = { key: privateKey, cert: certificate };
+    // return https.createServer(credentials, app);
 }
 
 export function createHttpServer(app: Express) {
