@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node ./dist/index.js",
+    "start": "npx prisma generate && node ./dist/index.js",
     "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc --build"
   },
