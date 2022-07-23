@@ -1,7 +1,14 @@
 import { fromEvent } from 'file-selector';
 
+function getHost() {
+    const env = process.env.VERCEL_ENV || 'development';
+    if (env === 'production')
+        return 'http://managekirayadar-env.eba-nnrtw3mm.ap-south-1.elasticbeanstalk.com/';
+    return 'http://localhost:4242/';
+}
 export function createEndpoint(endpoint: string) {
-    return `http://localhost:4242/${endpoint}`;
+    const host = getHost();
+    return `${host}${endpoint}`;
 }
 
 export async function fetchWithToken(endpoint: string, token: string) {
