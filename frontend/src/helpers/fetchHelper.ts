@@ -1,7 +1,7 @@
 import { fromEvent } from 'file-selector';
 
 function getHost() {
-    const env = process.env.VERCEL_ENV || 'development';
+    const env = process.env.NEXT_PUBLIC_VERCEL_ENV || 'development';
     if (env === 'production')
         return 'http://managekirayadar-env.eba-nnrtw3mm.ap-south-1.elasticbeanstalk.com/';
     return 'http://localhost:4242/';
