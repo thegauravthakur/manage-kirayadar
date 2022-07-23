@@ -6,6 +6,7 @@ import { auth } from '../middleware/protected';
 import tenantRoute from './tenant.route';
 import spaceRoute from './space.route';
 import documentsRoute from './documents.route';
+import { prismaClient } from '../utils/server';
 const express = require('express');
 const router = express.Router();
 
@@ -15,8 +16,9 @@ router.use('/property', auth, propertyRoute);
 router.use('/space', auth, spaceRoute);
 router.use('/tenant', auth, tenantRoute);
 router.use('/documents', auth, documentsRoute);
-router.use('/', function (req: Request, res: Response) {
-    res.send('hey');
+router.use('/', async function (req: Request, res: Response) {
+    const properties = await prismaClient.property.findMany({});
+    res.json(properties);
 });
 
 export default router;
