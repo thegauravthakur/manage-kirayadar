@@ -9,8 +9,14 @@ const app = express();
 app.use(express.json());
 app.use(CookieParser());
 
-// todo: update the frontend uri, once ready
-app.use(Cors({ origin: 'http://localhost:3000' }));
+app.use(
+    Cors({
+        origin: [
+            'http://localhost:3000',
+            'https://manage-kirayadar.vercel.app',
+        ],
+    })
+);
 
 const httpServer = createHttpServer(app);
 
