@@ -29,7 +29,10 @@ export async function createUser(req: Request, res: Response) {
         if (doesUserExists)
             return res
                 .status(400)
-                .json({ errorMessage: 'user already exists!', data: null });
+                .json({
+                    errorMessage: 'user already exists!',
+                    data: doesUserExists,
+                }); //todo: update this
         const otpEntry = await prismaClient.otp.findUnique({
             where: { email },
         });
