@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { z } from 'zod';
+import { CorsOptions } from 'cors';
 
 export function sendError(res: Response, error: unknown, errorMessage: string) {
     if (error instanceof z.ZodError) {
@@ -18,3 +19,17 @@ export function getFileExtension(name: string) {
     let last_dot = name.lastIndexOf('.');
     return name.slice(last_dot + 1);
 }
+
+const whitelist = [
+    'http://localhost:3000',
+    'https://manage-kirayadar.vercel.app',
+];
+export const corsOptions: CorsOptions = {
+    origin: function (origin, callback) {
+        if (origin && whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+};
