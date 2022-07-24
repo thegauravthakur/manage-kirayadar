@@ -16,12 +16,11 @@ export async function sendEmail({ otp, to }: SendEmailProps) {
         },
     });
 
-    // TODO Uncomment this later
-    // await transporter.sendMail({
-    //     from: '"Manage Kirayadar" <no-reply@managekirayadar.com>', // sender address
-    //     to,
-    //     subject: 'Your OTP to login to Manage Kirayadar', // Subject line
-    //     text: `${otp} is your OTP to login to Manage Kirayadar`,
-    //     html: `<b>${otp} is your OTP to login to Manage Kirayadar</b>`, // html body
-    // });
+    await transporter.sendMail({
+        from: '"Manage Kirayadar" <no-reply@managekirayadar.com>', // sender address
+        to,
+        subject: 'Your OTP to login to Manage Kirayadar', // Subject line
+        text: `${otp} is your OTP to login to Manage Kirayadar`,
+        html: `<b>${otp} is your OTP to login to Manage Kirayadar</b>`, // html body
+    });
 }

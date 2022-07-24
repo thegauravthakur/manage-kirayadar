@@ -8,7 +8,6 @@ phases:
     commands:
       - cd backend && npm install
       - npx prisma migrate deploy
-      - npx prisma generate
   build:
     commands:
       - npm run build
