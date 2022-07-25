@@ -26,11 +26,5 @@ const whitelist = [
     'https://manage-kirayadar.herokuapp.com',
 ];
 export const corsOptions: CorsOptions = {
-    origin: function (origin, callback) {
-        if (origin && whitelist.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: whitelist,
 };
