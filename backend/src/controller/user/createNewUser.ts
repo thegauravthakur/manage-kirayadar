@@ -23,6 +23,12 @@ export async function createUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
         const { name, password, email, otp } = req.body as UserSchema;
+        if (email !== 'gthakur581@gmail.com')
+            return res.status(400).json({
+                errorMessage:
+                    'sorry, this product is in preview currently, stay tuned!',
+                data: null,
+            });
         const doesUserExists = await prismaClient.user.findUnique({
             where: { email },
         });
