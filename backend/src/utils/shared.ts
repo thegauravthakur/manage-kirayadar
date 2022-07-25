@@ -23,6 +23,7 @@ export function getFileExtension(name: string) {
 const whitelist = [
     'http://localhost:3000',
     'https://manage-kirayadar.vercel.app',
+    'https://manage-kirayadar.herokuapp.com',
 ];
 export const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
