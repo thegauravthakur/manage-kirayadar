@@ -3,7 +3,7 @@ import { fromEvent } from 'file-selector';
 function getHost() {
     const env = process.env.NEXT_PUBLIC_VERCEL_ENV || 'development';
     if (env === 'production')
-        return 'http://managekirayadar-env.eba-nnrtw3mm.ap-south-1.elasticbeanstalk.com/';
+        return 'https://manage-kirayadar.herokuapp.com/';
     return 'http://localhost:4242/';
 }
 export function createEndpoint(endpoint: string) {
