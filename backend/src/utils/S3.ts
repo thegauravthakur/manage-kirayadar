@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import S3, { GetObjectOutput } from 'aws-sdk/clients/s3';
+import S3 from 'aws-sdk/clients/s3';
 import type { Body } from 'aws-sdk/clients/s3';
 import { env } from './shared';
 import { ManagedUpload } from 'aws-sdk/lib/s3/managed_upload';

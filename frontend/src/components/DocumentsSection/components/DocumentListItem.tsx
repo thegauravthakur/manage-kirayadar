@@ -16,7 +16,7 @@ import { CustomError } from '../../../types';
 import { useRouter } from 'next/router';
 import { LoadingWrapper } from '../../LoadingWrapper';
 
-async function showFilePicker() {
+export async function showFilePicker() {
     try {
         return await (window as any).showOpenFilePicker({
             multiple: false,

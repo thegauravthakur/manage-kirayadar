@@ -1,6 +1,7 @@
 import { AiOutlineEdit } from 'react-icons/ai';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { showFilePicker } from '../DocumentsSection/components/DocumentListItem';
 interface ProfileSectionProps {
     name: string;
 }
@@ -23,6 +24,9 @@ export function ProfileSection({ name }: ProfileSectionProps) {
                         'transition-opacity duration-200 ease-in-out',
                         isHovered ? 'opacity-100' : 'opacity-0'
                     )}
+                    onClick={() => {
+                        const handles = showFilePicker();
+                    }}
                 >
                     update
                     <AiOutlineEdit size={18} />
