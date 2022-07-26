@@ -2,12 +2,61 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { useState } from 'react';
 import clsx from 'clsx';
 import { showFilePicker } from '../DocumentsSection/components/DocumentListItem';
+import { fromEvent } from 'file-selector';
+import { useMutation } from 'react-query';
+import { createEndpoint } from '../../helpers/fetchHelper';
+import { useRouter } from 'next/router';
+import { useSnackbar } from '../../hooks/zustand/useSnackbar';
+import { CustomError } from '../../types';
+import { useSession } from '../../hooks/useSession';
 interface ProfileSectionProps {
     name: string;
 }
 
+async function updateProfilePhoto(
+    token: string,
+    handles: unknown,
+    propertyId: string,
+    spaceId: string,
+    tenantId: string
+) {
+    const [file] = (await fromEvent(handles)) as [File];
+    const formData = new FormData();
+    formData.append('profilePhoto', file as File);
+    formData.append('propertyId', propertyId);
+    formData.append('spaceId', spaceId);
+    formData.append('tenantId', tenantId);
+    const response = await fetch(createEndpoint('tenant/updateProfile'), {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Authorization: `bearer ${token}`,
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) throw data;
+    return data;
+}
+
 export function ProfileSection({ name }: ProfileSectionProps) {
     const [isHovered, setIsHovered] = useState(false);
+    const { tenantId, spaceId, propertyId } = useRouter().query as any;
+    const snackbar = useSnackbar();
+    const { session } = useSession();
+    const uploadMutation = useMutation(
+        (handles: unknown) =>
+            updateProfilePhoto(
+                session.token,
+                handles,
+                propertyId,
+                spaceId,
+                tenantId
+            ),
+        {
+            onSuccess: () => snackbar.show('Profile photo updated!', 'success'),
+            onError: (e: CustomError) => snackbar.show(e.errorMessage, 'error'),
+        }
+    );
     return (
         <div className='flex flex-col items-center space-y-5 shadow-md p-8 rounded-xl border bg-base-100'>
             <div
@@ -24,8 +73,9 @@ export function ProfileSection({ name }: ProfileSectionProps) {
                         'transition-opacity duration-200 ease-in-out',
                         isHovered ? 'opacity-100' : 'opacity-0'
                     )}
-                    onClick={() => {
-                        const handles = showFilePicker();
+                    onClick={async () => {
+                        const handles = await showFilePicker();
+                        uploadMutation.mutate(handles);
                     }}
                 >
                     update

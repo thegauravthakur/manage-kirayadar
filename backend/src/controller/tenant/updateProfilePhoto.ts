@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { uploadFileToS3 } from '../../utils/S3';
-import { number, z } from 'zod';
+import { string, z } from 'zod';
 import { getUserFromToken } from '../../middleware/protected';
 import { getFileExtension } from '../../utils/shared';
 
 const bodySchema = z.object({
-    spaceId: number(),
-    tenantId: number(),
-    propertyId: number(),
+    spaceId: string(),
+    tenantId: string(),
+    propertyId: string(),
 });
 type BodySchema = z.infer<typeof bodySchema>;
 

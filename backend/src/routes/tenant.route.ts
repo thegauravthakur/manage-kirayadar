@@ -10,6 +10,10 @@ const router = express.Router();
 // todo: add a auth middleware
 router.post('/add', addNewTenant);
 router.post('/get', getAllTenants);
-router.post('/updateProfile', upload.single('document'), updateProfilePhoto);
+router.post(
+    '/updateProfile',
+    upload.single('profilePhoto'),
+    updateProfilePhoto
+);
 
 export default router;
