@@ -25,11 +25,11 @@ export async function uploadFileToS3(
     });
 }
 
-function fetchGravatar(email: string) {
-    return createHash('md5').update(email).digest('hex');
-}
-
-export function sendFileFromS3(res: Response, Key: string) {
+export function sendFileFromS3(
+    res: Response,
+    Key: string,
+    errorData?: unknown
+) {
     const s3 = new S3();
     s3.getObject({ Key, Bucket })
         .on('httpHeaders', function (statusCode, headers) {
@@ -38,9 +38,9 @@ export function sendFileFromS3(res: Response, Key: string) {
         })
         .createReadStream()
         .on('error', () => {
-            const avatar =
-                'https://www.gravatar.com/avatar/5dab5059b885ef758fdd8f1b724d6434';
-            return res.json({ data: avatar, errorMessage: null });
+            return res
+                .status(400)
+                .json({ data: errorData, errorMessage: null });
         })
         .pipe(res);
 }

@@ -45,9 +45,11 @@ async function fetchProfilePhoto(token: string, tenantId: string) {
         { tenantId }
     );
     if (!response.ok) {
-        throw await response.json();
+        const { data } = await response.json();
+        return data;
     }
-    return response.blob();
+    const blob = await response.blob();
+    return blobToBase64(blob);
 }
 function blobToBase64(blob: Blob) {
     return new Promise<string>((resolve) => {
@@ -63,8 +65,7 @@ function useProfilePicture() {
     const { data: profilePhoto, isLoading } = useQuery(
         ['photo', tenantId],
         async () => {
-            const blob = await fetchProfilePhoto(session.token, tenantId);
-            return blobToBase64(blob);
+            return fetchProfilePhoto(session.token, tenantId);
         },
         { enabled: !!session.token }
     );
