@@ -11,7 +11,7 @@ import { CollapsableFloorSection } from '../../../components/CollapsableFloorSec
 import { AddNewSpaceDialog } from '../../../components/AddNewSpaceDialog';
 import { useState } from 'react';
 import { groupBy } from '../../../helpers/pageHelper';
-import { useSpaces } from '../../../hooks/react-query/useSpaces';
+import { useSpaces } from '../../../hooks/react-query/query/useSpaces';
 import { AppBar } from '../../../components/AppBar';
 import { CustomHead } from '../../../components/CustomHead';
 

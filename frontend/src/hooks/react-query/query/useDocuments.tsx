@@ -1,7 +1,7 @@
-import { useSession } from '../useSession';
+import { useSession } from '../../useSession';
 import { useQuery } from 'react-query';
-import { Document } from '../../types';
-import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
+import { Document } from '../../../types';
+import { createEndpoint, postWithToken } from '../../../helpers/fetchHelper';
 
 export function useDocuments(tenantId: number) {
     const { session } = useSession();

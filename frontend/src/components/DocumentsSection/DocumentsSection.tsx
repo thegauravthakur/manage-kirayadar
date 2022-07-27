@@ -1,6 +1,6 @@
 import { DocumentListItem } from './components/DocumentListItem';
 import { useRouter } from 'next/router';
-import { useDocuments } from '../../hooks/react-query/useDocuments';
+import { useDocuments } from '../../hooks/react-query/query/useDocuments';
 import { LoadingWrapper } from '../LoadingWrapper';
 
 const staticDocuments = [

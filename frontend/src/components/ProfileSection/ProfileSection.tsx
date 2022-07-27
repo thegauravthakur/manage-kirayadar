@@ -2,73 +2,17 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { useState } from 'react';
 import clsx from 'clsx';
 import { showFilePicker } from '../DocumentsSection/components/DocumentListItem';
-import {
-    QueryClient,
-    useMutation,
-    useQuery,
-    useQueryClient,
-} from 'react-query';
-import {
-    fetchTenantProfilePhoto,
-    updateTenantProfilePhoto,
-} from '../../helpers/fetchHelper';
-import { useRouter } from 'next/router';
-import { SnackBarState, useSnackbar } from '../../hooks/zustand/useSnackbar';
-import { CustomError } from '../../types';
-import { useSession } from '../../hooks/useSession';
+import { useTenantProfilePhoto } from '../../hooks/react-query/query/useTenantProfilePhoto';
+import { useTenantUploadPhotoMutation } from '../../hooks/react-query/mutation/useTenantUploadPhotoMutation';
 
 interface ProfileSectionProps {
     name: string;
 }
 
-function useProfilePicture() {
-    const { tenantId } = useRouter().query as Record<string, string>;
-    const { session } = useSession();
-    const { data: profilePhoto, isLoading } = useQuery(
-        ['photo', tenantId],
-        async () => {
-            return fetchTenantProfilePhoto(session.token, tenantId);
-        },
-        { enabled: !!session.token }
-    );
-    return { profilePhoto, isLoading };
-}
-
-async function onPhotoUpload(
-    snackbar: SnackBarState,
-    queryClient: QueryClient,
-    tenantId: string
-) {
-    snackbar.show('Profile photo updated!', 'success');
-    await queryClient.invalidateQueries(['photo', tenantId]);
-}
-
-function onPhotoUploadFail(snackbar: SnackBarState, message: string) {
-    snackbar.show(message, 'error');
-}
-
-function useUploadPhotoMutation() {
-    const { tenantId } = useRouter().query as any;
-    const snackbar = useSnackbar();
-    const queryClient = useQueryClient();
-    const { session } = useSession();
-    const uploadMutation = useMutation(
-        (handles: unknown) =>
-            updateTenantProfilePhoto(session.token, handles, tenantId),
-        {
-            onSuccess: async () =>
-                onPhotoUpload(snackbar, queryClient, tenantId),
-            onError: (e: CustomError) =>
-                onPhotoUploadFail(snackbar, e.errorMessage),
-        }
-    );
-    return { uploadMutation };
-}
-
 export function ProfileSection({ name }: ProfileSectionProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const { profilePhoto } = useProfilePicture();
-    const { uploadMutation } = useUploadPhotoMutation();
+    const { profilePhoto } = useTenantProfilePhoto();
+    const { uploadMutation } = useTenantUploadPhotoMutation();
 
     return (
         <div className='flex flex-col items-center space-y-5 shadow-md p-8 rounded-xl border bg-base-100'>

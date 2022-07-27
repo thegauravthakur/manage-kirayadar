@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { Tenant } from '../../types';
-import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
-import { useSession } from '../useSession';
+import { Tenant } from '../../../types';
+import { createEndpoint, postWithToken } from '../../../helpers/fetchHelper';
+import { useSession } from '../../useSession';
 
 export function useTenants(spaceId: number, initialData?: Tenant[]) {
     const { session } = useSession();

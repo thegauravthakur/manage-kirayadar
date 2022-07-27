@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { Space } from '../../types';
-import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
-import { useSession } from '../useSession';
+import { Space } from '../../../types';
+import { createEndpoint, postWithToken } from '../../../helpers/fetchHelper';
+import { useSession } from '../../useSession';
 
 export function useSpaces(propertyId: number, initialData?: Space[]) {
     const { session } = useSession();
