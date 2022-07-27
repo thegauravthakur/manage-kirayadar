@@ -43,7 +43,7 @@ async function onPhotoUpload(
     await queryClient.invalidateQueries(['photo', tenantId]);
 }
 
-async function onPhotoUploadFail(snackbar: SnackBarState, message: string) {
+function onPhotoUploadFail(snackbar: SnackBarState, message: string) {
     snackbar.show(message, 'error');
 }
 
@@ -56,7 +56,8 @@ function useUploadPhotoMutation() {
         (handles: unknown) =>
             updateTenantProfilePhoto(session.token, handles, tenantId),
         {
-            onSuccess: () => onPhotoUpload(snackbar, queryClient, tenantId),
+            onSuccess: async () =>
+                onPhotoUpload(snackbar, queryClient, tenantId),
             onError: (e: CustomError) =>
                 onPhotoUploadFail(snackbar, e.errorMessage),
         }
