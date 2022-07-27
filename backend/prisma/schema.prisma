@@ -64,7 +64,6 @@ model Tenant {
 model Document {
   id Int @default(autoincrement()) @id
   name String
-  key String
   tenant Tenant @relation(fields: [tenantId], references: [id])
   tenantId Int
 }

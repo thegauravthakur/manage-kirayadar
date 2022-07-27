@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
-import { sendFileFromS3 } from '../../utils/S3';
-import { getUserFromToken } from '../../middleware/protected';
+import { createTenantProfilePhotoKey, sendFileFromS3 } from '../../utils/S3';
 
 export async function getProfilePhoto(req: Request, res: Response) {
-    const { tenantId, propertyId, spaceId } = req.body;
-    const user = getUserFromToken(req)!;
-    const directory = `user/${user.id}/property/${propertyId}/space/${spaceId}/tenant/${tenantId}/profile`;
-    sendFileFromS3(res, directory);
+    try {
+        const { tenantId } = req.body;
+        const directory = createTenantProfilePhotoKey(tenantId);
+        sendFileFromS3(res, directory);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ data: null, errorMessage: '' });
+    }
 }

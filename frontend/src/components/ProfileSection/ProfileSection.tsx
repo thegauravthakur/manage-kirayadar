@@ -37,20 +37,11 @@ async function updateProfilePhoto(
     if (!response.ok) throw data;
     return data;
 }
-async function fetchProfilePhoto(
-    token: string,
-    tenantId: string,
-    propertyId: string,
-    spaceId: string
-) {
+async function fetchProfilePhoto(token: string, tenantId: string) {
     const response = await postWithToken(
         createEndpoint('tenant/profilePhoto'),
         token,
-        {
-            tenantId,
-            propertyId,
-            spaceId,
-        }
+        { tenantId }
     );
     const data = await response.json();
     if (!response.ok) {
@@ -59,15 +50,11 @@ async function fetchProfilePhoto(
     return data;
 }
 function useProfilePicture() {
-    const { tenantId, propertyId, spaceId } = useRouter().query as Record<
-        string,
-        string
-    >;
+    const { tenantId } = useRouter().query as Record<string, string>;
     const { session } = useSession();
     const { data: profilePhoto, isLoading } = useQuery(
         ['photo', tenantId],
-        async () =>
-            fetchProfilePhoto(session.token, tenantId, propertyId, spaceId),
+        async () => fetchProfilePhoto(session.token, tenantId),
         { enabled: !!session.token }
     );
     return { profilePhoto, isLoading };

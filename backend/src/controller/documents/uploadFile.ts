@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { deleteFileFromS3, uploadFileToS3 } from '../../utils/S3';
+import {
+    createTenantDocumentKey,
+    createTenantProfilePhotoKey,
+    deleteFileFromS3,
+    uploadFileToS3,
+} from '../../utils/S3';
 import { getFileExtension, sendError } from '../../utils/shared';
 import { getUserFromToken } from '../../middleware/protected';
 import { z } from 'zod';
@@ -25,44 +30,44 @@ const bodySchema = z.object({
 
 type BodySchema = z.infer<typeof bodySchema>;
 
-async function checkIfAlreadyExists(tenantId: number, safeName: string) {
+async function checkIfAlreadyExists(
+    tenantId: number,
+    safeName: string,
+    s3Key: string
+) {
     const document = await prismaClient.document.findFirst({
         where: { tenantId: tenantId, name: safeName },
     });
     if (document) {
-        await deleteFileFromS3(document.key);
+        await deleteFileFromS3(s3Key);
         await prismaClient.document.delete({
             where: { id: document.id },
         });
     }
 }
 
-async function createDocument(name: string, tenantId: number, key: string) {
-    await prismaClient.document.create({ data: { name, tenantId, key } });
+async function createDocument(name: string, tenantId: number) {
+    await prismaClient.document.create({ data: { name, tenantId } });
 }
 
 export async function uploadFile(request: Request, response: Response) {
     try {
         bodySchema.parse(request.body);
-        const { name, spaceId, tenantId, propertyId } =
-            request.body as BodySchema;
+        const { name, tenantId } = request.body as BodySchema;
         const hasAccess = hasAccessOnTenant(request, Number(tenantId));
         if (!hasAccess) {
             response
                 .status(401)
                 .json({ errorMessage: 'unauthorized!', data: null });
         }
-        const user = getUserFromToken(request)!;
-        const path = `user/${user.id}/property/${propertyId}/space/${spaceId}/tenant/${tenantId}/documents`;
-        const safeName = safeFileName(name);
+        const safeName = safeFileName(name); //todo: encode this thing
+        const path = createTenantDocumentKey(tenantId, safeName);
         if (request.file) {
-            const { originalname, buffer } = request.file;
+            const { buffer, mimetype } = request.file;
             // first checkIf file already exists!
-            await checkIfAlreadyExists(Number(tenantId), safeName);
-            const extension = getFileExtension(originalname);
-            const key = `${path}/${safeName}.${extension}`;
-            const data = await uploadFileToS3(buffer, key);
-            await createDocument(safeName, Number(tenantId), data.Key);
+            await checkIfAlreadyExists(Number(tenantId), safeName, path);
+            await uploadFileToS3(buffer, path, mimetype);
+            await createDocument(safeName, Number(tenantId));
             return response.json({ errorMessage: null, data: null });
         } else {
             return response

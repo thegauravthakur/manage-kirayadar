@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { uploadFileToS3 } from '../../utils/S3';
+import { createTenantProfilePhotoKey, uploadFileToS3 } from '../../utils/S3';
 import { string, z } from 'zod';
 import { getUserFromToken } from '../../middleware/protected';
 import { getFileExtension } from '../../utils/shared';
@@ -15,8 +15,8 @@ export async function updateProfilePhoto(req: Request, res: Response) {
     const user = getUserFromToken(req);
     const file = req.file;
     if (file && user) {
-        const { spaceId, tenantId, propertyId } = req.body as BodySchema;
-        const directory = `user/${user.id}/property/${propertyId}/space/${spaceId}/tenant/${tenantId}/profile`;
+        const { tenantId } = req.body as BodySchema;
+        const directory = createTenantProfilePhotoKey(tenantId);
         await uploadFileToS3(file.buffer, directory, file.mimetype);
         return res.json({ data: null, errorMessage: null });
     }

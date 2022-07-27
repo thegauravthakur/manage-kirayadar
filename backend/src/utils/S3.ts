@@ -9,7 +9,7 @@ const Bucket = env === 'development' ? 'manage-kirayadar-dev' : '';
 export async function uploadFileToS3(
     Body: Body,
     Key: string,
-    mimeType?: string
+    mimeType: string
 ): Promise<SendData> {
     return new Promise((resolve, reject) => {
         const s3 = new S3();
@@ -31,6 +31,10 @@ export function sendFileFromS3(res: Response, Key: string) {
             res.set('Content-Type', headers['content-type']);
         })
         .createReadStream()
+        .on('error', (err) => {
+            console.log(err, Key);
+            return res.status(400).json({ data: null, errorMessage: '' });
+        })
         .pipe(res);
 }
 
@@ -42,4 +46,15 @@ export function deleteFileFromS3(Key: string) {
             resolve(data);
         });
     });
+}
+
+export function createTenantProfilePhotoKey(tenantId: string | number) {
+    return `tenants/${tenantId}/profile`;
+}
+
+export function createTenantDocumentKey(
+    tenantId: string | number,
+    documentName: string
+) {
+    return `tenants/${tenantId}/documents/${documentName}`;
 }

@@ -89,7 +89,7 @@ export function DocumentListItem({
                 await postWithToken(
                     createEndpoint('documents/deleteFile'),
                     session.token,
-                    { documentId }
+                    { documentId, tenantId: Number(queryParams.tenantId) }
                 );
         },
         {
