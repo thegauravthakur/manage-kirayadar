@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../types';
 import { useSession } from '../../hooks/useSession';
+
 interface ProfileSectionProps {
     name: string;
 }
@@ -43,18 +44,28 @@ async function fetchProfilePhoto(token: string, tenantId: string) {
         token,
         { tenantId }
     );
-    const data = await response.json();
     if (!response.ok) {
-        throw data;
+        throw await response.json();
     }
-    return data;
+    return response.blob();
 }
+function blobToBase64(blob: Blob) {
+    return new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+    });
+}
+
 function useProfilePicture() {
     const { tenantId } = useRouter().query as Record<string, string>;
     const { session } = useSession();
     const { data: profilePhoto, isLoading } = useQuery(
         ['photo', tenantId],
-        async () => fetchProfilePhoto(session.token, tenantId),
+        async () => {
+            const blob = await fetchProfilePhoto(session.token, tenantId);
+            return blobToBase64(blob);
+        },
         { enabled: !!session.token }
     );
     return { profilePhoto, isLoading };
@@ -80,13 +91,14 @@ export function ProfileSection({ name }: ProfileSectionProps) {
         }
     );
     const { profilePhoto } = useProfilePicture();
-    console.log({ profilePhoto });
+    console.log(profilePhoto);
     return (
         <div className='flex flex-col items-center space-y-5 shadow-md p-8 rounded-xl border bg-base-100'>
             <div
                 className='h-32 w-32 rounded-full flex items-end justify-center overflow-hidden'
                 style={{
-                    backgroundImage: 'url(https://placeimg.com/150/150/people)',
+                    backgroundImage: `url(${profilePhoto})`,
+                    backgroundSize: 'cover',
                 }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}

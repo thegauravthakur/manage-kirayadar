@@ -4,6 +4,8 @@ import type { Body } from 'aws-sdk/clients/s3';
 import { env } from './shared';
 import { ManagedUpload } from 'aws-sdk/lib/s3/managed_upload';
 import SendData = ManagedUpload.SendData;
+import { createHash } from 'crypto';
+import { prismaClient } from './server';
 
 const Bucket = env === 'development' ? 'manage-kirayadar-dev' : '';
 export async function uploadFileToS3(
@@ -23,6 +25,10 @@ export async function uploadFileToS3(
     });
 }
 
+function fetchGravatar(email: string) {
+    return createHash('md5').update(email).digest('hex');
+}
+
 export function sendFileFromS3(res: Response, Key: string) {
     const s3 = new S3();
     s3.getObject({ Key, Bucket })
@@ -31,9 +37,10 @@ export function sendFileFromS3(res: Response, Key: string) {
             res.set('Content-Type', headers['content-type']);
         })
         .createReadStream()
-        .on('error', (err) => {
-            console.log(err, Key);
-            return res.status(400).json({ data: null, errorMessage: '' });
+        .on('error', () => {
+            const avatar =
+                'https://www.gravatar.com/avatar/5dab5059b885ef758fdd8f1b724d6434';
+            return res.json({ data: avatar, errorMessage: null });
         })
         .pipe(res);
 }

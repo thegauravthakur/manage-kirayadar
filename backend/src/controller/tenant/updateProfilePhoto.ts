@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { createTenantProfilePhotoKey, uploadFileToS3 } from '../../utils/S3';
 import { string, z } from 'zod';
 import { getUserFromToken } from '../../middleware/protected';
-import { getFileExtension } from '../../utils/shared';
 
 const bodySchema = z.object({
     spaceId: string(),
