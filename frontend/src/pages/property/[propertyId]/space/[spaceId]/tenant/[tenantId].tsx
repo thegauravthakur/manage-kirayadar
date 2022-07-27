@@ -39,7 +39,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         const tenant = tenants.find(
             (value: any) => value.id === Number(tenantId)
         );
-        return { props: { tenant } };
+        if (tenant) return { props: { tenant } };
+        else return { notFound: true };
     } catch (e) {
         return { notFound: true };
     }

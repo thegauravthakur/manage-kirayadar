@@ -12,7 +12,7 @@ export function PropertyCard({ name, address, id }: PropertyCardProps) {
                 <h2 className='card-title'>{name}</h2>
                 <p className='text-neutral'>{address}</p>
                 <div className='card-actions justify-end'>
-                    <Link href={`/property/${id}`}>
+                    <Link passHref prefetch href={`/property/${id}`}>
                         <a className='btn btn-primary'>manage</a>
                     </Link>
                 </div>

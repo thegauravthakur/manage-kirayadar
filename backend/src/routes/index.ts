@@ -16,9 +16,9 @@ router.use('/property', auth, propertyRoute);
 router.use('/space', auth, spaceRoute);
 router.use('/tenant', auth, tenantRoute);
 router.use('/documents', auth, documentsRoute);
-router.use('/', async function (req: Request, res: Response) {
-    const properties = await prismaClient.property.findMany({});
-    res.json(properties);
-});
+// router.use('/', async function (req: Request, res: Response) {
+//     const properties = await prismaClient.property.findMany({});
+//     res.json(properties);
+// });
 
 export default router;

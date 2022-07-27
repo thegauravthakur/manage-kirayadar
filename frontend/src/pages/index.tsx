@@ -5,7 +5,6 @@ import { AddNewPropertyCard } from '../components/AddNewPropertyCard';
 import { useProperties } from '../hooks/useProperties';
 import { HiOutlineArrowSmRight } from 'react-icons/hi';
 import { PropertyCard } from '../components/PropertyCard';
-import Link from 'next/link';
 import { AppBar } from '../components/AppBar';
 import { CustomHead } from '../components/CustomHead';
 

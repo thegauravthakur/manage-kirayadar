@@ -2,8 +2,7 @@ import { fromEvent } from 'file-selector';
 
 function getHost() {
     const env = process.env.NEXT_PUBLIC_VERCEL_ENV || 'development';
-    if (env === 'production')
-        return 'https://manage-kirayadar.herokuapp.com/';
+    if (env === 'production') return 'https://manage-kirayadar.herokuapp.com/';
     return 'http://localhost:4242/';
 }
 export function createEndpoint(endpoint: string) {
@@ -64,6 +63,49 @@ export async function uploadFile(
     formData.append('spaceId', spaceId);
     formData.append('tenantId', tenantId);
     const response = await fetch(createEndpoint('documents/uploadFile'), {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Authorization: `bearer ${token}`,
+        },
+    });
+    const data = await response.json();
+    if (!response.ok) throw data;
+    return data;
+}
+
+export async function fetchTenantProfilePhoto(token: string, tenantId: string) {
+    const response = await postWithToken(
+        createEndpoint('tenant/profilePhoto'),
+        token,
+        { tenantId }
+    );
+    if (!response.ok) {
+        const { data } = await response.json();
+        return data;
+    }
+    const blob = await response.blob();
+    return blobToBase64(blob);
+}
+
+function blobToBase64(blob: Blob) {
+    return new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+    });
+}
+
+export async function updateTenantProfilePhoto(
+    token: string,
+    handles: unknown,
+    tenantId: string
+) {
+    const [file] = (await fromEvent(handles)) as [File];
+    const formData = new FormData();
+    formData.append('profilePhoto', file as File);
+    formData.append('tenantId', tenantId);
+    const response = await fetch(createEndpoint('tenant/updateProfile'), {
         method: 'POST',
         body: formData,
         headers: {
