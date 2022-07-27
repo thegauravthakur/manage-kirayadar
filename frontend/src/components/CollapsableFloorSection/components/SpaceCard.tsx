@@ -1,6 +1,7 @@
 import { Space } from '../../../types';
 import { numberToWord } from '../../../helpers/pageHelper';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 interface SpaceCardProps {
     space: Space;
@@ -15,14 +16,13 @@ export function SpaceCard({ space }: SpaceCardProps) {
                 </h3>
                 <p>{numberToWord(space.floor)} floor</p>
             </div>
-            <button
+            <Link
+                prefetch
                 className='btn btn-outline btn-primary btn-sm'
-                onClick={() =>
-                    router.push(`${router.asPath}/space/${space.id}`)
-                }
+                href={`${router.asPath}/space/${space.id}`}
             >
                 Manage
-            </button>
+            </Link>
         </div>
     );
 }

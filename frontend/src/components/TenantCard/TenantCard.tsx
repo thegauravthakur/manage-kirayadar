@@ -1,5 +1,6 @@
 import { Tenant } from '../../types';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 interface TenantCardProps {
     tenant: Tenant;
@@ -14,14 +15,13 @@ export function TenantCard({ tenant }: TenantCardProps) {
                 </h3>
                 <p>{tenant.email}</p>
             </div>
-            <button
+            <Link
+                prefetch
                 className='btn btn-outline btn-primary btn-sm'
-                onClick={async () => {
-                    await router.push(router.asPath + `/tenant/${tenant.id}`);
-                }}
+                href={router.asPath + `/tenant/${tenant.id}`}
             >
                 Manage
-            </button>
+            </Link>
         </div>
     );
 }

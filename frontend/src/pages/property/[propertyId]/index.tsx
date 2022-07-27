@@ -12,7 +12,6 @@ import { AddNewSpaceDialog } from '../../../components/AddNewSpaceDialog';
 import { useState } from 'react';
 import { groupBy } from '../../../helpers/pageHelper';
 import { useSpaces } from '../../../hooks/react-query/useSpaces';
-import Link from 'next/link';
 import { AppBar } from '../../../components/AppBar';
 import { CustomHead } from '../../../components/CustomHead';
 
