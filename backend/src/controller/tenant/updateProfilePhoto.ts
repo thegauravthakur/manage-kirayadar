@@ -16,9 +16,8 @@ export async function updateProfilePhoto(req: Request, res: Response) {
     const file = req.file;
     if (file && user) {
         const { spaceId, tenantId, propertyId } = req.body as BodySchema;
-        const directory = `user/${user.id}/property/${propertyId}/space/${spaceId}/tenant/${tenantId}/`;
-        const path = `profile.${getFileExtension(file.originalname)}`;
-        await uploadFileToS3(file.buffer, `${directory}${path}`);
+        const directory = `user/${user.id}/property/${propertyId}/space/${spaceId}/tenant/${tenantId}/profile`;
+        await uploadFileToS3(file.buffer, directory, file.mimetype);
         return res.json({ data: null, errorMessage: null });
     }
     return res.json({ data: null, errorMessage: null });

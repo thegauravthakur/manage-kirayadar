@@ -3,8 +3,8 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { showFilePicker } from '../DocumentsSection/components/DocumentListItem';
 import { fromEvent } from 'file-selector';
-import { useMutation } from 'react-query';
-import { createEndpoint } from '../../helpers/fetchHelper';
+import { useMutation, useQuery } from 'react-query';
+import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../types';
@@ -37,6 +37,41 @@ async function updateProfilePhoto(
     if (!response.ok) throw data;
     return data;
 }
+async function fetchProfilePhoto(
+    token: string,
+    tenantId: string,
+    propertyId: string,
+    spaceId: string
+) {
+    const response = await postWithToken(
+        createEndpoint('tenant/profilePhoto'),
+        token,
+        {
+            tenantId,
+            propertyId,
+            spaceId,
+        }
+    );
+    const data = await response.json();
+    if (!response.ok) {
+        throw data;
+    }
+    return data;
+}
+function useProfilePicture() {
+    const { tenantId, propertyId, spaceId } = useRouter().query as Record<
+        string,
+        string
+    >;
+    const { session } = useSession();
+    const { data: profilePhoto, isLoading } = useQuery(
+        ['photo', tenantId],
+        async () =>
+            fetchProfilePhoto(session.token, tenantId, propertyId, spaceId),
+        { enabled: !!session.token }
+    );
+    return { profilePhoto, isLoading };
+}
 
 export function ProfileSection({ name }: ProfileSectionProps) {
     const [isHovered, setIsHovered] = useState(false);
@@ -57,6 +92,8 @@ export function ProfileSection({ name }: ProfileSectionProps) {
             onError: (e: CustomError) => snackbar.show(e.errorMessage, 'error'),
         }
     );
+    const { profilePhoto } = useProfilePicture();
+    console.log({ profilePhoto });
     return (
         <div className='flex flex-col items-center space-y-5 shadow-md p-8 rounded-xl border bg-base-100'>
             <div

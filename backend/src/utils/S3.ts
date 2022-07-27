@@ -8,20 +8,30 @@ import SendData = ManagedUpload.SendData;
 const Bucket = env === 'development' ? 'manage-kirayadar-dev' : '';
 export async function uploadFileToS3(
     Body: Body,
-    Key: string
+    Key: string,
+    mimeType?: string
 ): Promise<SendData> {
     return new Promise((resolve, reject) => {
         const s3 = new S3();
-        s3.upload({ Key, Body, Bucket }, function (err, data) {
-            if (err) reject(err);
-            resolve(data);
-        });
+        s3.upload(
+            { Key, Body, Bucket, ContentType: mimeType },
+            function (err, data) {
+                if (err) reject(err);
+                resolve(data);
+            }
+        );
     });
 }
 
 export function sendFileFromS3(res: Response, Key: string) {
     const s3 = new S3();
-    s3.getObject({ Key, Bucket }).createReadStream().pipe(res);
+    s3.getObject({ Key, Bucket })
+        .on('httpHeaders', function (statusCode, headers) {
+            res.set('Content-Length', headers['content-length']);
+            res.set('Content-Type', headers['content-type']);
+        })
+        .createReadStream()
+        .pipe(res);
 }
 
 export function deleteFileFromS3(Key: string) {
