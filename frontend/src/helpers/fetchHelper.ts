@@ -98,12 +98,11 @@ function blobToBase64(blob: Blob) {
 
 export async function updateTenantProfilePhoto(
     token: string,
-    handles: unknown,
+    file: File,
     tenantId: string
 ) {
-    const [file] = (await fromEvent(handles)) as [File];
     const formData = new FormData();
-    formData.append('profilePhoto', file as File);
+    formData.append('profilePhoto', file);
     formData.append('tenantId', tenantId);
     const response = await fetch(createEndpoint('tenant/updateProfile'), {
         method: 'POST',

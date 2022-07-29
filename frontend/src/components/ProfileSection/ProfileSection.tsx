@@ -1,7 +1,6 @@
 import { AiOutlineEdit } from 'react-icons/ai';
 import { useState } from 'react';
 import clsx from 'clsx';
-import { showFilePicker } from '../DocumentsSection/components/DocumentListItem';
 import { useTenantProfilePhoto } from '../../hooks/react-query/query/useTenantProfilePhoto';
 import { useTenantUploadPhotoMutation } from '../../hooks/react-query/mutation/useTenantUploadPhotoMutation';
 
@@ -25,20 +24,29 @@ export function ProfileSection({ name }: ProfileSectionProps) {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
-                <button
+                <input
+                    hidden
+                    accept='image/*'
+                    id='chose-file'
+                    type='file'
+                    onChange={(event) => {
+                        if (event.target.files) {
+                            const file = event.target.files[0];
+                            uploadMutation.mutate(file);
+                        }
+                    }}
+                />
+                <label
                     className={clsx(
-                        'bg-base-200 bg-opacity-80 w-full rounded-b-full text-sm h-10 flex justify-center items-center',
+                        'bg-base-200 bg-opacity-80 w-full rounded-b-full text-sm h-10 flex justify-center items-center cursor-pointer',
                         'transition-opacity duration-200 ease-in-out',
                         isHovered ? 'opacity-100' : 'opacity-0'
                     )}
-                    onClick={async () => {
-                        const handles = await showFilePicker();
-                        uploadMutation.mutate(handles);
-                    }}
+                    htmlFor='chose-file'
                 >
                     update
                     <AiOutlineEdit size={18} />
-                </button>
+                </label>
             </div>
             <div className='flex flex-col items-center'>
                 <h2 className='text-2xl font-semibold text-primary'>{name}</h2>

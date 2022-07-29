@@ -24,8 +24,7 @@ export function useTenantUploadPhotoMutation() {
     const queryClient = useQueryClient();
     const { session } = useSession();
     const uploadMutation = useMutation(
-        (handles: unknown) =>
-            updateTenantProfilePhoto(session.token, handles, tenantId),
+        (file: File) => updateTenantProfilePhoto(session.token, file, tenantId),
         {
             onSuccess: async () =>
                 onPhotoUpload(snackbar, queryClient, tenantId),
