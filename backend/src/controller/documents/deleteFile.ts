@@ -1,11 +1,7 @@
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { prismaClient } from '../../utils/server';
-import {
-    createTenantDocumentKey,
-    createTenantProfilePhotoKey,
-    deleteFileFromS3,
-} from '../../utils/S3';
+import { createTenantDocumentKey, deleteFileFromS3 } from '../../utils/S3';
 import { hasAccessOnDocument } from '../../utils/jwt';
 import { sendError } from '../../utils/shared';
 

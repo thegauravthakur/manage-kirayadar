@@ -21,6 +21,7 @@ export function AddNewPropertyCard() {
                     Simply register a new property with minutes, and I&apos;ll
                     take care of the rest
                 </p>
+
                 <div className='card-actions justify-end'>
                     <button
                         className='btn btn-primary btn-md'
