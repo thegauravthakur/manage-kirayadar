@@ -5,7 +5,10 @@ import { verifyToken } from '../../utils/jwt';
 export function currentUser(req: Request, res: Response) {
     const authHeader = req.headers['authorization'];
     const access_token = authHeader && authHeader.split(' ')[1];
-    if (!access_token) return res.sendStatus(401);
+    if (!access_token)
+        return res
+            .status(401)
+            .json({ data: null, errorMessage: 'unauthorized!' });
 
     try {
         z.string().parse(access_token);
@@ -15,6 +18,8 @@ export function currentUser(req: Request, res: Response) {
         const { iat, exp, ...filteredUser } = user as any;
         return res.json({ data: { user: filteredUser }, error: null });
     } catch (error) {
-        return res.status(401).json({ error: 'unauthorized!', data: null });
+        return res
+            .status(401)
+            .json({ errorMessage: 'unauthorized!', data: null });
     }
 }

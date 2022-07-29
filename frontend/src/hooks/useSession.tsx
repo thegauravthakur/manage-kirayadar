@@ -13,8 +13,8 @@ export function useSession(): Session {
     const { data: session, isLoading } = useQuery(
         'session',
         async () => {
-            const result = await getCurrentUser(token ?? '');
-            return result.data;
+            const user = await getCurrentUser(token ?? '');
+            return user;
         },
         { enabled: token !== undefined }
     );

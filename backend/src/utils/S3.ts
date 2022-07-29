@@ -4,8 +4,7 @@ import type { Body } from 'aws-sdk/clients/s3';
 import { env } from './shared';
 import { ManagedUpload } from 'aws-sdk/lib/s3/managed_upload';
 import SendData = ManagedUpload.SendData;
-import { createHash } from 'crypto';
-import { prismaClient } from './server';
+const signedUrlExpireSeconds = 60 * 60 * 24;
 
 const Bucket = env === 'development' ? 'manage-kirayadar-dev' : '';
 export async function uploadFileToS3(
@@ -42,7 +41,7 @@ export function sendFileFromS3(
                 .status(400)
                 .json({ data: errorData, errorMessage: null });
         })
-        .pipe(res);
+        .pipe(res.set('Access-Control-Allow-Origin', 'h'));
 }
 
 export function deleteFileFromS3(Key: string) {
@@ -64,4 +63,17 @@ export function createTenantDocumentKey(
     documentName: string
 ) {
     return `tenants/${tenantId}/documents/${documentName}`;
+}
+
+export function getSignedUrl(Key: string): string | null {
+    try {
+        const s3 = new S3();
+        return s3.getSignedUrl('getObject', {
+            Bucket: Bucket,
+            Key: Key,
+            Expires: signedUrlExpireSeconds,
+        });
+    } catch (error) {
+        return null;
+    }
 }

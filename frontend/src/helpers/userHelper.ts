@@ -25,7 +25,7 @@ export async function getCurrentUser(accessToken: string) {
         createEndpoint('user/current'),
         accessToken
     );
-    if (!response.ok) throw new Error('unauthorized!');
-    const result: JSONResponse<{ user: User }> = await response.json();
-    return result;
+    if (!response.ok) return null;
+    const { data }: JSONResponse<{ user: User }> = await response.json();
+    return data?.user;
 }

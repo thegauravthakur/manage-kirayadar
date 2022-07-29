@@ -54,8 +54,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     try {
         const accessToken = getCookie('accessToken', { req, res });
         if (accessToken) {
-            const result = await getCurrentUser(accessToken as string);
-            if (result.data?.user)
+            const user = await getCurrentUser(accessToken as string);
+            if (user)
                 return {
                     redirect: {
                         destination: '/',

@@ -80,12 +80,11 @@ export async function fetchTenantProfilePhoto(token: string, tenantId: string) {
         token,
         { tenantId }
     );
+    const { data } = await response.json();
     if (!response.ok) {
-        const { data } = await response.json();
-        return data;
+        throw data;
     }
-    const blob = await response.blob();
-    return blobToBase64(blob);
+    return data;
 }
 
 function blobToBase64(blob: Blob) {

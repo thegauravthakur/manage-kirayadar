@@ -47,8 +47,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         const accessToken = getCookie('accessToken', { req, res });
         if (!accessToken) return redirect;
         if (accessToken) {
-            const result = await getCurrentUser(accessToken as string);
-            if (!result.data?.user) return redirect;
+            const user = await getCurrentUser(accessToken as string);
+            if (!user) return redirect;
         }
     } catch (error) {
         return redirect;

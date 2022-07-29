@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import userRoute from './user.route';
 import otpRoute from './otp.route';
 import propertyRoute from './property.route';
@@ -6,7 +5,6 @@ import { auth } from '../middleware/protected';
 import tenantRoute from './tenant.route';
 import spaceRoute from './space.route';
 import documentsRoute from './documents.route';
-import { prismaClient } from '../utils/server';
 const express = require('express');
 const router = express.Router();
 

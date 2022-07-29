@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createTenantProfilePhotoKey, sendFileFromS3 } from '../../utils/S3';
+import { createTenantProfilePhotoKey, getSignedUrl } from '../../utils/S3';
 import { createHash } from 'crypto';
 import { prismaClient } from '../../utils/server';
 
@@ -15,9 +15,12 @@ export async function getProfilePhoto(req: Request, res: Response) {
             where: { id: Number(tenantId) },
         });
         const directory = createTenantProfilePhotoKey(tenantId);
-        sendFileFromS3(res, directory, fetchGravatar(tenant?.email ?? ''));
+        const url = getSignedUrl(directory);
+        res.json({
+            data: url ?? fetchGravatar(tenant?.email ?? ''),
+            errorMessage: null,
+        });
     } catch (error) {
-        console.log(error);
         res.status(400).json({ data: null, errorMessage: '' });
     }
 }
