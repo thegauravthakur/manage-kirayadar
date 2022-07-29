@@ -15,7 +15,7 @@ export function TenantCard({ tenant }: TenantCardProps) {
                 </h3>
                 <p>{tenant.email}</p>
             </div>
-            <Link prefetch href={router.asPath + `/tenant/${tenant.id}`}>
+            <Link href={router.asPath + `/tenant/${tenant.id}`}>
                 <a className='btn btn-outline btn-primary btn-sm'>Manage</a>
             </Link>
         </div>

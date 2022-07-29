@@ -16,7 +16,7 @@ export function SpaceCard({ space }: SpaceCardProps) {
                 </h3>
                 <p>{numberToWord(space.floor)} floor</p>
             </div>
-            <Link prefetch href={`${router.asPath}/space/${space.id}`}>
+            <Link href={`${router.asPath}/space/${space.id}`}>
                 <a className='btn btn-outline btn-primary btn-sm'>Manage</a>
             </Link>
         </div>
