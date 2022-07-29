@@ -20,11 +20,11 @@ export function getFileExtension(name: string) {
     return name.slice(last_dot + 1);
 }
 
-// const whitelist = [
-//     'http://localhost:3000',
-//     'https://manage-kirayadar.vercel.app',
-//     'https://manage-kirayadar.herokuapp.com',
-// ];
+const whitelist = [
+    'http://localhost:3000',
+    'https://manage-kirayadar.vercel.app',
+    'https://manage-kirayadar.herokuapp.com',
+];
 export const corsOptions: CorsOptions = {
-    origin: '*', // todo: add specific URL here instead of allowing all origins
+    origin: whitelist,
 };
