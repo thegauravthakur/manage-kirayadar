@@ -51,14 +51,14 @@ export default function DetailedProperty({
                         />
                     );
                 })}
-                <div>
+                <span>
                     <AddNewSpaceDialog
                         propertyId={property.id}
                         setShowDialog={setShowDialog}
                         showDialog={showDialog}
                         totalFloors={property.totalFloors}
                     />
-                </div>
+                </span>
             </div>
         </div>
     );
@@ -71,14 +71,12 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
     try {
         const accessToken = getCookie('accessToken', { req, res }) as string;
-        if (accessToken) {
-            const property = await getProperty(accessToken, Number(propertyId));
-            if (property) {
-                const spaces = await getSpaces(accessToken, property.id);
-                return { props: { property, spaces } };
-            }
-            return { notFound: true };
+        const property = await getProperty(accessToken, Number(propertyId));
+        if (property) {
+            const spaces = await getSpaces(accessToken, property.id);
+            return { props: { property, spaces } };
         }
+        return { notFound: true };
     } catch (error) {}
     return { notFound: true };
 };
