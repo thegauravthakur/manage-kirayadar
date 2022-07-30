@@ -18,7 +18,7 @@ export function ProfileSection({ name }: ProfileSectionProps) {
             <div
                 className='h-32 w-32 rounded-full flex items-end justify-center overflow-hidden'
                 style={{
-                    backgroundImage: `url(${profilePhoto})`,
+                    backgroundImage: `url(${profilePhoto ?? ''})`,
                     backgroundSize: 'cover',
                 }}
                 onMouseEnter={() => setIsHovered(true)}
