@@ -21,7 +21,8 @@ export async function getProfilePhoto(req: Request, res: Response) {
             data: url ?? fetchGravatar(tenant?.email ?? ''),
             errorMessage: null,
         });
-    } catch (error) {
-        res.status(400).json({ data: null, errorMessage: '' });
+    } catch (error: any) {
+        console.log(error);
+        res.status(400).json({ data: null, errorMessage: error.message });
     }
 }
