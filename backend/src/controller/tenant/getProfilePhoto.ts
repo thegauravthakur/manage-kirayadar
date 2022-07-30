@@ -22,6 +22,6 @@ export async function getProfilePhoto(req: Request, res: Response) {
         });
     } catch (error: any) {
         console.log(error);
-        res.status(400).json({ data: null, errorMessage: '' });
+        res.status(400).json({ data: null, errorMessage: error.message });
     }
 }
