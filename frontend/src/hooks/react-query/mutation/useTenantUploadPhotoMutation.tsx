@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import { SnackBarState, useSnackbar } from '../../zustand/useSnackbar';
 import { QueryClient, useMutation, useQueryClient } from 'react-query';
 import { useSession } from '../../useSession';
-import { updateTenantProfilePhoto } from '../../../helpers/fetchHelper';
 import { CustomError } from '../../../types';
+import { updateTenantProfilePhoto } from '../../../helpers/tenantHelper';
 
 async function onPhotoUpload(
     snackbar: SnackBarState,

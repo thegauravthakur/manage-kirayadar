@@ -19,5 +19,5 @@ const port = process.env.PORT || 4242;
 app.use(routes);
 
 httpServer.listen(port, () => {
-    console.log(`unsecure server started at port 4242`);
+    console.log(`server started at port: ${port}`);
 });

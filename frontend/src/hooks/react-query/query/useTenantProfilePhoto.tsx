@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useSession } from '../../useSession';
 import { useQuery } from 'react-query';
-import { fetchTenantProfilePhoto } from '../../../helpers/fetchHelper';
+import { fetchTenantProfilePhoto } from '../../../helpers/tenantHelper';
 
 export function useTenantProfilePhoto() {
     const { tenantId } = useRouter().query as Record<string, string>;
