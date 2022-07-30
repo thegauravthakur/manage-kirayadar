@@ -8,9 +8,7 @@ export function useTenantProfilePhoto() {
     const { session } = useSession();
     const { data: profilePhoto, isLoading } = useQuery(
         ['photo', tenantId],
-        async () => {
-            return fetchTenantProfilePhoto(session.token, tenantId);
-        },
+        async () => fetchTenantProfilePhoto(session.token, tenantId),
         { enabled: !!session.token, refetchOnWindowFocus: false }
     );
     return { profilePhoto, isLoading };

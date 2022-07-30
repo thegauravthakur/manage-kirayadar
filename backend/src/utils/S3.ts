@@ -65,10 +65,10 @@ export function createTenantDocumentKey(
     return `tenants/${tenantId}/documents/${documentName}`;
 }
 
-export function getSignedUrl(Key: string): string | null {
+export async function getSignedUrl(Key: string): Promise<string | null> {
     try {
         const s3 = new S3({ signatureVersion: 'v4', region: 'ap-south-1' });
-        return s3.getSignedUrl('getObject', {
+        return s3.getSignedUrlPromise('getObject', {
             Bucket: Bucket,
             Key: Key,
             Expires: signedUrlExpireSeconds,
