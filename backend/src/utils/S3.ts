@@ -6,7 +6,10 @@ import { ManagedUpload } from 'aws-sdk/lib/s3/managed_upload';
 import SendData = ManagedUpload.SendData;
 const signedUrlExpireSeconds = 60 * 60 * 24;
 
-const Bucket = env === 'development' ? 'manage-kirayadar-dev' : '';
+//todo: update this to prod one
+const Bucket =
+    env === 'development' ? 'manage-kirayadar-dev' : 'manage-kirayadar-dev';
+
 export async function uploadFileToS3(
     Body: Body,
     Key: string,
@@ -74,7 +77,6 @@ export async function getSignedUrl(Key: string): Promise<string | null> {
             Expires: signedUrlExpireSeconds,
         });
     } catch (error: any) {
-        console.log(error.message);
         return null;
     }
 }

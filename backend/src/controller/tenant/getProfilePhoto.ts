@@ -16,13 +16,11 @@ export async function getProfilePhoto(req: Request, res: Response) {
         });
         const directory = createTenantProfilePhotoKey(tenantId);
         const url = await getSignedUrl(directory);
-        console.log(url);
         res.json({
             data: url ?? fetchGravatar(tenant?.email ?? ''),
             errorMessage: null,
         });
     } catch (error: any) {
-        console.log(error);
-        res.status(400).json({ data: null, errorMessage: error.message });
+        res.status(400).json({ data: null, errorMessage: '' });
     }
 }
