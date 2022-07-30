@@ -74,6 +74,7 @@ export async function getSignedUrl(Key: string): Promise<string | null> {
             Expires: signedUrlExpireSeconds,
         });
     } catch (error: any) {
+        console.log(error.message);
         return null;
     }
 }
