@@ -67,13 +67,13 @@ export function createTenantDocumentKey(
 
 export function getSignedUrl(Key: string): string | null {
     try {
-        const s3 = new S3();
+        const s3 = new S3({ signatureVersion: 'v4', region: 'ap-south-1' });
         return s3.getSignedUrl('getObject', {
             Bucket: Bucket,
             Key: Key,
             Expires: signedUrlExpireSeconds,
         });
-    } catch (error) {
+    } catch (error: any) {
         return null;
     }
 }
