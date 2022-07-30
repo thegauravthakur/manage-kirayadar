@@ -32,10 +32,8 @@ export async function getFileFromS3(request: Request, response: Response) {
             where: { id: Number(documentId), tenantId: Number(tenantId) },
         });
         if (document) {
-            // response.attachment(document.key.split('/').at(-1));
             const path = createTenantDocumentKey(tenantId, document.name);
             sendFileFromS3(response, path);
-            response.json({ data: null, error: null });
         } else
             response
                 .status(400)

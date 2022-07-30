@@ -44,7 +44,7 @@ export function sendFileFromS3(
                 .status(400)
                 .json({ data: errorData, errorMessage: null });
         })
-        .pipe(res.set('Access-Control-Allow-Origin', 'h'));
+        .pipe(res);
 }
 
 export function deleteFileFromS3(Key: string) {
