@@ -11,7 +11,7 @@ export function useTenantProfilePhoto() {
         async () => {
             return fetchTenantProfilePhoto(session.token, tenantId);
         },
-        { enabled: !!session.token }
+        { enabled: !!session.token, refetchOnWindowFocus: false }
     );
     return { profilePhoto, isLoading };
 }

@@ -84,6 +84,7 @@ export async function fetchTenantProfilePhoto(token: string, tenantId: string) {
     if (!response.ok) {
         throw data;
     }
+    console.log(data);
     return data;
 }
 
