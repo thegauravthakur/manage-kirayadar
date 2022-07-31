@@ -7,7 +7,7 @@ interface PropertyCardProps {
 }
 export function PropertyCard({ name, address, id }: PropertyCardProps) {
     return (
-        <div className='card w-full max-w-sm bg-base-100 shadow-xl'>
+        <div className='card w-full max-w-sm bg-base-100 shadow-xl h-60'>
             <div className='card-body'>
                 <h2 className='card-title'>{name}</h2>
                 <p className='text-neutral'>{address}</p>

@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import '../styles/globals.css';
+import 'swiper/css';
 import { useState } from 'react';
 import { Snackbar } from '../components/Snackbar';
 import NextNProgress from 'nextjs-progressbar';

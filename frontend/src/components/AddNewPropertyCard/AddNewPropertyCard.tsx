@@ -6,7 +6,7 @@ export function AddNewPropertyCard() {
     const [showDialog, setShowDialog] = useState(false);
 
     return (
-        <div className='carousel-item card w-full max-w-sm bg-base-100 shadow-xl image-full'>
+        <div className='card w-full max-w-sm bg-base-100 shadow-xl image-full h-60'>
             <figure>
                 <Image
                     alt='house'

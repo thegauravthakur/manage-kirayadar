@@ -11,6 +11,7 @@ import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../types';
 import ReactFocusLock from 'focus-trap-react';
 import { FormLabel } from '../FormLabel';
+import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
 
 interface AddNewPropertyDialogProps {
     showDialog: boolean;
@@ -72,90 +73,92 @@ export function AddNewPropertyDialog({
     );
     const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
     return (
-        <ReactFocusLock active={showDialog}>
-            <div
-                className={clsx('modal', {
-                    'modal-open': showDialog,
-                })}
-            >
-                <form className='modal-box space-y-5' onSubmit={onSubmit}>
-                    <div className=''>
-                        <div className='flex justify-between mb-5'>
-                            <h2 className='font-bold text-lg'>
-                                Add New Property
-                            </h2>
-                            <button
-                                className='btn btn-circle btn-sm btn-outline'
-                                type='button'
-                                onClick={() => {
-                                    reset();
-                                    setShowDialog(false);
-                                }}
-                            >
-                                <AiOutlineClose fontSize={18} />
-                            </button>
-                        </div>
-                        <FormLabel
-                            errorText={errors.name?.message}
-                            id='name'
-                            labelText='What is name of this property?'
-                        >
-                            <input
-                                className={clsx(
-                                    'input input-bordered input-primary input-md w-full',
-                                    { 'input-error': !!errors.name }
-                                )}
+        <ClientOnlyPortal>
+            <ReactFocusLock active={showDialog}>
+                <div
+                    className={clsx('modal', {
+                        'modal-open': showDialog,
+                    })}
+                >
+                    <form className='modal-box space-y-5' onSubmit={onSubmit}>
+                        <div className=''>
+                            <div className='flex justify-between mb-5'>
+                                <h2 className='font-bold text-lg'>
+                                    Add New Property
+                                </h2>
+                                <button
+                                    className='btn btn-circle btn-sm btn-outline'
+                                    type='button'
+                                    onClick={() => {
+                                        reset();
+                                        setShowDialog(false);
+                                    }}
+                                >
+                                    <AiOutlineClose fontSize={18} />
+                                </button>
+                            </div>
+                            <FormLabel
+                                errorText={errors.name?.message}
                                 id='name'
-                                placeholder='Enter a name...'
-                                type='text'
-                                {...register('name')}
-                            />
-                        </FormLabel>
-                        <FormLabel
-                            errorText={errors.totalFloors?.message}
-                            id='totalFloors'
-                            labelText='How many floors are there?'
-                        >
-                            <input
-                                className={clsx(
-                                    'input input-bordered input-primary input-md w-full',
-                                    { 'input-error': !!errors.totalFloors }
-                                )}
+                                labelText='What is name of this property?'
+                            >
+                                <input
+                                    className={clsx(
+                                        'input input-bordered input-primary input-md w-full',
+                                        { 'input-error': !!errors.name }
+                                    )}
+                                    id='name'
+                                    placeholder='Enter a name...'
+                                    type='text'
+                                    {...register('name')}
+                                />
+                            </FormLabel>
+                            <FormLabel
+                                errorText={errors.totalFloors?.message}
                                 id='totalFloors'
-                                placeholder='total number of floors...'
-                                type='text'
-                                {...register('totalFloors', {
-                                    valueAsNumber: true,
-                                })}
-                            />
-                        </FormLabel>
-                        <FormLabel
-                            errorText={errors.address?.message}
-                            id='address'
-                            labelText='Where is this property located?'
-                        >
-                            <input
-                                className={clsx(
-                                    'input input-bordered input-primary input-md w-full',
-                                    { 'input-error': !!errors.address }
-                                )}
+                                labelText='How many floors are there?'
+                            >
+                                <input
+                                    className={clsx(
+                                        'input input-bordered input-primary input-md w-full',
+                                        { 'input-error': !!errors.totalFloors }
+                                    )}
+                                    id='totalFloors'
+                                    placeholder='total number of floors...'
+                                    type='text'
+                                    {...register('totalFloors', {
+                                        valueAsNumber: true,
+                                    })}
+                                />
+                            </FormLabel>
+                            <FormLabel
+                                errorText={errors.address?.message}
                                 id='address'
-                                placeholder='Enter city name...'
-                                type='text'
-                                {...register('address')}
-                            />
-                        </FormLabel>
-                    </div>
-                    <button
-                        className={clsx('btn btn-primary btn-block', {
-                            loading: mutation.isLoading,
-                        })}
-                        type='submit'
-                    >
-                        create new property
-                    </button>
-                </form>
-            </div>
-        </ReactFocusLock>
+                                labelText='Where is this property located?'
+                            >
+                                <input
+                                    className={clsx(
+                                        'input input-bordered input-primary input-md w-full',
+                                        { 'input-error': !!errors.address }
+                                    )}
+                                    id='address'
+                                    placeholder='Enter city name...'
+                                    type='text'
+                                    {...register('address')}
+                                />
+                            </FormLabel>
+                        </div>
+                        <button
+                            className={clsx('btn btn-primary btn-block', {
+                                loading: mutation.isLoading,
+                            })}
+                            type='submit'
+                        >
+                            create new property
+                        </button>
+                    </form>
+                </div>
+            </ReactFocusLock>
+        </ClientOnlyPortal>
     );
 }
