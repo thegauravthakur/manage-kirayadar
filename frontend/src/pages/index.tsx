@@ -8,6 +8,9 @@ import { AppBar } from '../components/AppBar';
 import { CustomHead } from '../components/CustomHead';
 import { SwiperSlide, Swiper } from 'swiper/react';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { PropertyCardShimmer } from '../components/PropertyCard/PropertyCardShimmer';
+import { createEmptyArray } from '../helpers/pageHelper';
+import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
 
 function useSlidesPerView() {
     const _630 = useMediaQuery(`(min-width: 630px)`);
@@ -27,7 +30,8 @@ function useSlidesPerView() {
     return 1.1;
 }
 const Home: NextPage = () => {
-    const { properties } = useProperties();
+    const { properties, isLoading } = useProperties();
+    const emptyArray = createEmptyArray(6);
     const slides = useSlidesPerView();
     const showNewPropertyCard = useMediaQuery(`(min-width: 860px)`);
     return (
@@ -48,6 +52,12 @@ const Home: NextPage = () => {
                             <AddNewPropertyCard />
                         </SwiperSlide>
                     )}
+                    {isLoading &&
+                        emptyArray.map((value) => (
+                            <SwiperSlide key={value}>
+                                <PropertyCardShimmer />
+                            </SwiperSlide>
+                        ))}
                     {properties?.map(({ id, name, address }) => (
                         <SwiperSlide key={id}>
                             <PropertyCard
