@@ -20,11 +20,7 @@ export function FormLabel({
             </label>
             {children}
             {!!errorText && (
-                <label className='label'>
-                    <span className='label-text-alt text-error'>
-                        {errorText}
-                    </span>
-                </label>
+                <span className='text-error text-xs pl-2'>{errorText}</span>
             )}
         </div>
     );

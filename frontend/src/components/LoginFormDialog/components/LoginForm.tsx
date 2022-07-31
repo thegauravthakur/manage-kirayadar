@@ -2,12 +2,14 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { JSONResponse, postWithData } from '../../../helpers/fetchHelper';
 import { useRouter } from 'next/router';
-import { RefObject, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import clsx from 'clsx';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomError } from '../../../types';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
+import { FormLabel } from '../../FormLabel';
+import { AiOutlineClose } from 'react-icons/ai';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'email not properly formatted' }),
@@ -25,16 +27,17 @@ async function loginUser(formData: FormSchema) {
 
 interface LoginFormProps {
     showDialog: boolean;
-    formRef: RefObject<HTMLFormElement>;
+    setShowDialog: Dispatch<SetStateAction<boolean>>;
 }
 
-export function LoginForm({ formRef, showDialog }: LoginFormProps) {
+export function LoginForm({ showDialog, setShowDialog }: LoginFormProps) {
     const router = useRouter();
     const {
         register,
         handleSubmit,
         setFocus,
         formState: { errors },
+        reset,
     } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
     });
@@ -58,62 +61,64 @@ export function LoginForm({ formRef, showDialog }: LoginFormProps) {
     }, [setFocus, showDialog]);
 
     return (
-        <form
-            ref={formRef}
-            className='p-4 rounded-md w-full max-w-sm mx-auto'
-            method='post'
-            onSubmit={onSubmit}
-        >
-            <fieldset>
-                <label className='label' htmlFor='email'>
-                    <span className='label-text'>What is your email?</span>
-                </label>
-                <input
-                    className={clsx(
-                        'input input-bordered input-primary input-md w-full',
-                        { 'input-error': !!errors.email }
-                    )}
-                    id='email'
-                    placeholder='Your email...'
-                    type='email'
-                    {...register('email')}
-                />
-                <label className='label'>
-                    {errors.email && (
-                        <span className='label-text-alt text-error'>
-                            {errors.email.message}
-                        </span>
-                    )}
-                </label>
-                <label className='label' htmlFor='password'>
-                    <span className='label-text'>What is your password?</span>
-                </label>
-                <input
-                    className={clsx(
-                        'input input-bordered input-primary input-md w-full',
-                        { 'input-error': !!errors.password }
-                    )}
-                    id='password'
-                    placeholder='Your password...'
-                    type='password'
-                    {...register('password')}
-                />
-                <label className='label'>
-                    {errors.password && (
-                        <span className='label-text-alt text-error'>
-                            {errors.password.message}
-                        </span>
-                    )}
-                </label>
+        <div className='space-y-5'>
+            <div className={clsx('flex items-center')}>
+                <h2 className={clsx('font-bold text-lg flex-1 text-center')}>
+                    Login to your account
+                </h2>
                 <button
-                    className={clsx('btn btn-primary btn-block', {
+                    className='btn btn-circle btn-sm btn-outline'
+                    type='button'
+                    onClick={() => {
+                        setShowDialog(false);
+                        reset();
+                    }}
+                >
+                    <AiOutlineClose fontSize={18} />
+                </button>
+            </div>
+            <form method='post' onSubmit={onSubmit}>
+                <FormLabel
+                    errorText={errors.email?.message}
+                    id='email'
+                    labelText='What is your email'
+                >
+                    <input
+                        className={clsx(
+                            'input input-bordered input-primary input-md w-full',
+                            { 'input-error': !!errors.email }
+                        )}
+                        id='email'
+                        placeholder='Your email...'
+                        type='email'
+                        {...register('email')}
+                    />
+                </FormLabel>
+                <FormLabel
+                    errorText={errors.password?.message}
+                    id='password'
+                    labelText='What is your password?'
+                >
+                    <input
+                        className={clsx(
+                            'input input-bordered input-primary input-md w-full',
+                            { 'input-error': !!errors.password }
+                        )}
+                        id='password'
+                        placeholder='Your password...'
+                        type='password'
+                        {...register('password')}
+                    />
+                </FormLabel>
+                <button
+                    className={clsx('btn btn-primary btn-block mt-5', {
                         loading: mutation.isLoading,
                     })}
                     type='submit'
                 >
                     Login
                 </button>
-            </fieldset>
-        </form>
+            </form>
+        </div>
     );
 }
