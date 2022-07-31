@@ -5,6 +5,7 @@ import 'swiper/css';
 import { useState } from 'react';
 import { Snackbar } from '../components/Snackbar';
 import NextNProgress from 'nextjs-progressbar';
+import { GlobalSpinner } from '../components/GlobalSpinner';
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient());
@@ -17,6 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     options={{ showSpinner: false }}
                 />
                 <Snackbar />
+                <GlobalSpinner />
                 <Component {...pageProps} />
             </Hydrate>
         </QueryClientProvider>

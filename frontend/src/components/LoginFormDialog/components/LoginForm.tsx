@@ -1,29 +1,18 @@
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
-import { JSONResponse, postWithData } from '../../../helpers/fetchHelper';
-import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import clsx from 'clsx';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CustomError } from '../../../types';
-import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 import { FormLabel } from '../../FormLabel';
 import { AiOutlineClose } from 'react-icons/ai';
+import { useLoginMutation } from '../../../hooks/react-query/mutation/useLoginMutation';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'email not properly formatted' }),
     password: z.string().min(1, 'password is required'),
 });
 
-type FormSchema = z.infer<typeof formSchema>;
-
-async function loginUser(formData: FormSchema) {
-    const response = await postWithData('api/auth/login', formData);
-    const result: JSONResponse = await response.json();
-    if (!response.ok) throw result;
-    return result;
-}
+export type LoginFormSchema = z.infer<typeof formSchema>;
 
 interface LoginFormProps {
     showDialog: boolean;
@@ -31,29 +20,16 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ showDialog, setShowDialog }: LoginFormProps) {
-    const router = useRouter();
     const {
         register,
         handleSubmit,
         setFocus,
         formState: { errors },
         reset,
-    } = useForm<FormSchema>({
+    } = useForm<LoginFormSchema>({
         resolver: zodResolver(formSchema),
     });
-    const snackbar = useSnackbar();
-    const mutation = useMutation(
-        async (formData: FormSchema) => loginUser(formData),
-        {
-            async onSuccess() {
-                await router.push('/');
-            },
-            onError(error: CustomError) {
-                if (error.errorMessage)
-                    snackbar.show(error.errorMessage, 'error');
-            },
-        }
-    );
+    const mutation = useLoginMutation();
     const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
 
     useEffect(() => {
