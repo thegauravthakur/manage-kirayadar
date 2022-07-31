@@ -12,8 +12,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient}>
             <Hydrate state={pageProps.dehydratedState}>
                 <NextNProgress
-                    color='#1d4ed8'
-                    height={4}
+                    color='#4338ca'
+                    height={5}
                     options={{ showSpinner: false }}
                 />
                 <Snackbar />

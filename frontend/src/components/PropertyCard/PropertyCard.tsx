@@ -18,7 +18,7 @@ export function PropertyCard({
             <div className='card-body'>
                 <div className='flex items-center justify-between'>
                     <h2 className='card-title'>{name}</h2>
-                    <span className='text-xs bg-green-600 text-base-100 py-1 px-2 rounded'>
+                    <span className='text-xs bg-green-600 text-base-100 py-1 px-2 rounded whitespace-nowrap'>
                         {totalTenants}{' '}
                         {pluralize('Tenant', 'Tenants', totalTenants)}
                     </span>

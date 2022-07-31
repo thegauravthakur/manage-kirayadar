@@ -33,7 +33,7 @@ function useSlidesPerView() {
 const Home: NextPage = () => {
     const { properties, isLoading } = useProperties();
     const emptyArray = createEmptyArray(6);
-    const slides = useSlidesPerView();
+    const slidesPerView = useSlidesPerView();
     const showNewPropertyCard = useMediaQuery(`(min-width: 860px)`);
     return (
         <div className='bg-base-200 min-h-screen space-y-5 flex flex-col relative'>
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
                 </h1>
                 <Swiper
                     className='flex-1 w-full'
-                    slidesPerView={slides}
+                    slidesPerView={slidesPerView}
                     spaceBetween={20}
                 >
                     {showNewPropertyCard && (
