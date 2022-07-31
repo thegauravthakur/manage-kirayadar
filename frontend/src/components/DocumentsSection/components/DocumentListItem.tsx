@@ -15,6 +15,7 @@ import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 import { CustomError } from '../../../types';
 import { useRouter } from 'next/router';
 import { LoadingWrapper } from '../../LoadingWrapper';
+import { useGlobalSpinner } from '../../../hooks/zustand/useGlobalSpinner';
 
 export async function showFilePicker() {
     try {
@@ -63,6 +64,7 @@ export function DocumentListItem({
     showDownloadButton = true,
     documentId = null,
 }: DocumentListItemProps) {
+    const { show: showSpinner, hide: hideSpinner } = useGlobalSpinner();
     const { session } = useSession();
     const queryClient = useQueryClient();
     const { show } = useSnackbar();
@@ -118,6 +120,7 @@ export function DocumentListItem({
                         <button
                             className='btn btn-circle btn-sm btn-ghost'
                             onClick={async () => {
+                                showSpinner();
                                 if (documentId) {
                                     const blob = await fetchMutation(
                                         Number(queryParams.tenantId),
@@ -126,6 +129,7 @@ export function DocumentListItem({
                                     );
                                     downloadFile(blob, name);
                                 }
+                                hideSpinner();
                             }}
                         >
                             <AiOutlineDownload size={25} />
