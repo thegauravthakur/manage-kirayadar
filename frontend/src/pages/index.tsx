@@ -12,6 +12,7 @@ import { PropertyCardShimmer } from '../components/PropertyCard/PropertyCardShim
 import { createEmptyArray } from '../helpers/pageHelper';
 
 function useSlidesPerView() {
+    // need to look into this in order to make it dynamic
     const _630 = useMediaQuery(`(min-width: 630px)`);
     const _740 = useMediaQuery(`(min-width: 740px)`);
     const _1000 = useMediaQuery(`(min-width: 1000px)`);
@@ -28,6 +29,7 @@ function useSlidesPerView() {
     if (_630) return 1.5;
     return 1.1;
 }
+
 const Home: NextPage = () => {
     const { properties, isLoading } = useProperties();
     const emptyArray = createEmptyArray(6);
@@ -57,12 +59,13 @@ const Home: NextPage = () => {
                                 <PropertyCardShimmer />
                             </SwiperSlide>
                         ))}
-                    {properties?.map(({ id, name, address }) => (
-                        <SwiperSlide key={id}>
+                    {properties?.map((property) => (
+                        <SwiperSlide key={property.id}>
                             <PropertyCard
-                                address={address}
-                                id={id}
-                                name={name}
+                                address={property.address}
+                                id={property.id}
+                                name={property.name}
+                                totalTenants={property.totalTenants}
                             />
                         </SwiperSlide>
                     ))}

@@ -15,6 +15,7 @@ export interface Property {
     name: string;
     address: string;
     totalFloors: number;
+    totalTenants: number;
 }
 
 export interface Space {

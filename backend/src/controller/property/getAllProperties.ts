@@ -6,8 +6,15 @@ import { getUserFromToken } from '../../middleware/protected';
 export async function getAllProperties(req: Request, res: Response) {
     try {
         const user = await getUserFromToken(req)!;
-        const properties = await prismaClient.property.findMany({
+        const allProperties = await prismaClient.property.findMany({
             where: { ownerId: user.id },
+            include: { spaces: { include: { tenants: true } } },
+        });
+        const properties = allProperties.map(({ spaces, ...rest }) => {
+            const totalTenants = spaces.reduce((prev, current) => {
+                return prev + current.tenants.length;
+            }, 0);
+            return { ...rest, totalTenants };
         });
         return res.json({ errorMessage: null, data: { properties } });
     } catch (error) {
