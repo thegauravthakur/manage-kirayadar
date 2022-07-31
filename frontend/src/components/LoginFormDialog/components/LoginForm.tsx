@@ -61,17 +61,15 @@ export function LoginForm({ showDialog, setShowDialog }: LoginFormProps) {
     }, [setFocus, showDialog]);
 
     return (
-        <div className='space-y-5'>
-            <div className={clsx('flex items-center')}>
-                <h2 className={clsx('font-bold text-lg flex-1 text-center')}>
-                    Login to your account
-                </h2>
+        <>
+            <div className='flex justify-between mb-5'>
+                <h2 className='font-bold text-lg'>Add New Property</h2>
                 <button
                     className='btn btn-circle btn-sm btn-outline'
                     type='button'
                     onClick={() => {
-                        setShowDialog(false);
                         reset();
+                        setShowDialog(false);
                     }}
                 >
                     <AiOutlineClose fontSize={18} />
@@ -119,6 +117,6 @@ export function LoginForm({ showDialog, setShowDialog }: LoginFormProps) {
                     Login
                 </button>
             </form>
-        </div>
+        </>
     );
 }
