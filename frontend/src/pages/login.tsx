@@ -9,6 +9,7 @@ import {
 import clsx from 'clsx';
 import { LoginFormDialog } from '../components/LoginFormDialog';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Login() {
     const [showDialog, setShowDialog] = useState(false);
@@ -39,12 +40,16 @@ export default function Login() {
                     <AiOutlineMail size={24} />
                     Continue with Email
                 </button>
-                <div>
-                    <LoginFormDialog
-                        setShowDialog={setShowDialog}
-                        showDialog={showDialog}
-                    />
-                </div>
+                <LoginFormDialog
+                    setShowDialog={setShowDialog}
+                    showDialog={showDialog}
+                />
+                <span>
+                    No account?{' '}
+                    <Link href='/signup'>
+                        <a className='text-green-600 font-bold'>Create one</a>
+                    </Link>
+                </span>
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import ReactFocusLock from 'focus-trap-react';
 import clsx from 'clsx';
 import { LoginForm } from './components/LoginForm';
+import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
 
 interface SignUpDialogProps {
     setShowDialog: Dispatch<SetStateAction<boolean>>;
@@ -12,16 +13,19 @@ export function LoginFormDialog({
     setShowDialog,
     showDialog,
 }: SignUpDialogProps) {
+    if (!showDialog) return null;
     return (
-        <ReactFocusLock active={showDialog}>
-            <div className={clsx('modal', { 'modal-open': showDialog })}>
-                <div className='modal-box max-w-md px-3.5 sm:px-5'>
-                    <LoginForm
-                        setShowDialog={setShowDialog}
-                        showDialog={showDialog}
-                    />
+        <ClientOnlyPortal>
+            <ReactFocusLock active={showDialog}>
+                <div className={clsx('modal', { 'modal-open': showDialog })}>
+                    <div className='modal-box max-w-md px-3.5 sm:px-5'>
+                        <LoginForm
+                            setShowDialog={setShowDialog}
+                            showDialog={showDialog}
+                        />
+                    </div>
                 </div>
-            </div>
-        </ReactFocusLock>
+            </ReactFocusLock>
+        </ClientOnlyPortal>
     );
 }

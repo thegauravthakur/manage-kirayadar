@@ -10,6 +10,7 @@ import {
 } from 'react-icons/ai';
 import { useState } from 'react';
 import { SignupFormDialog } from '../components/SignupFormDialog';
+import Link from 'next/link';
 
 export default function Signup() {
     const [showDialog, setShowDialog] = useState(false);
@@ -43,12 +44,16 @@ export default function Signup() {
                     text='Continue with Email'
                     onClick={() => setShowDialog(true)}
                 />
-                <div>
-                    <SignupFormDialog
-                        setShowDialog={setShowDialog}
-                        showDialog={showDialog}
-                    />
-                </div>
+                <SignupFormDialog
+                    setShowDialog={setShowDialog}
+                    showDialog={showDialog}
+                />
+                <span>
+                    Already have an account?{' '}
+                    <Link href='/login'>
+                        <a className='text-green-600 font-bold'>Login here</a>
+                    </Link>
+                </span>
             </div>
         </div>
     );
