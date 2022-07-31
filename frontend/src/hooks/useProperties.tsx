@@ -6,12 +6,14 @@ import { useSnackbar } from './zustand/useSnackbar';
 
 const errorMessage = 'Error occurred while getting all the properties';
 
-async function getProperties(token: string) {
+async function getProperties(token: string): Promise<Property[]> {
     const response = await fetchWithToken(
         createEndpoint('property/get'),
         token
     );
-    const { data } = await response.json();
+    const { data } = (await response.json()) as {
+        data: { properties: Property[] };
+    };
     if (response.ok) return data.properties;
     else throw data;
 }

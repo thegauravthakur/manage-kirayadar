@@ -10,7 +10,6 @@ import { SwiperSlide, Swiper } from 'swiper/react';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { PropertyCardShimmer } from '../components/PropertyCard/PropertyCardShimmer';
 import { createEmptyArray } from '../helpers/pageHelper';
-import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
 
 function useSlidesPerView() {
     const _630 = useMediaQuery(`(min-width: 630px)`);
