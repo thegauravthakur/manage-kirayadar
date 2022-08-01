@@ -39,23 +39,21 @@ export function Snackbar() {
     return (
         <div
             className={clsx(
-                'alert absolute z-[9999] w-auto left-0 right-0 m-5 max-w-4xl mx-auto',
+                'flex absolute z-[9999] w-auto left-0 right-0 m-5 max-w-4xl mx-auto py-3 px-5 rounded-xl items-center mx-2',
                 alertClass
             )}
         >
-            <div>
+            <div className='flex flex-1 space-x-2'>
                 <Icon fontSize={28} />
                 <span>{message}</span>
             </div>
-            <div className='flex-none'>
-                <button
-                    className='btn btn-circle btn-sm btn-outline'
-                    type='button'
-                    onClick={hide}
-                >
-                    <AiOutlineClose fontSize={18} />
-                </button>
-            </div>
+            <button
+                className='btn btn-circle btn-sm btn-outline'
+                type='button'
+                onClick={hide}
+            >
+                <AiOutlineClose fontSize={18} />
+            </button>
         </div>
     );
 }
