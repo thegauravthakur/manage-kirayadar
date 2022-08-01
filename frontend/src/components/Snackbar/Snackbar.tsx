@@ -39,7 +39,7 @@ export function Snackbar() {
     return (
         <div
             className={clsx(
-                'flex absolute z-[9999] w-auto left-0 right-0 m-5 max-w-4xl mx-auto py-3 px-5 rounded-xl items-center mx-2',
+                'flex absolute z-[9999] w-full left-0 right-0 m-5 max-w-4xl mx-auto py-3 px-5 rounded-xl items-center',
                 alertClass
             )}
         >
