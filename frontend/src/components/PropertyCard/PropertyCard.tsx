@@ -25,7 +25,7 @@ export function PropertyCard({
                         {pluralize('tenant', 'tenants', totalTenants)}
                     </span>
                 </div>
-                <p className='text-gray-500'>{address}</p>
+                <p className='text-gray-500 text-sm'>{address}</p>
                 <div className='card-actions justify-end'>
                     <Link href={`/property/${id}`}>
                         <a className='btn btn-primary'>manage</a>
