@@ -18,7 +18,7 @@ export function LoginFormDialog({
         <ClientOnlyPortal>
             <ReactFocusLock active={showDialog}>
                 <div className={clsx('modal', { 'modal-open': showDialog })}>
-                    <div className='modal-box max-w-md px-3.5 sm:px-5'>
+                    <div className='modal-box w-full max-w-md px-3.5 sm:px-5'>
                         <LoginForm
                             setShowDialog={setShowDialog}
                             showDialog={showDialog}
