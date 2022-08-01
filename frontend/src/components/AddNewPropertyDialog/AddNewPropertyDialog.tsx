@@ -32,8 +32,8 @@ export function AddNewPropertyDialog({
         useForm<CreateNewPropertySchema>({
             resolver: zodResolver(formSchema),
         });
-    const mutation = useCreateNewPropertyMutation(setShowDialog);
-    const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
+    const { mutate, isLoading } = useCreateNewPropertyMutation(setShowDialog);
+    const onSubmit = handleSubmit((formData) => mutate(formData));
     function onCloseIconClick() {
         reset();
         setShowDialog(false);
@@ -67,7 +67,7 @@ export function AddNewPropertyDialog({
                         </div>
                         <button
                             className={clsx('btn btn-primary btn-block', {
-                                loading: mutation.isLoading,
+                                loading: isLoading,
                             })}
                             type='submit'
                         >
