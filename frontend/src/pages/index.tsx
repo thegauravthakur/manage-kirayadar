@@ -10,6 +10,9 @@ import { SwiperSlide, Swiper } from 'swiper/react';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { PropertyCardShimmer } from '../components/PropertyCard/PropertyCardShimmer';
 import { createEmptyArray } from '../helpers/pageHelper';
+import { AiOutlinePlus, AiOutlinePlusCircle } from 'react-icons/ai';
+import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
+import { useState } from 'react';
 
 function useSlidesPerView() {
     // need to look into this in order to make it dynamic
@@ -31,6 +34,7 @@ function useSlidesPerView() {
 }
 
 const Home: NextPage = () => {
+    const [showDialog, setShowDialog] = useState(false);
     const { properties, isLoading } = useProperties();
     const emptyArray = createEmptyArray(6);
     const slidesPerView = useSlidesPerView();
@@ -40,9 +44,19 @@ const Home: NextPage = () => {
             <CustomHead title='Manage Kirayadar' />
             <AppBar />
             <div className='p-5 space-y-5 h-full flex-1 flex flex-col'>
-                <h1 className='text-2xl font-semibold'>
-                    Manage your properties
-                </h1>
+                <div className='flex items-center justify-between'>
+                    <h1 className='text-2xl font-semibold'>
+                        Manage your properties
+                    </h1>
+                    {!showNewPropertyCard && (
+                        <button
+                            className='btn btn-circle btn-sm btn-outline'
+                            onClick={() => setShowDialog(true)}
+                        >
+                            <AiOutlinePlus />
+                        </button>
+                    )}
+                </div>
                 <Swiper
                     className='flex-1 w-full'
                     slidesPerView={slidesPerView}
@@ -50,7 +64,7 @@ const Home: NextPage = () => {
                 >
                     {showNewPropertyCard && (
                         <SwiperSlide>
-                            <AddNewPropertyCard />
+                            <AddNewPropertyCard setShowDialog={setShowDialog} />
                         </SwiperSlide>
                     )}
                     {isLoading &&
@@ -71,6 +85,10 @@ const Home: NextPage = () => {
                     ))}
                 </Swiper>
             </div>
+            <AddNewPropertyDialog
+                setShowDialog={setShowDialog}
+                showDialog={showDialog}
+            />
         </div>
     );
 };

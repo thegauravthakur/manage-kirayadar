@@ -46,25 +46,23 @@ export function AddNewPropertyDialog({
                         'modal-open': showDialog,
                     })}
                 >
-                    <form className='modal-box space-y-5' onSubmit={onSubmit}>
-                        <div>
-                            <div className='flex justify-between mb-5'>
-                                <h2 className='font-bold text-lg'>
-                                    Add New Property
-                                </h2>
-                                <button
-                                    className='btn btn-circle btn-sm btn-outline'
-                                    type='reset'
-                                    onClick={onCloseIconClick}
-                                >
-                                    <AiOutlineClose fontSize={18} />
-                                </button>
-                            </div>
-                            <FormControl
-                                formState={formState}
-                                register={register}
-                            />
+                    <form className='modal-box w-full ' onSubmit={onSubmit}>
+                        <div className='flex justify-between mb-5'>
+                            <h2 className='font-bold text-lg'>
+                                Add New Property
+                            </h2>
+                            <button
+                                className='btn btn-circle btn-sm btn-outline'
+                                type='reset'
+                                onClick={onCloseIconClick}
+                            >
+                                <AiOutlineClose fontSize={18} />
+                            </button>
                         </div>
+                        <FormControl
+                            formState={formState}
+                            register={register}
+                        />
                         <button
                             className={clsx('btn btn-primary btn-block', {
                                 loading: isLoading,

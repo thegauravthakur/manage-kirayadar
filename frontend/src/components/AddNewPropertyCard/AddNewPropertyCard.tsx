@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import { useState } from 'react';
-import { AddNewPropertyDialog } from '../AddNewPropertyDialog';
+import { Dispatch, SetStateAction } from 'react';
 
-export function AddNewPropertyCard() {
-    const [showDialog, setShowDialog] = useState(false);
-
+interface AddNewPropertyCardProps {
+    setShowDialog: Dispatch<SetStateAction<boolean>>;
+}
+export function AddNewPropertyCard({ setShowDialog }: AddNewPropertyCardProps) {
     return (
         <div className='card w-full max-w-sm bg-base-100 shadow-xl image-full h-60'>
             <figure>
@@ -31,10 +31,6 @@ export function AddNewPropertyCard() {
                     </button>
                 </div>
             </div>
-            <AddNewPropertyDialog
-                setShowDialog={setShowDialog}
-                showDialog={showDialog}
-            />
         </div>
     );
 }
