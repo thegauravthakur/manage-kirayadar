@@ -13,6 +13,7 @@ import {
 import { useRouter } from 'next/router';
 import { CustomError } from '../../../types';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
+import { FormInputBox } from '../../UI/FormInputBox';
 
 interface SignupStepTwoFormProps {
     userDetails: MutableRefObject<UserDetails>;
@@ -71,8 +72,8 @@ export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
         <form className='space-y-6 py-3 w-full flex-1' onSubmit={onSubmit}>
             <fieldset className='h-full flex flex-col justify-between'>
                 <div className='space-y-2 px-4'>
-                    <div className='space-y-2'>
-                        <label className='space-y-1.5' htmlFor='otp'>
+                    <div className='space-y-4'>
+                        <div className='space-y-2'>
                             <h2 className='text-sm font-semibold'>
                                 Confirm your email
                             </h2>
@@ -80,28 +81,21 @@ export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
                                 Please enter the code we sent to{' '}
                                 {userDetails.current.email}
                             </p>
-                        </label>
-                        <input
-                            autoComplete='one-time-code'
-                            className={inputClasses(!!errors.otp)}
+                        </div>
+                        <FormInputBox
+                            error={errors.otp?.message}
                             id='otp'
-                            inputMode='numeric'
-                            placeholder='one time password'
+                            label='OTP'
+                            placeholder='Enter OTP'
+                            registerForm={register('otp')}
                             type='text'
-                            {...register('otp')}
                         />
-                        <p className='text-rose-600 text-sm'>
-                            {errors.otp && errors.otp.message}
-                        </p>
                     </div>
                 </div>
                 <div className='space-y-2'>
                     <hr />
                     <div className='flex justify-end px-4'>
-                        <button
-                            className='py-1.5 px-3 border rounded-lg bg-blue-600 text-white outline-none focus:ring text-right text-sm'
-                            type='submit'
-                        >
+                        <button className='btn btn-primary' type='submit'>
                             Create
                         </button>
                     </div>

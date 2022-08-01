@@ -51,10 +51,7 @@ export function SignupFormDialog({
                             Create new account
                         </h2>
                         <button
-                            className={clsx(
-                                'bg-gray-200 rounded-full p-2 box-content',
-                                'hover:bg-gray-300'
-                            )}
+                            className='btn btn-circle btn-outline btn-sm'
                             type='button'
                             onClick={() => {
                                 setShowDialog(false);

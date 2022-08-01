@@ -4,6 +4,7 @@ import { UserDetails } from '../SignupFormDialog';
 import clsx from 'clsx';
 import { createEndpoint, postWithData } from '../../../helpers/fetchHelper';
 import { useMutation } from 'react-query';
+import { FormInputBox } from '../../UI/FormInputBox';
 
 interface FormData {
     password: string;
@@ -51,16 +52,13 @@ export function SignupStepTwoForm({
         <form className='space-y-6 py-3 w-full flex-1' onSubmit={onSubmit}>
             <fieldset className='h-full flex flex-col justify-between'>
                 <div className='space-y-2 px-4'>
-                    <div className='space-y-1.5'>
-                        <label htmlFor='password'>
-                            <h2 className='text-sm font-semibold'>Password</h2>
-                        </label>
-                        <input
-                            className={inputClasses(!!errors.password)}
-                            id='password'
-                            placeholder='Enter a strong password'
-                            type='password'
-                            {...register('password', {
+                    <FormInputBox
+                        error={errors.password?.message}
+                        id='password'
+                        label='Your Password'
+                        placeholder='Enter Your Password'
+                        registerForm={{
+                            ...register('password', {
                                 required: {
                                     value: true,
                                     message: 'password field is required',
@@ -69,49 +67,33 @@ export function SignupStepTwoForm({
                                     value: 5,
                                     message: 'Minimum length should be 5',
                                 },
-                            })}
-                        />
-                        <p className='text-rose-600 text-sm'>
-                            {errors.password && errors.password.message}
-                        </p>
-                    </div>
-                    <div className='space-y-1.5'>
-                        <label htmlFor='confirmPassword'>
-                            <h2 className='text-sm font-semibold'>
-                                Confirm Password
-                            </h2>
-                        </label>
-                        <input
-                            className={inputClasses(!!errors.confirmPassword)}
-                            id='confirmPassword'
-                            placeholder='Re-enter password'
-                            type='password'
-                            {...register('confirmPassword', {
-                                required: {
-                                    value: true,
-                                    message:
-                                        'Confirm password field is required',
-                                },
-                                validate: (val: string) => {
-                                    if (watch('password') != val) {
-                                        return 'Passwords do no match';
-                                    }
-                                },
-                            })}
-                        />
-                        <p className='text-rose-600 text-sm'>
-                            {errors.confirmPassword &&
-                                errors.confirmPassword.message}
-                        </p>
-                    </div>
+                            }),
+                        }}
+                        type='password'
+                    />
+                    <FormInputBox
+                        error={errors.confirmPassword?.message}
+                        id='confirm-password'
+                        label='Confirm Password'
+                        placeholder='Confirm Your Password'
+                        registerForm={register('confirmPassword', {
+                            required: {
+                                value: true,
+                                message: 'Confirm password field is required',
+                            },
+                            validate: (val: string) => {
+                                if (watch('password') != val) {
+                                    return 'Passwords do no match';
+                                }
+                            },
+                        })}
+                        type='password'
+                    />
                 </div>
                 <div className='space-y-2'>
                     <hr />
                     <div className='flex justify-end px-4'>
-                        <button
-                            className='py-1.5 px-3 border rounded-lg bg-blue-600 text-white outline-none focus:ring text-right text-sm'
-                            type='submit'
-                        >
+                        <button className='btn btn-primary' type='submit'>
                             {mutation.isLoading ? 'Sending OTP' : 'Next'}
                         </button>
                     </div>

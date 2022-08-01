@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction, useEffect } from 'react';
 import clsx from 'clsx';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormLabel } from '../../FormLabel';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useLoginMutation } from '../../../hooks/react-query/mutation/useLoginMutation';
 import { FormInputBox } from '../../UI/FormInputBox';

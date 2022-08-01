@@ -29,6 +29,14 @@ export async function createUser(req: Request, res: Response) {
                     'sorry, this product is in preview currently, stay tuned!',
                 data: null,
             });
+        const otpEntry = await prismaClient.otp.findUnique({
+            where: { email },
+        });
+        if (otpEntry?.otp !== Number(otp))
+            return res
+                .status(400)
+                .json({ errorMessage: 'wrong OTP', data: null });
+
         const doesUserExists = await prismaClient.user.findUnique({
             where: { email },
         });
@@ -37,13 +45,6 @@ export async function createUser(req: Request, res: Response) {
                 errorMessage: 'user already exists!',
                 data: null,
             });
-        const otpEntry = await prismaClient.otp.findUnique({
-            where: { email },
-        });
-        if (otpEntry?.otp !== Number(otp))
-            return res
-                .status(400)
-                .json({ errorMessage: 'wrong OTP', data: null });
 
         const passwordHash = await generateHash(password);
         const user = await prismaClient.user.create({
