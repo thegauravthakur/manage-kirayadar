@@ -46,7 +46,7 @@ export function AddNewPropertyDialog({
                         'modal-open': showDialog,
                     })}
                 >
-                    <form className='modal-box w-full ' onSubmit={onSubmit}>
+                    <form className='modal-box w-full' onSubmit={onSubmit}>
                         <div className='flex justify-between mb-5'>
                             <h2 className='font-bold text-lg'>
                                 Add New Property

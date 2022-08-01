@@ -1,6 +1,6 @@
 import { FormState, UseFormRegister } from 'react-hook-form';
 import { CreateNewPropertySchema } from './AddNewPropertyDialog';
-import { InputBox } from '../UI/InputBox';
+import { FormInputBox } from '../UI/FormInputBox';
 
 interface FormControlProps {
     formState: FormState<CreateNewPropertySchema>;
@@ -10,7 +10,7 @@ export function FormControl({ formState, register }: FormControlProps) {
     const { errors } = formState;
     return (
         <>
-            <InputBox
+            <FormInputBox
                 error={errors.name?.message}
                 id='name'
                 label='Property Name'
@@ -18,7 +18,7 @@ export function FormControl({ formState, register }: FormControlProps) {
                 registerForm={register('name')}
                 type='text'
             />
-            <InputBox
+            <FormInputBox
                 error={errors.totalFloors?.message}
                 id='total-floors'
                 label='Total Floors'
@@ -26,7 +26,7 @@ export function FormControl({ formState, register }: FormControlProps) {
                 registerForm={register('totalFloors', { valueAsNumber: true })}
                 type='number'
             />
-            <InputBox
+            <FormInputBox
                 error={errors.address?.message}
                 id='address'
                 label='Address'

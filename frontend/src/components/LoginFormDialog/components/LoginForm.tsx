@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormLabel } from '../../FormLabel';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useLoginMutation } from '../../../hooks/react-query/mutation/useLoginMutation';
+import { FormInputBox } from '../../UI/FormInputBox';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'email not properly formatted' }),
@@ -37,9 +38,9 @@ export function LoginForm({ showDialog, setShowDialog }: LoginFormProps) {
     }, [setFocus, showDialog]);
 
     return (
-        <>
+        <form method='post' onSubmit={onSubmit}>
             <div className='flex justify-between mb-5'>
-                <h2 className='font-bold text-lg'>Add New Property</h2>
+                <h2 className='font-bold text-lg'>Login to your account</h2>
                 <button
                     className='btn btn-circle btn-sm btn-outline'
                     type='button'
@@ -51,48 +52,30 @@ export function LoginForm({ showDialog, setShowDialog }: LoginFormProps) {
                     <AiOutlineClose fontSize={18} />
                 </button>
             </div>
-            <form method='post' onSubmit={onSubmit}>
-                <FormLabel
-                    errorText={errors.email?.message}
-                    id='email'
-                    labelText='What is your email'
-                >
-                    <input
-                        className={clsx(
-                            'input input-bordered input-primary input-md w-full',
-                            { 'input-error': !!errors.email }
-                        )}
-                        id='email'
-                        placeholder='Your email...'
-                        type='email'
-                        {...register('email')}
-                    />
-                </FormLabel>
-                <FormLabel
-                    errorText={errors.password?.message}
-                    id='password'
-                    labelText='What is your password?'
-                >
-                    <input
-                        className={clsx(
-                            'input input-bordered input-primary input-md w-full',
-                            { 'input-error': !!errors.password }
-                        )}
-                        id='password'
-                        placeholder='Your password...'
-                        type='password'
-                        {...register('password')}
-                    />
-                </FormLabel>
-                <button
-                    className={clsx('btn btn-primary btn-block mt-5', {
-                        loading: mutation.isLoading,
-                    })}
-                    type='submit'
-                >
-                    Login
-                </button>
-            </form>
-        </>
+            <FormInputBox
+                error={errors.email?.message}
+                id='email'
+                label='Your Email'
+                placeholder='Enter Your Email'
+                registerForm={register('email')}
+                type='email'
+            />
+            <FormInputBox
+                error={errors.password?.message}
+                id='password'
+                label='Your Password'
+                placeholder='Enter Your Password'
+                registerForm={register('password')}
+                type='password'
+            />
+            <button
+                className={clsx('btn btn-primary btn-block', {
+                    loading: mutation.isLoading,
+                })}
+                type='submit'
+            >
+                Login
+            </button>
+        </form>
     );
 }

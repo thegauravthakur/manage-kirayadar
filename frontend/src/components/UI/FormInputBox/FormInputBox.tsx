@@ -10,7 +10,7 @@ interface InputBoxProps {
     registerForm?: UseFormRegisterReturn;
 }
 
-export function InputBox(props: InputBoxProps) {
+export function FormInputBox(props: InputBoxProps) {
     const { type, id, registerForm, error, placeholder, label } = props;
     return (
         <div className='relative mt-2'>
