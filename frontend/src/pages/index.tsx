@@ -10,7 +10,7 @@ import { SwiperSlide, Swiper } from 'swiper/react';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { PropertyCardShimmer } from '../components/PropertyCard/PropertyCardShimmer';
 import { createEmptyArray } from '../helpers/pageHelper';
-import { AiOutlinePlus, AiOutlinePlusCircle } from 'react-icons/ai';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
 import { useState } from 'react';
 
