@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import clsx from 'clsx';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -28,7 +28,7 @@ export function AddNewPropertyDialog({
     showDialog,
     setShowDialog,
 }: AddNewPropertyDialogProps) {
-    const { register, handleSubmit, reset, formState } =
+    const { register, handleSubmit, reset, formState, setFocus } =
         useForm<CreateNewPropertySchema>({
             resolver: zodResolver(formSchema),
         });
@@ -38,6 +38,9 @@ export function AddNewPropertyDialog({
         reset();
         setShowDialog(false);
     }
+    useEffect(() => {
+        if (showDialog) setFocus('name');
+    }, [setFocus, showDialog]);
     return (
         <ClientOnlyPortal>
             <ReactFocusLock active={showDialog}>
@@ -45,8 +48,14 @@ export function AddNewPropertyDialog({
                     className={clsx('modal', {
                         'modal-open': showDialog,
                     })}
+                    onKeyDown={({ key }) => {
+                        if (key === 'Escape') setShowDialog(false);
+                    }}
                 >
-                    <form className='modal-box w-full' onSubmit={onSubmit}>
+                    <form
+                        className='modal-box w-full mx-2  px-3.5 sm:px-5 max-w-md'
+                        onSubmit={onSubmit}
+                    >
                         <div className='flex justify-between mb-5'>
                             <h2 className='font-bold text-lg'>
                                 Add New Property
