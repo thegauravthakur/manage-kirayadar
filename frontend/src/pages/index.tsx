@@ -13,6 +13,7 @@ import { createEmptyArray } from '../helpers/pageHelper';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
 import { useState } from 'react';
+import { dehydrate, QueryClient } from 'react-query';
 
 function useSlidesPerView() {
     // need to look into this in order to make it dynamic
@@ -97,15 +98,27 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const redirect = { redirect: { destination: '/login', permanent: false } };
+    const queryClient = new QueryClient();
     try {
         const accessToken = getCookie('accessToken', { req, res });
         if (!accessToken) return redirect;
         if (accessToken) {
             const user = await getCurrentUser(accessToken as string);
+            const tokenQuery = queryClient.prefetchQuery('accessToken', () =>
+                Promise.resolve(accessToken)
+            );
+            const sessionQuery = queryClient.prefetchQuery('session', () =>
+                Promise.resolve({ user, token: accessToken })
+            );
+            await Promise.all([tokenQuery, sessionQuery]);
             if (!user) return redirect;
         }
     } catch (error) {
         return redirect;
     }
-    return { props: {} };
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient),
+        },
+    };
 };
