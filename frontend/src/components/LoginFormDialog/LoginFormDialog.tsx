@@ -21,6 +21,9 @@ export function LoginFormDialog({
                     className={clsx('modal', {
                         'modal-open': showDialog,
                     })}
+                    onKeyDown={({ key }) => {
+                        if (key === 'Escape') setShowDialog(false);
+                    }}
                 >
                     <div className='modal-box max-w-md px-3.5 sm:px-5 w-full mx-2'>
                         <LoginForm
