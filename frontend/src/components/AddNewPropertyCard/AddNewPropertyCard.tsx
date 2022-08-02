@@ -10,18 +10,16 @@ export function AddNewPropertyCard({ setShowDialog }: AddNewPropertyCardProps) {
             <figure>
                 <Image
                     alt='house'
-                    height={250}
+                    layout='fill'
                     src='https://res.cloudinary.com/gauravthakur/image/upload/v1656783892/Manage%20Kirayadar/house-image_vbvhin.jpg'
-                    width={400}
                 />
             </figure>
             <div className='card-body'>
                 <h2 className='card-title'>Register a new property!</h2>
                 <p>
-                    Simply register a new property with minutes, and I&apos;ll
-                    take care of the rest
+                    Simply register a new property within minutes, and
+                    we&apos;ll take care of the rest
                 </p>
-
                 <div className='card-actions justify-end'>
                     <button
                         className='btn btn-primary btn-md'
