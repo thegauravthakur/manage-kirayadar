@@ -1,14 +1,14 @@
-import { useLogout } from '../../../hooks/useLogout';
+import { useLogoutMutation } from '../../../hooks/react-query/mutation/useLogoutMutation';
 import Image from 'next/image';
 
 export function ProfileDropdown() {
-    const mutation = useLogout();
+    const mutation = useLogoutMutation();
     return (
         <div className='dropdown dropdown-end'>
             <label className='btn btn-ghost btn-circle avatar' tabIndex={0}>
                 <div className='w-10 rounded-full'>
                     <Image
-                        alt=''
+                        alt='profile photo'
                         height={80}
                         src='https://placeimg.com/80/80/people'
                         width={80}

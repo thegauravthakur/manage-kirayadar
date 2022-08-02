@@ -14,7 +14,6 @@ async function getProperties(token: string): Promise<Property[]> {
     const { data } = (await response.json()) as {
         data: { properties: Property[] };
     };
-    console.log(data);
     if (response.ok) return data.properties;
     else throw data;
 }

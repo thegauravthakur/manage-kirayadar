@@ -41,6 +41,7 @@ export function LoginForm({ showDialog, setShowDialog }: LoginFormProps) {
             <div className='flex justify-between mb-5'>
                 <h2 className='font-bold text-lg'>Login to your account</h2>
                 <button
+                    aria-label='close login dialog'
                     className='btn btn-circle btn-sm btn-outline'
                     type='button'
                     onClick={() => {
