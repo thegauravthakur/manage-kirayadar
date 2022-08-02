@@ -1,6 +1,5 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import FocusLock from 'focus-trap-react';
 import clsx from 'clsx';
 import SignupStepOneForm from './components/SignupStepOneForm';

@@ -14,6 +14,8 @@ import { useRouter } from 'next/router';
 import { CustomError } from '../../../types';
 import { useSnackbar } from '../../../hooks/zustand/useSnackbar';
 import { FormInputBox } from '../../UI/FormInputBox';
+import { useGlobalSpinner } from '../../../hooks/zustand/useGlobalSpinner';
+import { useCreateUserMutation } from '../../../hooks/react-query/mutation/useCreateUserMutation';
 
 interface SignupStepTwoFormProps {
     userDetails: MutableRefObject<UserDetails>;
@@ -24,24 +26,7 @@ const formSchema = z.object({
     otp: z.string().length(6, 'OTP should be 6 digit'),
 });
 
-async function createUser(userDetails: UserDetails, otp: string) {
-    const response = await postWithData(createEndpoint('user/create'), {
-        ...userDetails,
-        otp,
-    });
-    const result: JSONResponse = await response.json();
-    if (!response.ok) throw result;
-    return result;
-}
-
-const inputClasses = (condition: boolean) =>
-    clsx(
-        'outline-offset-0 outline-1 border rounded-md w-full outline-none focus:outline-blue-600 p-1.5 bg-slate-100 text-sm',
-        { 'outline outline-rose-300 focus:outline-rose-300': condition }
-    );
-
 export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
-    const router = useRouter();
     const {
         register,
         handleSubmit,
@@ -50,21 +35,9 @@ export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
     } = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
-    const { show } = useSnackbar();
-    const mutation = useMutation(
-        async (otp: string) => createUser(userDetails.current, otp),
-        {
-            onSuccess: () => router.push('/'),
-            onError(error: CustomError) {
-                if (error.errorMessage) {
-                    show(error.errorMessage, 'error');
-                }
-            },
-        }
-    );
-    const onSubmit = handleSubmit(({ otp }) => {
-        mutation.mutate(otp);
-    });
+    const mutation = useCreateUserMutation(userDetails.current);
+    const onSubmit = handleSubmit(({ otp }) => mutation.mutate(otp));
+
     useEffect(() => {
         setFocus('otp');
     }, [setFocus]);
@@ -74,7 +47,7 @@ export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
                 <div className='space-y-2 px-4'>
                     <div className='space-y-4'>
                         <div className='space-y-2'>
-                            <h2 className='text-sm font-semibold'>
+                            <h2 className='font-semibold'>
                                 Confirm your email
                             </h2>
                             <p className='text-sm'>
@@ -95,7 +68,10 @@ export function SignupStepThreeForm({ userDetails }: SignupStepTwoFormProps) {
                 <div className='space-y-2'>
                     <hr />
                     <div className='flex justify-end px-4'>
-                        <button className='btn btn-primary' type='submit'>
+                        <button
+                            className='btn btn-primary btn-sm'
+                            type='submit'
+                        >
                             Create
                         </button>
                     </div>

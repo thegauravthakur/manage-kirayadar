@@ -58,13 +58,10 @@ export default function SignupStepOneForm({
                         type='email'
                     />
                 </div>
-                <div className='space-y-2'>
-                    <hr />
-                    <div className='flex justify-end px-4'>
-                        <button className='btn btn-primary' type='submit'>
-                            Next
-                        </button>
-                    </div>
+                <div className='flex justify-end px-4'>
+                    <button className='btn btn-primary btn-sm' type='submit'>
+                        Next
+                    </button>
                 </div>
             </fieldset>
         </form>

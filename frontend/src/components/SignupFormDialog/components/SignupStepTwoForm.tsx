@@ -1,10 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { Dispatch, MutableRefObject, SetStateAction, useEffect } from 'react';
 import { UserDetails } from '../SignupFormDialog';
-import clsx from 'clsx';
-import { createEndpoint, postWithData } from '../../../helpers/fetchHelper';
-import { useMutation } from 'react-query';
 import { FormInputBox } from '../../UI/FormInputBox';
+import { useSendOTPMutation } from '../../../hooks/react-query/mutation/useSendOTPMutation';
 
 interface FormData {
     password: string;
@@ -15,12 +13,6 @@ interface SignupStepTwoFormProps {
     userDetails: MutableRefObject<UserDetails>;
     setFormStep: Dispatch<SetStateAction<number>>;
 }
-
-const inputClasses = (condition: boolean) =>
-    clsx(
-        'outline-offset-0 outline-1 border rounded-md w-full outline-none focus:outline-blue-600 p-1.5 bg-slate-100 text-sm',
-        { 'outline outline-rose-300 focus:outline-rose-300': condition }
-    );
 
 export function SignupStepTwoForm({
     setFormStep,
@@ -33,14 +25,7 @@ export function SignupStepTwoForm({
         formState: { errors },
         watch,
     } = useForm<FormData>();
-    const mutation = useMutation(
-        async (data: UserDetails) => {
-            await postWithData(createEndpoint('otp/generate'), {
-                email: data.email,
-            });
-        },
-        { onSuccess: () => setFormStep((step) => step + 1) }
-    );
+    const mutation = useSendOTPMutation(setFormStep);
     const onSubmit = handleSubmit(async ({ confirmPassword, ...rest }) => {
         userDetails.current = { ...userDetails.current, ...rest };
         mutation.mutate(userDetails.current);
@@ -93,7 +78,10 @@ export function SignupStepTwoForm({
                 <div className='space-y-2'>
                     <hr />
                     <div className='flex justify-end px-4'>
-                        <button className='btn btn-primary' type='submit'>
+                        <button
+                            className='btn btn-primary btn-sm'
+                            type='submit'
+                        >
                             {mutation.isLoading ? 'Sending OTP' : 'Next'}
                         </button>
                     </div>
