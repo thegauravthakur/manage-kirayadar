@@ -1,4 +1,3 @@
-import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 import { logoutUser } from '../helpers/userHelper';
