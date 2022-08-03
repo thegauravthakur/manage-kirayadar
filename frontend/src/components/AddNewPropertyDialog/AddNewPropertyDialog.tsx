@@ -39,7 +39,10 @@ export function AddNewPropertyDialog({
         setShowDialog(false);
     }
     useEffect(() => {
-        if (showDialog) setFocus('name');
+        if (showDialog) {
+            setFocus('name');
+            document.body.style.overflow = 'hidden';
+        } else document.body.style.overflow = 'unset';
     }, [setFocus, showDialog]);
     return (
         <ClientOnlyPortal>

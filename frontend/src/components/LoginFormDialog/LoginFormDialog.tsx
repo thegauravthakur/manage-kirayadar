@@ -1,5 +1,5 @@
 import { AiOutlineClose } from 'react-icons/ai';
-import { Dispatch, SetStateAction, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import ReactFocusLock from 'focus-trap-react';
 import clsx from 'clsx';
 import { LoginForm } from './components/LoginForm';
@@ -13,6 +13,11 @@ export function LoginFormDialog({
     setShowDialog,
     showDialog,
 }: SignUpDialogProps) {
+    useEffect(() => {
+        if (showDialog) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = 'unset';
+    }, [showDialog]);
+
     if (!showDialog) return null;
     return (
         <ClientOnlyPortal>
