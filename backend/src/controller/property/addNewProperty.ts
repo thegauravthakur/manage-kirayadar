@@ -23,6 +23,7 @@ export async function addNewProperty(req: Request, res: Response) {
         });
         return res.json({ errorMessage: null, data: { property } });
     } catch (error) {
+        console.log(error);
         const message = 'An error occurred while creating a new property';
         sendError(res, error, message);
     }
