@@ -45,7 +45,7 @@ const Home: NextPage = () => {
         <div className='bg-base-200 min-h-screen space-y-5 flex flex-col relative'>
             <CustomHead title='Manage Kirayadar' />
             <AppBar />
-            <div className='p-5 space-y-5 h-full flex-1 flex flex-col'>
+            <div className='p-5 h-full flex-1 flex flex-col space-y-5 md:space-y-7'>
                 <h1 className='text-2xl font-semibold'>Your Properties</h1>
                 <button
                     className='btn btn-primary w-48'
