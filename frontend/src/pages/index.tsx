@@ -10,12 +10,11 @@ import { SwiperSlide, Swiper } from 'swiper/react';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { PropertyCardShimmer } from '../components/PropertyCard/PropertyCardShimmer';
 import { createEmptyArray } from '../helpers/pageHelper';
-import { AiOutlinePlus } from 'react-icons/ai';
 import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
 import { useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 
-function useSlidesPerView() {
+export function useSlidesPerView() {
     // need to look into this in order to make it dynamic
     const _630 = useMediaQuery(`(min-width: 630px)`);
     const _490 = useMediaQuery(`(min-width: 450px)`);

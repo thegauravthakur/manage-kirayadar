@@ -21,8 +21,16 @@ export async function getAllSpaces(req: Request, res: Response) {
                 .json({ errorMessage: 'unauthorized!', data: null });
         const spaces = await prismaClient.space.findMany({
             where: { propertyId },
+            include: { tenants: true },
         });
-        return res.json({ errorMessage: null, data: { spaces } });
+        const filteredSpaces = spaces.map(({ tenants, ...rest }) => ({
+            ...rest,
+            totalTenants: tenants.length,
+        }));
+        return res.json({
+            errorMessage: null,
+            data: { spaces: filteredSpaces },
+        });
     } catch (error) {
         const message = 'Error occurred while creating a new space';
         sendError(res, error, message);

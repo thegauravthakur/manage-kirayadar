@@ -14,6 +14,8 @@ import { groupBy } from '../../../helpers/pageHelper';
 import { useSpaces } from '../../../hooks/react-query/query/useSpaces';
 import { AppBar } from '../../../components/AppBar';
 import { CustomHead } from '../../../components/CustomHead';
+import { BsArrowLeft } from 'react-icons/bs';
+import Link from 'next/link';
 
 interface DetailedPropertyProps {
     property: Property;
@@ -32,7 +34,13 @@ export default function DetailedProperty({
             <CustomHead title={`Manage ${property.name}`} />
             <AppBar />
             <div className='p-5 space-y-5'>
-                <div className='flex justify-between items-center'>
+                <Link href='/'>
+                    <a className='flex items-center space-x-4 uppercase text-xs text-secondary font-semibold'>
+                        <BsArrowLeft size={24} />
+                        <span>Back to all properties</span>
+                    </a>
+                </Link>
+                <div className='space-y-5 ml-0 sm:ml-10'>
                     <h1 className='text-2xl font-semibold'>{property.name}</h1>
                     <button
                         className='btn btn-primary btn-wide gap-2'
@@ -41,24 +49,24 @@ export default function DetailedProperty({
                         <AiOutlinePlus size={22} />
                         Add New Space
                     </button>
-                </div>
-                {Object.keys(spacesPerFloor).map((value) => {
-                    return (
-                        <CollapsableFloorSection
-                            key={value}
-                            floor={Number(value)}
-                            spaces={spacesPerFloor[value]}
+                    {Object.keys(spacesPerFloor).map((value) => {
+                        return (
+                            <CollapsableFloorSection
+                                key={value}
+                                floor={Number(value)}
+                                spaces={spacesPerFloor[value]}
+                            />
+                        );
+                    })}
+                    <span>
+                        <AddNewSpaceDialog
+                            propertyId={property.id}
+                            setShowDialog={setShowDialog}
+                            showDialog={showDialog}
+                            totalFloors={property.totalFloors}
                         />
-                    );
-                })}
-                <span>
-                    <AddNewSpaceDialog
-                        propertyId={property.id}
-                        setShowDialog={setShowDialog}
-                        showDialog={showDialog}
-                        totalFloors={property.totalFloors}
-                    />
-                </span>
+                    </span>
+                </div>
             </div>
         </div>
     );

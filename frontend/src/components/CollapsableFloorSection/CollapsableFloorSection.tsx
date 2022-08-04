@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import clsx from 'clsx';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { SpaceCard } from './components/SpaceCard';
 import { Space } from '../../types';
 import { numberToWord } from '../../helpers/pageHelper';
+import { SwiperSlide, Swiper } from 'swiper/react';
+import { useSlidesPerView } from '../../pages';
 
 interface CollapsableFloorSectionProps {
     floor: number;
@@ -13,27 +13,25 @@ export function CollapsableFloorSection({
     spaces,
     floor,
 }: CollapsableFloorSectionProps) {
-    const [isExpanded, setIsExpanded] = useState(true);
+    const slidesPerView = useSlidesPerView();
     return (
-        <div className={clsx('space-y-5')}>
-            <button
-                className='btn btn-outline btn-primary gap-3 bg-base-100'
-                onClick={() => setIsExpanded(!isExpanded)}
-            >
+        <div className={clsx('space-y-5 capitalize')}>
+            <h3 className='text-lg font-semibold text-primary'>
                 {numberToWord(floor)} floor
-                {isExpanded ? (
-                    <BiChevronDown size={22} />
-                ) : (
-                    <BiChevronUp size={22} />
-                )}
-            </button>
-            {isExpanded && (
-                <div className={clsx('grid grid-cols-2 gap-5 p-0')}>
+            </h3>
+            <div className={clsx('flex space-x-4')}>
+                <Swiper
+                    className='flex-1 w-full'
+                    slidesPerView={slidesPerView}
+                    spaceBetween={20}
+                >
                     {spaces.map((space) => (
-                        <SpaceCard key={space.id} space={space} />
+                        <SwiperSlide key={space.id}>
+                            <SpaceCard space={space} />
+                        </SwiperSlide>
                     ))}
-                </div>
-            )}
+                </Swiper>
+            </div>
         </div>
     );
 }
