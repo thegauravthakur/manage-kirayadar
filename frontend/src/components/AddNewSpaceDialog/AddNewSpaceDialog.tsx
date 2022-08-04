@@ -9,6 +9,7 @@ import { createEmptyArray, numberToWord } from '../../helpers/pageHelper';
 import { FormLabel } from '../FormLabel';
 import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
 import { useSession } from '../../hooks/useSession';
+import { FormInputBox } from '../UI/FormInputBox';
 
 const formSchema = z.object({
     name: z.string().min(2, 'name should have at least 2 letter'),
@@ -88,22 +89,14 @@ export function AddNewSpaceDialog({
                             <AiOutlineClose fontSize={18} />
                         </button>
                     </div>
-                    <FormLabel
-                        errorText={errors.name?.message}
-                        id='name'
-                        labelText='What is the name for this space?'
-                    >
-                        <input
-                            className={clsx(
-                                'input input-bordered input-primary input-md w-full',
-                                { 'input-error': !!errors.name }
-                            )}
-                            id='name'
-                            placeholder='Enter a name...'
-                            type='text'
-                            {...register('name')}
-                        />
-                    </FormLabel>
+                    <FormInputBox
+                        error={errors.name?.message}
+                        id='floor'
+                        label='Name'
+                        placeholder='Enter name for this space?'
+                        registerForm={register('name')}
+                        type='text'
+                    />
                     <FormLabel
                         errorText={errors.floor?.message}
                         id='floor'
