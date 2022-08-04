@@ -43,7 +43,7 @@ export default function DetailedProperty({
                 <div className='space-y-5 ml-0 sm:ml-10'>
                     <h1 className='text-2xl font-semibold'>{property.name}</h1>
                     <button
-                        className='btn btn-primary btn-wide gap-2'
+                        className='btn btn-primary btn-48 gap-2'
                         onClick={() => setShowDialog(true)}
                     >
                         <AiOutlinePlus size={22} />
