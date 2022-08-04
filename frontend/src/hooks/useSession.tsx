@@ -4,13 +4,14 @@ import { useAccessToken } from './useAccessToken';
 import { User } from '../types';
 
 export interface Session {
-    session: { user?: User; token: string };
+    user?: User | null;
+    token?: string | null;
     isLoading: boolean;
 }
 
 export function useSession(): Session {
     const [token] = useAccessToken();
-    const { data: session, isLoading } = useQuery(
+    const { data: user, isLoading } = useQuery(
         'session',
         async () => {
             const user = await getCurrentUser(token ?? '');
@@ -18,5 +19,5 @@ export function useSession(): Session {
         },
         { enabled: token !== undefined }
     );
-    return { session: { ...session, token: token! }, isLoading };
+    return { user, token: token, isLoading };
 }

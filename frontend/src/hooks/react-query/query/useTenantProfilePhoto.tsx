@@ -5,11 +5,11 @@ import { fetchTenantProfilePhoto } from '../../../helpers/tenantHelper';
 
 export function useTenantProfilePhoto() {
     const { tenantId } = useRouter().query as Record<string, string>;
-    const { session } = useSession();
+    const { token } = useSession();
     const { data: profilePhoto, isLoading } = useQuery(
         ['photo', tenantId],
-        async () => fetchTenantProfilePhoto(session.token, tenantId),
-        { enabled: !!session.token, refetchOnWindowFocus: false }
+        async () => fetchTenantProfilePhoto(token!, tenantId),
+        { enabled: !!token, refetchOnWindowFocus: false }
     );
     return { profilePhoto, isLoading };
 }

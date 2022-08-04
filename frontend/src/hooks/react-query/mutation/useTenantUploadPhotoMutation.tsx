@@ -22,9 +22,9 @@ export function useTenantUploadPhotoMutation() {
     const { tenantId } = useRouter().query as any;
     const snackbar = useSnackbar();
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { token } = useSession();
     const uploadMutation = useMutation(
-        (file: File) => updateTenantProfilePhoto(session.token, file, tenantId),
+        (file: File) => updateTenantProfilePhoto(token!, file, tenantId),
         {
             onSuccess: async () =>
                 onPhotoUpload(snackbar, queryClient, tenantId),

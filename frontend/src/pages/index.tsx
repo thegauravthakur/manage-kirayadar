@@ -39,35 +39,23 @@ const Home: NextPage = () => {
     const { properties, isLoading } = useProperties();
     const emptyArray = createEmptyArray(6);
     const slidesPerView = useSlidesPerView();
-    const showNewPropertyCard = useMediaQuery(`(min-width: 860px)`);
     return (
         <div className='bg-base-200 min-h-screen space-y-5 flex flex-col relative'>
             <CustomHead title='Manage Kirayadar' />
             <AppBar />
             <div className='p-5 space-y-5 h-full flex-1 flex flex-col'>
-                <div className='flex items-center justify-between'>
-                    <h1 className='text-2xl font-semibold'>
-                        Manage your properties
-                    </h1>
-                    {!showNewPropertyCard && (
-                        <button
-                            className='btn btn-circle btn-sm btn-outline'
-                            onClick={() => setShowDialog(true)}
-                        >
-                            <AiOutlinePlus />
-                        </button>
-                    )}
-                </div>
+                <h1 className='text-2xl font-semibold'>Your Properties</h1>
+                <button
+                    className='btn btn-primary w-48'
+                    onClick={() => setShowDialog(true)}
+                >
+                    Create Property
+                </button>
                 <Swiper
                     className='flex-1 w-full'
                     slidesPerView={slidesPerView}
                     spaceBetween={20}
                 >
-                    {showNewPropertyCard && (
-                        <SwiperSlide>
-                            <AddNewPropertyCard setShowDialog={setShowDialog} />
-                        </SwiperSlide>
-                    )}
                     {isLoading &&
                         emptyArray.map((value) => (
                             <SwiperSlide key={value}>
@@ -76,12 +64,7 @@ const Home: NextPage = () => {
                         ))}
                     {properties?.map((property) => (
                         <SwiperSlide key={property.id}>
-                            <PropertyCard
-                                address={property.address}
-                                id={property.id}
-                                name={property.name}
-                                totalTenants={property.totalTenants}
-                            />
+                            <PropertyCard property={property} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -108,7 +91,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
                 Promise.resolve(accessToken)
             );
             const sessionQuery = queryClient.prefetchQuery('session', () =>
-                Promise.resolve({ user, token: accessToken })
+                Promise.resolve(user)
             );
             await Promise.all([tokenQuery, sessionQuery]);
             if (!user) return redirect;

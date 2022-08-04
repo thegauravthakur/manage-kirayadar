@@ -8,7 +8,7 @@ import { useGlobalSpinner } from '../../zustand/useGlobalSpinner';
 
 async function createNewProperty(
     formData: CreateNewPropertySchema,
-    { token }: Session['session']
+    token: string
 ) {
     const response = await postWithToken(
         createEndpoint('property/add'),
@@ -24,13 +24,13 @@ export function useCreateNewPropertyMutation(
     setShowDialog: (a: boolean) => void
 ) {
     const queryClient = useQueryClient();
-    const { session } = useSession();
+    const { token } = useSession();
     const { show } = useSnackbar();
     const spinner = useGlobalSpinner();
     return useMutation(
         async (formData: CreateNewPropertySchema) => {
             spinner.show();
-            return createNewProperty(formData, session);
+            return createNewProperty(formData, token!);
         },
         {
             onError: (error: CustomError) => {

@@ -1,37 +1,40 @@
 import Link from 'next/link';
-import { BsPeople } from 'react-icons/bs';
 import { pluralize } from '../../helpers/shared';
+import clsx from 'clsx';
+import { Property } from '../../types';
+import { useSession } from '../../hooks/useSession';
 
 interface PropertyCardProps {
-    name: string;
-    address: string;
-    id: number;
-    totalTenants: number;
+    property: Property;
 }
-export function PropertyCard({
-    name,
-    address,
-    id,
-    totalTenants,
-}: PropertyCardProps) {
+export function PropertyCard({ property }: PropertyCardProps) {
+    const { name, id, totalTenants, totalSpaces, totalFloors } = property;
     return (
-        <div className='card w-full max-w-sm bg-base-100 shadow-xl h-60'>
-            <div className='card-body uppercase p-5 sm:p-7'>
-                <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-1'>
-                    <h2 className='card-title'>{name}</h2>
-                    <span className='text-xs bg-green-600 text-base-100 py-1 px-2 rounded whitespace-nowrap flex items-center'>
-                        <BsPeople className='mr-2' size={15} />
-                        {totalTenants}{' '}
-                        {pluralize('tenant', 'tenants', totalTenants)}
-                    </span>
+        <Link href={`/property/${id}`}>
+            <a
+                className={clsx(
+                    'h-60 bg-base-100 inline-block w-full max-w-xs p-6 rounded-lg flex flex-col justify-between shadow-lg m-0.5',
+                    'transition transition-shadow duration-300 hover:shadow-xl outline-blue-600'
+                )}
+            >
+                <div className='space-y-2'>
+                    <div className='flex justify-between'>
+                        <p>
+                            {totalSpaces}{' '}
+                            {pluralize('Space', 'Spaces', totalSpaces)}
+                        </p>
+                        <p className='bg-blue-500 text-white px-4 text-xs flex items-center justify-center rounded-md'>
+                            {totalTenants}{' '}
+                            {pluralize('Tenant', 'Tenants', totalTenants)}
+                        </p>
+                    </div>
+                    <h3 className='text-lg'>{name}</h3>
                 </div>
-                <p className='text-gray-500 text-sm'>{address}</p>
-                <div className='card-actions justify-end'>
-                    <Link href={`/property/${id}`}>
-                        <a className='btn btn-primary'>manage</a>
-                    </Link>
+                <div className='space-y-2'>
+                    <p>Total Floors: {totalFloors}</p>
+                    <p>Owner: {}</p>
                 </div>
-            </div>
-        </div>
+            </a>
+        </Link>
     );
 }

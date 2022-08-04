@@ -50,11 +50,11 @@ export function AddNewSpaceDialog({
     } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
     });
-    const { session } = useSession();
+    const { token } = useSession();
     const queryClient = useQueryClient();
     const mutation = useMutation(
         async (formData: FormSchema) => {
-            await createNewSpace(formData, session.token, propertyId);
+            await createNewSpace(formData, token!, propertyId);
         },
         {
             onSuccess: async () => {

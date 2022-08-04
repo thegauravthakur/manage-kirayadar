@@ -65,14 +65,14 @@ export function DocumentListItem({
     documentId = null,
 }: DocumentListItemProps) {
     const { show: showSpinner, hide: hideSpinner } = useGlobalSpinner();
-    const { session } = useSession();
+    const { token } = useSession();
     const queryClient = useQueryClient();
     const { show } = useSnackbar();
     const queryParams = useRouter().query;
 
     const mutation = useMutation(
         async (handles: unknown) =>
-            uploadFile(session.token, handles, name, queryParams),
+            uploadFile(token!, handles, name, queryParams),
         {
             onSuccess: async () => {
                 await queryClient.invalidateQueries([

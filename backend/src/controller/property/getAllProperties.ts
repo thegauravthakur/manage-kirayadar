@@ -14,7 +14,8 @@ export async function getAllProperties(req: Request, res: Response) {
             const totalTenants = spaces.reduce((prev, current) => {
                 return prev + current.tenants.length;
             }, 0);
-            return { ...rest, totalTenants };
+            const totalSpaces = spaces.length;
+            return { ...rest, totalTenants, totalSpaces };
         });
         return res.json({ errorMessage: null, data: { properties } });
     } catch (error) {

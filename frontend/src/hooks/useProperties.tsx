@@ -19,13 +19,13 @@ async function getProperties(token: string): Promise<Property[]> {
 }
 
 export function useProperties() {
-    const { session } = useSession();
+    const { token } = useSession();
     const { show } = useSnackbar();
     const { data: properties, isLoading } = useQuery<Property[]>(
         'properties',
-        async () => getProperties(session.token),
+        async () => getProperties(token!),
         {
-            enabled: !!session.token,
+            enabled: !!token,
             onError: (error) => {
                 const message =
                     (error as CustomError)?.errorMessage ?? errorMessage;

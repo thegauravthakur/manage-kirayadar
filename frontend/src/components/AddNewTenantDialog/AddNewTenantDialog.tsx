@@ -50,11 +50,11 @@ export function AddNewTenantDialog({
     } = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
     });
-    const { session } = useSession();
+    const { token } = useSession();
     const queryClient = useQueryClient();
     const mutation = useMutation(
         async (formData: FormSchema) => {
-            await addNewTenant(formData, session.token, spaceId);
+            await addNewTenant(formData, token!, spaceId);
         },
         {
             onSuccess: async () => {
