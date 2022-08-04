@@ -9,6 +9,7 @@ interface PropertyCardProps {
 }
 export function PropertyCard({ property }: PropertyCardProps) {
     const { name, id, totalTenants, totalSpaces, totalFloors } = property;
+    const { user } = useSession();
     return (
         <Link href={`/property/${id}`}>
             <a
@@ -32,7 +33,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
                 </div>
                 <div className='space-y-2'>
                     <p>Total Floors: {totalFloors}</p>
-                    <p>Owner: {}</p>
+                    <p>Owner: {user?.name}</p>
                 </div>
             </a>
         </Link>

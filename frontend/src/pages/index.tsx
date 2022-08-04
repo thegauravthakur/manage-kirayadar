@@ -62,6 +62,9 @@ const Home: NextPage = () => {
                                 <PropertyCardShimmer />
                             </SwiperSlide>
                         ))}
+                    <SwiperSlide>
+                        <PropertyCardShimmer />
+                    </SwiperSlide>
                     {properties?.map((property) => (
                         <SwiperSlide key={property.id}>
                             <PropertyCard property={property} />
