@@ -11,6 +11,7 @@ interface SignUpDialogProps {
     setShowDialog: Dispatch<SetStateAction<boolean>>;
     showDialog: boolean;
 }
+
 export interface UserDetails {
     name: string;
     email: string;
