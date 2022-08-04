@@ -90,7 +90,7 @@ export function DocumentListItem({
             if (documentId)
                 await postWithToken(
                     createEndpoint('documents/deleteFile'),
-                    session.token,
+                    token!,
                     { documentId, tenantId: Number(queryParams.tenantId) }
                 );
         },
@@ -125,7 +125,7 @@ export function DocumentListItem({
                                     const blob = await fetchMutation(
                                         Number(queryParams.tenantId),
                                         documentId,
-                                        session.token
+                                        token!
                                     );
                                     downloadFile(blob, name);
                                 }
