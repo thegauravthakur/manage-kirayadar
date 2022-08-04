@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { Session, useSession } from '../../useSession';
+import { useSession } from '../../useSession';
 import { useSnackbar } from '../../zustand/useSnackbar';
 import { createEndpoint, postWithToken } from '../../../helpers/fetchHelper';
 import { CustomError } from '../../../types';
@@ -20,9 +20,7 @@ async function createNewProperty(
     return result;
 }
 const errorMessage = 'Error occurred while fetching all the properties';
-export function useCreateNewPropertyMutation(
-    setShowDialog: (a: boolean) => void
-) {
+export function useCreateNewPropertyMutation(onSuccess: () => void) {
     const queryClient = useQueryClient();
     const { token } = useSession();
     const { show } = useSnackbar();
@@ -41,7 +39,7 @@ export function useCreateNewPropertyMutation(
                 show('created a new property', 'success');
                 // todo: maybe instead of invalidating the cache, we can directly update the cache which will be quick
                 await queryClient.invalidateQueries('properties');
-                setShowDialog(false);
+                onSuccess();
             },
             onSettled() {
                 spinner.hide();

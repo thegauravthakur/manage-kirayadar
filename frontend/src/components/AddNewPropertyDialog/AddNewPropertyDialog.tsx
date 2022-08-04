@@ -32,8 +32,13 @@ export function AddNewPropertyDialog({
         useForm<CreateNewPropertySchema>({
             resolver: zodResolver(formSchema),
         });
-    const { mutate, isLoading } = useCreateNewPropertyMutation(setShowDialog);
-    const onSubmit = handleSubmit((formData) => mutate(formData));
+    const { mutate, isLoading } = useCreateNewPropertyMutation(() => {
+        setShowDialog(false);
+        reset();
+    });
+    const onSubmit = handleSubmit((formData) => {
+        mutate(formData);
+    });
     function onCloseIconClick() {
         reset();
         setShowDialog(false);

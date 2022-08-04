@@ -18,19 +18,21 @@ import { dehydrate, QueryClient } from 'react-query';
 function useSlidesPerView() {
     // need to look into this in order to make it dynamic
     const _630 = useMediaQuery(`(min-width: 630px)`);
-    const _740 = useMediaQuery(`(min-width: 740px)`);
+    const _490 = useMediaQuery(`(min-width: 450px)`);
+    const _800 = useMediaQuery(`(min-width: 800px)`);
     const _1000 = useMediaQuery(`(min-width: 1000px)`);
-    const _1100 = useMediaQuery(`(min-width: 1100px)`);
-    const _1400 = useMediaQuery(`(min-width: 1400px)`);
-    const _1600 = useMediaQuery(`(min-width: 1600px)`);
-    const _1900 = useMediaQuery(`(min-width: 1900px)`);
-    if (_1900) return 5.1;
-    if (_1600) return 4.1;
-    if (_1400) return 3.5;
-    if (_1100) return 3.1;
-    if (_1000) return 2.5;
-    if (_740) return 2.1;
-    if (_630) return 1.5;
+    const _1250 = useMediaQuery(`(min-width: 1250px)`);
+    const _1350 = useMediaQuery(`(min-width: 1350px)`);
+    const _1500 = useMediaQuery(`(min-width: 1500px)`);
+    const _1700 = useMediaQuery(`(min-width: 1700px)`);
+    if (_1700) return 5.5;
+    if (_1500) return 4.5;
+    if (_1350) return 4.1;
+    if (_1250) return 3.5;
+    if (_1000) return 3.1;
+    if (_800) return 2.5;
+    if (_630) return 2.1;
+    if (_490) return 1.5;
     return 1.1;
 }
 
@@ -62,9 +64,6 @@ const Home: NextPage = () => {
                                 <PropertyCardShimmer />
                             </SwiperSlide>
                         ))}
-                    <SwiperSlide>
-                        <PropertyCardShimmer />
-                    </SwiperSlide>
                     {properties?.map((property) => (
                         <SwiperSlide key={property.id}>
                             <PropertyCard property={property} />
