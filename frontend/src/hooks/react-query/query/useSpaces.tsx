@@ -18,7 +18,7 @@ export function useSpaces(propertyId: number, initialData?: Space[]) {
             if (response.ok) return result.data.spaces;
             return result.data;
         },
-        { enabled: !!session.token, initialData }
+        { enabled: !!token, initialData }
     );
     return { spaces, isLoading };
 }
