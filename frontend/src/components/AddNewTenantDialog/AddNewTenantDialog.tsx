@@ -18,6 +18,10 @@ interface AddNewTenantDialogProps {
 const formSchema = z.object({
     name: z.string().min(2, 'name should be at least 2 character long'),
     email: z.string().email('email is not in correct format'),
+    phone: z
+        .string()
+        .regex(new RegExp('^[6-9]\\d{9}$'), 'Phone number is invalid'),
+    address: z.string().min(2),
 });
 
 export type CreateNewTenantSchema = z.infer<typeof formSchema>;
@@ -81,18 +85,37 @@ export function AddNewTenantDialog({
                             error={errors.name?.message}
                             id='name'
                             label={"Tenant's Name"}
-                            placeholder='Enter the name of the tenant...'
+                            placeholder='Enter the name of the tenant'
                             registerForm={register('name')}
                             type='text'
                         />
                         <FormInputBox
-                            error={errors.email?.message}
-                            id='email'
-                            label={"Tenant's Email"}
-                            placeholder='Enter the email of the tenant...'
-                            registerForm={register('email')}
-                            type='email'
+                            error={errors.address?.message}
+                            id='address'
+                            label={"Tenant's Address"}
+                            placeholder='Enter the Address of the tenant'
+                            registerForm={register('address')}
+                            type='text'
                         />
+                        <div className='flex space-x-1 w-full'>
+                            <FormInputBox
+                                error={errors.phone?.message}
+                                id='phone'
+                                label={"Tenant's Mobile"}
+                                placeholder='Phone Number'
+                                registerForm={register('phone')}
+                                type='tel'
+                            />
+                            <FormInputBox
+                                error={errors.email?.message}
+                                id='email'
+                                label={"Tenant's Email"}
+                                placeholder='Email Address'
+                                registerForm={register('email')}
+                                type='email'
+                            />
+                        </div>
+
                         <button
                             className={clsx('btn btn-primary btn-block', {
                                 loading: mutation.isLoading,

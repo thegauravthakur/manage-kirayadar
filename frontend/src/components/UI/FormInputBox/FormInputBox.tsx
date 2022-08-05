@@ -13,7 +13,7 @@ interface InputBoxProps {
 export function FormInputBox(props: InputBoxProps) {
     const { type, id, registerForm, error, placeholder, label } = props;
     return (
-        <div className='relative mt-2'>
+        <div className='relative mt-2 w-full'>
             <input
                 className={clsx(
                     'border border-black h-14 w-full rounded-lg pl-4',
