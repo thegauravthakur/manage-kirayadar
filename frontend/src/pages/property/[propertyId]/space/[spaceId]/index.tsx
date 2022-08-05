@@ -10,7 +10,7 @@ import { AppBar } from '../../../../../components/AppBar';
 import { CustomHead } from '../../../../../components/CustomHead';
 import Link from 'next/link';
 import { BsArrowLeft } from 'react-icons/bs';
-import { AiOutlinePlus } from 'react-icons/ai';
+import { NoDataToShow } from '../../../../../components/NoDataToShow/NoDataToShow';
 
 interface SpaceProps {
     space: Space;
@@ -30,11 +30,17 @@ function Space({ space, tenants }: SpaceProps) {
                 </Link>
                 <div className='space-y-5 ml-0 sm:ml-10'>
                     <h2 className='text-2xl font-semibold'>{space.name}</h2>
-
                     <TenantInformationSection
                         initialTenants={tenants}
                         space={space}
                     />
+                    {tenants?.length === 0 && (
+                        <NoDataToShow
+                            containerStyles='mt-10'
+                            heading='no tenants in this space'
+                            subHeading='Please create a new tenant to continue...'
+                        />
+                    )}
                 </div>
             </div>
         </div>

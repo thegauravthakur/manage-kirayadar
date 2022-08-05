@@ -1,7 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { getCookie } from 'cookies-next';
 import { getCurrentUser } from '../helpers/userHelper';
-import { AddNewPropertyCard } from '../components/AddNewPropertyCard';
 import { useProperties } from '../hooks/useProperties';
 import { PropertyCard } from '../components/PropertyCard';
 import { AppBar } from '../components/AppBar';
@@ -13,6 +12,7 @@ import { createEmptyArray } from '../helpers/pageHelper';
 import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
 import { useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
+import { NoDataToShow } from '../components/NoDataToShow/NoDataToShow';
 
 export function useSlidesPerView() {
     // need to look into this in order to make it dynamic
@@ -68,6 +68,13 @@ const Home: NextPage = () => {
                             <PropertyCard property={property} />
                         </SwiperSlide>
                     ))}
+                    {properties?.length === 0 && (
+                        <NoDataToShow
+                            containerStyles='mt-10'
+                            heading='no properties to show'
+                            subHeading='Please create a new property to continue...'
+                        />
+                    )}
                 </Swiper>
             </div>
             <AddNewPropertyDialog
