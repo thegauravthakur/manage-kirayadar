@@ -38,7 +38,7 @@ export function useSlidesPerView() {
 const Home: NextPage = () => {
     const [showDialog, setShowDialog] = useState(false);
     const { properties, isLoading } = useProperties();
-    const emptyArray = createEmptyArray(6);
+    const emptyArray = createEmptyArray(3);
     const slidesPerView = useSlidesPerView();
     return (
         <div className='bg-base-200 min-h-screen space-y-5 flex flex-col relative'>

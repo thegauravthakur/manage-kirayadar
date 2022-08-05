@@ -16,6 +16,7 @@ import { AppBar } from '../../../components/AppBar';
 import { CustomHead } from '../../../components/CustomHead';
 import { BsArrowLeft } from 'react-icons/bs';
 import Link from 'next/link';
+import { NoDataToShow } from '../../../components/NoDataToShow/NoDataToShow';
 
 interface DetailedPropertyProps {
     property: Property;
@@ -58,6 +59,13 @@ export default function DetailedProperty({
                             />
                         );
                     })}
+                    {Object.keys(spacesPerFloor).length === 0 && (
+                        <NoDataToShow
+                            containerStyles='pt-10'
+                            heading='No spaces to show'
+                            subHeading='Please create a new space to continue...'
+                        />
+                    )}
                     <AddNewSpaceDialog
                         propertyId={property.id}
                         setShowDialog={setShowDialog}
