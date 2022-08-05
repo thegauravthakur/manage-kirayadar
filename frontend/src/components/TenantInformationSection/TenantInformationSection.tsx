@@ -41,7 +41,7 @@ export function TenantInformationSection({
                     spaceBetween={20}
                 >
                     {tenants?.map((tenant) => (
-                        <SwiperSlide key={space.id}>
+                        <SwiperSlide key={tenant.id}>
                             <TenantCard tenant={tenant} />
                         </SwiperSlide>
                     ))}

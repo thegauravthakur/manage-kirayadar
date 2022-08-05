@@ -15,7 +15,7 @@ export async function getProfilePhoto(req: Request, res: Response) {
             where: { id: Number(tenantId) },
         });
         const directory = createTenantProfilePhotoKey(tenantId);
-        const url = getSignedUrl(directory);
+        const url = await getSignedUrl(directory);
         res.json({
             data: url ?? fetchGravatar(tenant?.email ?? ''),
             errorMessage: null,

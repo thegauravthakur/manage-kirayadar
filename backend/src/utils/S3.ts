@@ -7,8 +7,7 @@ import SendData = ManagedUpload.SendData;
 const signedUrlExpireSeconds = 60 * 60 * 24;
 
 //todo: update this to prod one
-const Bucket =
-    env === 'development' ? 'manage-kirayadar-dev' : 'manage-kirayadar-dev';
+const Bucket = env === 'development' ? 'manage-kirayadar-dev' : 'kirayedaar';
 
 export async function uploadFileToS3(
     Body: Body,
@@ -68,9 +67,11 @@ export function createTenantDocumentKey(
     return `tenants/${tenantId}/documents/${documentName}`;
 }
 
-export function getSignedUrl(Key: string): string | null {
+export async function getSignedUrl(Key: string): Promise<string | null> {
     try {
         const s3 = new S3({ signatureVersion: 'v4', region: 'ap-south-1' });
+        // throw error if key doesn't exist
+        await s3.headObject({ Bucket, Key }).promise();
         return s3.getSignedUrl('getObject', {
             Bucket: Bucket,
             Key: Key,
