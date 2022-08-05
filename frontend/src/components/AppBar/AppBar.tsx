@@ -8,7 +8,7 @@ export function AppBar() {
             <div className='flex-1'>
                 <Link href='/'>
                     <a className='btn btn-ghost normal-case text-xl text-primary'>
-                        Manage Kirayadar
+                        Manage Kirayedaar
                     </a>
                 </Link>
             </div>
