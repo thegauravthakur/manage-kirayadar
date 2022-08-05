@@ -58,14 +58,12 @@ export default function DetailedProperty({
                             />
                         );
                     })}
-                    <span>
-                        <AddNewSpaceDialog
-                            propertyId={property.id}
-                            setShowDialog={setShowDialog}
-                            showDialog={showDialog}
-                            totalFloors={property.totalFloors}
-                        />
-                    </span>
+                    <AddNewSpaceDialog
+                        propertyId={property.id}
+                        setShowDialog={setShowDialog}
+                        showDialog={showDialog}
+                        totalFloors={property.totalFloors}
+                    />
                 </div>
             </div>
         </div>

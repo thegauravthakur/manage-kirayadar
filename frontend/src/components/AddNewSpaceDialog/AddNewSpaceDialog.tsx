@@ -9,6 +9,7 @@ import { FormInputBox } from '../UI/FormInputBox';
 import { FormSelectBox } from '../UI/FormSelectBox';
 import FocusTrap from 'focus-trap-react';
 import { useCreateNewSpaceMutation } from '../../hooks/react-query/mutation/useCreateNewSpaceMutation';
+import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
 
 const formSchema = z.object({
     name: z.string().min(2, 'name should have at least 2 letter'),
@@ -66,60 +67,62 @@ export function AddNewSpaceDialog({
     }, [reset, setFocus, showDialog]);
 
     return (
-        <FocusTrap active={showDialog}>
-            <div
-                ref={modalRef}
-                className={clsx('modal', {
-                    'modal-open': showDialog,
-                })}
-                onKeyDown={({ key }) => {
-                    if (key === 'Escape') setShowDialog(false);
-                }}
-            >
-                <form
-                    className='modal-box w-full mx-2 px-3.5 sm:px-5 max-w-md'
-                    onSubmit={onSubmit}
+        <ClientOnlyPortal>
+            <FocusTrap active={showDialog}>
+                <div
+                    ref={modalRef}
+                    className={clsx('modal', {
+                        'modal-open': showDialog,
+                    })}
+                    onKeyDown={({ key }) => {
+                        if (key === 'Escape') setShowDialog(false);
+                    }}
                 >
-                    <div className='flex justify-between mb-5'>
-                        <h2 className='font-bold text-lg'>Add New Space</h2>
-                        <button
-                            className='btn btn-circle btn-sm btn-outline'
-                            type='reset'
-                            onClick={() => {
-                                reset();
-                                setShowDialog(false);
-                            }}
-                        >
-                            <AiOutlineClose fontSize={18} />
-                        </button>
-                    </div>
-                    <FormInputBox
-                        error={errors.name?.message}
-                        id='floor'
-                        label='Name'
-                        placeholder='Enter name for this space?'
-                        registerForm={register('name')}
-                        type='text'
-                    />
-                    <FormSelectBox
-                        error={errors.floor?.message}
-                        id='floor'
-                        label='Chose Floor'
-                        options={options}
-                        registerForm={register('floor', {
-                            valueAsNumber: true,
-                        })}
-                    />
-                    <button
-                        className={clsx('btn btn-primary btn-block', {
-                            loading: mutation.isLoading,
-                        })}
-                        type='submit'
+                    <form
+                        className='modal-box w-full mx-2 px-3.5 sm:px-5 max-w-md'
+                        onSubmit={onSubmit}
                     >
-                        create new space
-                    </button>
-                </form>
-            </div>
-        </FocusTrap>
+                        <div className='flex justify-between mb-5'>
+                            <h2 className='font-bold text-lg'>Add New Space</h2>
+                            <button
+                                className='btn btn-circle btn-sm btn-outline'
+                                type='reset'
+                                onClick={() => {
+                                    reset();
+                                    setShowDialog(false);
+                                }}
+                            >
+                                <AiOutlineClose fontSize={18} />
+                            </button>
+                        </div>
+                        <FormInputBox
+                            error={errors.name?.message}
+                            id='floor'
+                            label='Name'
+                            placeholder='Enter name for this space?'
+                            registerForm={register('name')}
+                            type='text'
+                        />
+                        <FormSelectBox
+                            error={errors.floor?.message}
+                            id='floor'
+                            label='Chose Floor'
+                            options={options}
+                            registerForm={register('floor', {
+                                valueAsNumber: true,
+                            })}
+                        />
+                        <button
+                            className={clsx('btn btn-primary btn-block', {
+                                loading: mutation.isLoading,
+                            })}
+                            type='submit'
+                        >
+                            create new space
+                        </button>
+                    </form>
+                </div>
+            </FocusTrap>
+        </ClientOnlyPortal>
     );
 }
