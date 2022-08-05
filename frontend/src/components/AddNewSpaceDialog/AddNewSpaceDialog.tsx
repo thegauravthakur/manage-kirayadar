@@ -1,22 +1,29 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation, useQueryClient } from 'react-query';
 import { AiOutlineClose } from 'react-icons/ai';
 import { createEmptyArray, numberToWord } from '../../helpers/pageHelper';
-import { FormLabel } from '../FormLabel';
-import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
-import { useSession } from '../../hooks/useSession';
 import { FormInputBox } from '../UI/FormInputBox';
+import { FormSelectBox } from '../UI/FormSelectBox';
+import FocusTrap from 'focus-trap-react';
+import { useCreateNewSpaceMutation } from '../../hooks/react-query/mutation/useCreateNewSpaceMutation';
 
 const formSchema = z.object({
     name: z.string().min(2, 'name should have at least 2 letter'),
     floor: z.number().min(1, ''),
 });
 
-type FormSchema = z.infer<typeof formSchema>;
+export type CreateNewSpaceSchema = z.infer<typeof formSchema>;
+
+const getOptions = (totalFloors: number) => {
+    const emptyArray = createEmptyArray(totalFloors - 1);
+    return emptyArray.map((value) => ({
+        value: numberToWord(value + 1) + ' floor',
+        key: value + 1,
+    }));
+};
 
 interface AddNewSpaceDialogProps {
     showDialog: boolean;
@@ -25,57 +32,54 @@ interface AddNewSpaceDialogProps {
     propertyId: number;
 }
 
-async function createNewSpace(
-    formData: FormSchema,
-    token: string,
-    propertyId: number
-) {
-    await postWithToken(createEndpoint('space/add'), token, {
-        ...formData,
-        propertyId,
-    });
-}
-
 export function AddNewSpaceDialog({
     showDialog,
     setShowDialog,
     totalFloors,
     propertyId,
 }: AddNewSpaceDialogProps) {
-    const emptyArray = createEmptyArray(totalFloors - 1);
     const {
         register,
         handleSubmit,
         reset,
+        setFocus,
         formState: { errors },
-    } = useForm<FormSchema>({
+    } = useForm<CreateNewSpaceSchema>({
         resolver: zodResolver(formSchema),
     });
-    const { token } = useSession();
-    const queryClient = useQueryClient();
-    const mutation = useMutation(
-        async (formData: FormSchema) => {
-            await createNewSpace(formData, token!, propertyId);
-        },
-        {
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(['spaces', propertyId]);
-                reset();
-                setShowDialog(false);
-            },
-        }
-    );
-    const onSubmit = handleSubmit((formData) => {
-        mutation.mutate(formData);
+    const mutation = useCreateNewSpaceMutation(propertyId, () => {
+        reset();
+        setShowDialog(false);
     });
+    const options = getOptions(totalFloors);
+    const modalRef = useRef<HTMLDivElement>(null);
+    const onSubmit = handleSubmit((formData) => mutation.mutate(formData));
+
+    useEffect(() => {
+        if (showDialog) {
+            setFocus('name');
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+            reset();
+        }
+    }, [reset, setFocus, showDialog]);
+
     return (
-        <div
-            className={clsx('modal', {
-                'modal-open': showDialog,
-            })}
-        >
-            <form className='modal-box space-y-5' onSubmit={onSubmit}>
-                <div>
+        <FocusTrap active={showDialog}>
+            <div
+                ref={modalRef}
+                className={clsx('modal', {
+                    'modal-open': showDialog,
+                })}
+                onKeyDown={({ key }) => {
+                    if (key === 'Escape') setShowDialog(false);
+                }}
+            >
+                <form
+                    className='modal-box w-full mx-2 px-3.5 sm:px-5 max-w-md'
+                    onSubmit={onSubmit}
+                >
                     <div className='flex justify-between mb-5'>
                         <h2 className='font-bold text-lg'>Add New Space</h2>
                         <button
@@ -97,38 +101,25 @@ export function AddNewSpaceDialog({
                         registerForm={register('name')}
                         type='text'
                     />
-                    <FormLabel
-                        errorText={errors.floor?.message}
+                    <FormSelectBox
+                        error={errors.floor?.message}
                         id='floor'
-                        labelText='What floor is this space on?'
+                        label='Chose Floor'
+                        options={options}
+                        registerForm={register('floor', {
+                            valueAsNumber: true,
+                        })}
+                    />
+                    <button
+                        className={clsx('btn btn-primary btn-block', {
+                            loading: mutation.isLoading,
+                        })}
+                        type='submit'
                     >
-                        <select
-                            className={clsx(
-                                'select select-primary font-normal w-full',
-                                {
-                                    'select-error': !!errors.floor,
-                                }
-                            )}
-                            defaultValue={1}
-                            {...register('floor', { valueAsNumber: true })}
-                        >
-                            {emptyArray.map((value) => (
-                                <option key={value} value={value + 1}>
-                                    {numberToWord(value + 1)} floor
-                                </option>
-                            ))}
-                        </select>
-                    </FormLabel>
-                </div>
-                <button
-                    className={clsx('btn btn-primary btn-block', {
-                        loading: mutation.isLoading,
-                    })}
-                    type='submit'
-                >
-                    create new space
-                </button>
-            </form>
-        </div>
+                        create new space
+                    </button>
+                </form>
+            </div>
+        </FocusTrap>
     );
 }
