@@ -5,11 +5,9 @@ import { ProfileDropdown } from './components/ProfileDropdown';
 export function AppBar() {
     return (
         <div className='bg-base-100 px-5 py-2 flex'>
-            <div className='flex-1'>
+            <div className='flex-1 flex items-center'>
                 <Link href='/'>
-                    <a className='btn btn-ghost normal-case text-xl text-primary'>
-                        Manage Kirayedaar
-                    </a>
+                    <a className='text-xl text-primary'>Manage Kirayedaar</a>
                 </Link>
             </div>
             <a className='btn btn-ghost btn-circle'>
