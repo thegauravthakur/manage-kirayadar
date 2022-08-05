@@ -9,6 +9,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
 import { useSession } from '../../hooks/useSession';
 import FocusTrap from 'focus-trap-react';
+import { FormInputBox } from '../UI/FormInputBox';
+import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
 
 interface AddNewTenantDialogProps {
     showDialog: boolean;
@@ -69,14 +71,17 @@ export function AddNewTenantDialog({
     });
 
     return (
-        <FocusTrap active={showDialog}>
-            <div
-                className={clsx('modal', {
-                    'modal-open': showDialog,
-                })}
-            >
-                <form className='modal-box space-y-5' onSubmit={onSubmit}>
-                    <div>
+        <ClientOnlyPortal>
+            <FocusTrap active={showDialog}>
+                <div
+                    className={clsx('modal', {
+                        'modal-open': showDialog,
+                    })}
+                >
+                    <form
+                        className='modal-box w-full mx-2  px-3.5 sm:px-5 max-w-md'
+                        onSubmit={onSubmit}
+                    >
                         <div className='flex justify-between mb-5'>
                             <h2 className='font-bold text-lg'>
                                 Add New Tenant
@@ -92,49 +97,33 @@ export function AddNewTenantDialog({
                                 <AiOutlineClose fontSize={18} />
                             </button>
                         </div>
-                        <FormLabel
-                            errorText={errors.name?.message}
+                        <FormInputBox
+                            error={errors.name?.message}
                             id='name'
-                            labelText='What is name of the tenant?'
-                        >
-                            <input
-                                className={clsx(
-                                    'input input-bordered input-primary input-md w-full',
-                                    { 'input-error': !!errors.name }
-                                )}
-                                id='name'
-                                placeholder='name...'
-                                type='text'
-                                {...register('name')}
-                            />
-                        </FormLabel>
-                        <FormLabel
-                            errorText={errors.email?.message}
+                            label={"Tenant's Name"}
+                            placeholder='Enter the name of the tenant...'
+                            registerForm={register('name')}
+                            type='text'
+                        />
+                        <FormInputBox
+                            error={errors.email?.message}
                             id='email'
-                            labelText='What is the email of the tenant?'
+                            label={"Tenant's Email"}
+                            placeholder='Enter the email of the tenant...'
+                            registerForm={register('email')}
+                            type='email'
+                        />
+                        <button
+                            className={clsx('btn btn-primary btn-block', {
+                                loading: mutation.isLoading,
+                            })}
+                            type='submit'
                         >
-                            <input
-                                className={clsx(
-                                    'input input-bordered input-primary input-md w-full',
-                                    { 'input-error': !!errors.email }
-                                )}
-                                id='name'
-                                placeholder='email...'
-                                type='text'
-                                {...register('email')}
-                            />
-                        </FormLabel>
-                    </div>
-                    <button
-                        className={clsx('btn btn-primary btn-block', {
-                            loading: mutation.isLoading,
-                        })}
-                        type='submit'
-                    >
-                        create new tenant
-                    </button>
-                </form>
-            </div>
-        </FocusTrap>
+                            create new tenant
+                        </button>
+                    </form>
+                </div>
+            </FocusTrap>
+        </ClientOnlyPortal>
     );
 }

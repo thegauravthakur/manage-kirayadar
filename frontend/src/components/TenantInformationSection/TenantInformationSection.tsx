@@ -4,10 +4,8 @@ import { AddNewTenantDialog } from '../AddNewTenantDialog';
 import { useState } from 'react';
 import { Space, Tenant } from '../../types';
 import { useTenants } from '../../hooks/react-query/query/useTenants';
-import { numberToWord } from '../../helpers/pageHelper';
 import clsx from 'clsx';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { SpaceCard } from '../CollapsableFloorSection/components/SpaceCard';
 import { useSlidesPerView } from '../../pages';
 
 interface TenantInformationSectionProps {
@@ -47,13 +45,11 @@ export function TenantInformationSection({
                     ))}
                 </Swiper>
             </div>
-            <div>
-                <AddNewTenantDialog
-                    setShowDialog={setShowModal}
-                    showDialog={showModal}
-                    spaceId={space.id}
-                />
-            </div>
+            <AddNewTenantDialog
+                setShowDialog={setShowModal}
+                showDialog={showModal}
+                spaceId={space.id}
+            />
         </section>
     );
 }
