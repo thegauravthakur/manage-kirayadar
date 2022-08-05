@@ -1,16 +1,13 @@
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import clsx from 'clsx';
 import { AiOutlineClose } from 'react-icons/ai';
-import { FormLabel } from '../FormLabel';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation, useQueryClient } from 'react-query';
-import { createEndpoint, postWithToken } from '../../helpers/fetchHelper';
-import { useSession } from '../../hooks/useSession';
 import FocusTrap from 'focus-trap-react';
 import { FormInputBox } from '../UI/FormInputBox';
 import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
+import { useCreateNewTenantMutation } from '../../hooks/react-query/mutation/useCreateNewTenantMutation';
 
 interface AddNewTenantDialogProps {
     showDialog: boolean;
@@ -23,21 +20,7 @@ const formSchema = z.object({
     email: z.string().email('email is not in correct format'),
 });
 
-type FormSchema = z.infer<typeof formSchema>;
-
-async function addNewTenant(
-    formSchema: FormSchema,
-    token: string,
-    spaceId: number
-) {
-    const response = await postWithToken(createEndpoint('tenant/add'), token, {
-        ...formSchema,
-        spaceId,
-    });
-    const data = await response.json();
-    if (!response.ok) throw data;
-    return data;
-}
+export type CreateNewTenantSchema = z.infer<typeof formSchema>;
 
 export function AddNewTenantDialog({
     showDialog,
@@ -48,27 +31,27 @@ export function AddNewTenantDialog({
         register,
         handleSubmit,
         reset,
+        setFocus,
         formState: { errors },
-    } = useForm<FormSchema>({
+    } = useForm<CreateNewTenantSchema>({
         resolver: zodResolver(formSchema),
     });
-    const { token } = useSession();
-    const queryClient = useQueryClient();
-    const mutation = useMutation(
-        async (formData: FormSchema) => {
-            await addNewTenant(formData, token!, spaceId);
-        },
-        {
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(['tenants', spaceId]);
-                reset();
-                setShowDialog(false);
-            },
-        }
-    );
+    const mutation = useCreateNewTenantMutation(spaceId, closeAndResetDialog);
     const onSubmit = handleSubmit((formData) => {
         mutation.mutate(formData);
     });
+
+    function closeAndResetDialog() {
+        reset();
+        setShowDialog(false);
+    }
+
+    useEffect(() => {
+        if (showDialog) {
+            setFocus('name');
+            document.body.style.overflow = 'hidden';
+        } else document.body.style.overflow = 'unset';
+    }, [setFocus, showDialog]);
 
     return (
         <ClientOnlyPortal>
@@ -89,10 +72,7 @@ export function AddNewTenantDialog({
                             <button
                                 className='btn btn-circle btn-sm btn-outline'
                                 type='reset'
-                                onClick={() => {
-                                    reset();
-                                    setShowDialog(false);
-                                }}
+                                onClick={closeAndResetDialog}
                             >
                                 <AiOutlineClose fontSize={18} />
                             </button>
