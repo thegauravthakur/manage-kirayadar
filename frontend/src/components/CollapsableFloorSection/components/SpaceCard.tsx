@@ -1,10 +1,9 @@
 import { Space } from '../../../types';
 import Link from 'next/link';
 import clsx from 'clsx';
-import {
-    getFormattedShareType,
-    getFormattedSpaceType,
-} from '../../../helpers/spaceHelper';
+import { RiHotelBedLine, RiHotelBedFill } from 'react-icons/ri';
+import { getFormattedSpaceType } from '../../../helpers/spaceHelper';
+import { createEmptyArray } from '../../../helpers/pageHelper';
 
 interface SpaceCardProps {
     space: Space;
@@ -13,6 +12,16 @@ interface SpaceCardProps {
 export function SpaceCard({ space }: SpaceCardProps) {
     const { name, propertyId, id, totalTenants, spaceType, sharingType, rent } =
         space;
+    const vacantRooms = sharingType - totalTenants;
+    const filledBedsToShow = createEmptyArray(Math.min(totalTenants, 5));
+    const emptyBedsToShow = createEmptyArray(
+        Math.abs(
+            filledBedsToShow.length - Math.min(sharingType - totalTenants, 5)
+        )
+    );
+    const extraBeds =
+        sharingType - (filledBedsToShow.length + emptyBedsToShow.length);
+
     return (
         <Link href={`/property/${propertyId}/space/${id}`}>
             <a
@@ -23,7 +32,7 @@ export function SpaceCard({ space }: SpaceCardProps) {
             >
                 <div className='space-y-2'>
                     <div className='flex justify-between'>
-                        <p>{getFormattedShareType(sharingType)} sharing</p>
+                        <p>Rent: &#8377; {rent}</p>
                         <p
                             className={clsx(
                                 'text-white px-4 text-xs flex items-center justify-center rounded-md',
@@ -34,14 +43,29 @@ export function SpaceCard({ space }: SpaceCardProps) {
                                 ]
                             )}
                         >
-                            {totalTenants < sharingType ? 'vacant' : 'occupied'}
+                            {totalTenants < sharingType
+                                ? `${vacantRooms} rooms vacant`
+                                : 'occupied'}
                         </p>
                     </div>
                     <h3 className='text-lg'>Room: {name}</h3>
                 </div>
                 <div className='space-y-2'>
                     <p>Space Type: {getFormattedSpaceType(spaceType)}</p>
-                    <p>Room Rent: &#8377; {rent}</p>
+                    <div className='flex items-center space-x-2'>
+                        <p>Beds:</p>
+                        <div className='flex items-center space-x-2'>
+                            {filledBedsToShow.map((key) => (
+                                <RiHotelBedFill key={key} size={22} />
+                            ))}
+                            {emptyBedsToShow.map((key) => (
+                                <RiHotelBedLine key={key} size={22} />
+                            ))}
+                            {extraBeds > 0 && (
+                                <p className='text-xs'>+{extraBeds} Beds</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </a>
         </Link>

@@ -11,12 +11,14 @@ import { CustomHead } from '../../../../../components/CustomHead';
 import Link from 'next/link';
 import { BsArrowLeft } from 'react-icons/bs';
 import { NoDataToShow } from '../../../../../components/NoDataToShow/NoDataToShow';
+import { useTenants } from '../../../../../hooks/react-query/query/useTenants';
 
 interface SpaceProps {
     space: Space;
     tenants: Tenant[];
 }
-function Space({ space, tenants }: SpaceProps) {
+function Space({ space, tenants: initialTenants }: SpaceProps) {
+    const { tenants } = useTenants(space.id, initialTenants);
     return (
         <div className='bg-base-200 min-h-screen space-y-5'>
             <CustomHead title={`Manage ${space.name}`} />
@@ -31,8 +33,8 @@ function Space({ space, tenants }: SpaceProps) {
                 <div className='space-y-5 ml-0 sm:ml-10'>
                     <h2 className='text-2xl font-semibold'>{space.name}</h2>
                     <TenantInformationSection
-                        initialTenants={tenants}
                         space={space}
+                        tenants={tenants!}
                     />
                     {tenants?.length === 0 && (
                         <NoDataToShow
