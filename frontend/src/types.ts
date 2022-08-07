@@ -19,12 +19,25 @@ export interface Property {
     totalSpaces: number;
 }
 
+export type SpaceType =
+    | 'room'
+    | 'one_Rk'
+    | 'two_RK'
+    | 'one_BHK'
+    | 'two_BHK'
+    | 'three_BHK'
+    | 'four_BHK'
+    | 'five_BHK';
+
 export interface Space {
     id: number;
     floor: number;
     name: string;
     propertyId: number;
     totalTenants: number;
+    spaceType: SpaceType;
+    rent: number;
+    sharingType: number;
 }
 
 export interface Tenant {

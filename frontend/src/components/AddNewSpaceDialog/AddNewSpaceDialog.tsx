@@ -10,6 +10,10 @@ import { FormSelectBox } from '../UI/FormSelectBox';
 import FocusTrap from 'focus-trap-react';
 import { useCreateNewSpaceMutation } from '../../hooks/react-query/mutation/useCreateNewSpaceMutation';
 import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
+import {
+    getFormattedShareType,
+    getFormattedSpaceType,
+} from '../../helpers/spaceHelper';
 
 const SpaceType = [
     'room',
@@ -22,34 +26,10 @@ const SpaceType = [
     'five_BHK',
 ] as const;
 
-enum wordNumberMapping {
-    'one' = 1,
-    'two' = 2,
-    'three' = 3,
-    'four' = 4,
-    'five' = 5,
-    'six' = 6,
-    'seven' = 7,
-    'eight' = 8,
-    'nine' = 9,
-    'ten' = 10,
-}
-
-enum numberSharingTypeMapping {
-    'single' = 1,
-    'double' = 2,
-    'triple' = 3,
-}
-
 function getSpaceTypeOptions() {
     const [room, ...rest] = SpaceType;
     const spaceTypes = rest.map((unit) => {
-        const [digit, type] = unit.split('_');
-        // a cleaver use of enums
-        return {
-            value: `${wordNumberMapping[digit as unknown as number]} ${type}`,
-            key: unit,
-        };
+        return { value: getFormattedSpaceType(unit), key: unit };
     });
     return [{ value: room, key: room }, ...spaceTypes];
 }
@@ -57,16 +37,7 @@ function getSpaceTypeOptions() {
 function getSharingTypeOptions() {
     const emptyArray = createEmptyArray(10);
     return emptyArray.map((index) => {
-        if (index + 1 < 4) {
-            return {
-                key: index + 1,
-                value: `${numberSharingTypeMapping[index + 1]} sharing`,
-            };
-        }
-        return {
-            key: index + 1,
-            value: `${wordNumberMapping[index + 1]} sharing`,
-        };
+        return { key: index + 1, value: getFormattedShareType(index + 1) };
     });
 }
 

@@ -1,15 +1,18 @@
 import { Space } from '../../../types';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { pluralize } from '../../../helpers/shared';
+import {
+    getFormattedShareType,
+    getFormattedSpaceType,
+} from '../../../helpers/spaceHelper';
 
 interface SpaceCardProps {
     space: Space;
 }
+
 export function SpaceCard({ space }: SpaceCardProps) {
-    const router = useRouter();
-    const { name, floor, propertyId, id, totalTenants } = space;
+    const { name, propertyId, id, totalTenants, spaceType, sharingType, rent } =
+        space;
     return (
         <Link href={`/property/${propertyId}/space/${id}`}>
             <a
@@ -20,17 +23,25 @@ export function SpaceCard({ space }: SpaceCardProps) {
             >
                 <div className='space-y-2'>
                     <div className='flex justify-between'>
-                        <p>Floor No. {floor}</p>
-                        <p className='bg-blue-500 text-white px-4 text-xs flex items-center justify-center rounded-md'>
-                            {totalTenants}{' '}
-                            {pluralize('Tenant', 'Tenants', totalTenants)}
+                        <p>{getFormattedShareType(sharingType)} sharing</p>
+                        <p
+                            className={clsx(
+                                'text-white px-4 text-xs flex items-center justify-center rounded-md',
+                                [
+                                    totalTenants < sharingType
+                                        ? 'bg-blue-500'
+                                        : 'bg-red-500',
+                                ]
+                            )}
+                        >
+                            {totalTenants < sharingType ? 'vacant' : 'occupied'}
                         </p>
                     </div>
-                    <h3 className='text-lg'>{name}</h3>
+                    <h3 className='text-lg'>Room: {name}</h3>
                 </div>
                 <div className='space-y-2'>
-                    <p>Capacity: 3 Seater</p>
-                    <p>Available Beds: NA</p>
+                    <p>Space Type: {getFormattedSpaceType(spaceType)}</p>
+                    <p>Room Rent: &#8377; {rent}</p>
                 </div>
             </a>
         </Link>
