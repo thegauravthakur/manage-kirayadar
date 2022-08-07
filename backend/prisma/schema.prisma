@@ -48,6 +48,20 @@ model Space {
   propertyId Int
   tenants Tenant[]
   floor Int
+  spaceType SpaceType @default(room)
+  sharingType Int @default(0)
+  rent Decimal @default(0)
+}
+
+enum SpaceType {
+  room
+  one_Rk
+  two_RK
+  one_BHK
+  two_BHK
+  three_BHK
+  four_BHK
+  five_BHK
 }
 
 model Tenant {

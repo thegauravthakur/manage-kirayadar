@@ -10,7 +10,6 @@ interface SpaceCardProps {
 export function SpaceCard({ space }: SpaceCardProps) {
     const router = useRouter();
     const { name, floor, propertyId, id, totalTenants } = space;
-    console.log(space);
     return (
         <Link href={`/property/${propertyId}/space/${id}`}>
             <a

@@ -18,18 +18,18 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@prisma/client": "^3.15.2",
+    "@prisma/client": "^4.1.1",
     "@types/cookie-parser": "^1.4.3",
     "@types/jsonwebtoken": "^8.5.8",
     "aws-sdk": "^2.1176.0",
     "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.7.5",
-    "cookie-parser": "^1.4.6",
-    "dotenv": "^16.0.1",
-    "jsonwebtoken": "^8.5.1",
     "prisma": "^3.15.2",
     "zod": "^3.17.3"
   }
