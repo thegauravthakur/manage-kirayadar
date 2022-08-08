@@ -102,8 +102,31 @@ export function AddNewTenantDialog({
                             create new tenant
                         </button>
                     </form>
+                    <IncreaseShareLimitDialog />
                 </div>
             </FocusTrap>
         </ClientOnlyPortal>
+    );
+}
+
+function IncreaseShareLimitDialog() {
+    return (
+        <div className='modal modal-open'>
+            <div className='modal-box w-full mx-2  px-3.5 sm:px-5 max-w-sm'>
+                <div className='space-y-2 mb-6'>
+                    <h3 className='font-semibold text-lg'>Room Occupied</h3>
+                    <p>
+                        The room is already occupied, do you want to bump up the
+                        sharing type?
+                    </p>
+                </div>
+                <div className='space-y-3'>
+                    <button className='btn w-full btn-primary'>
+                        Bump up the sharing type
+                    </button>
+                    <button className='btn w-full btn-ghost'>Cancel</button>
+                </div>
+            </div>
+        </div>
     );
 }
