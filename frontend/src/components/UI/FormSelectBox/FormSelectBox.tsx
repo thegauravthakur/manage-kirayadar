@@ -6,7 +6,7 @@ interface FormSelectBoxProps {
     registerForm?: UseFormRegisterReturn;
     id: string;
     label: string;
-    options: { key: number; value: string }[];
+    options: { key: string | number; value: string }[];
 }
 
 export function FormSelectBox({
@@ -17,7 +17,7 @@ export function FormSelectBox({
     options,
 }: FormSelectBoxProps) {
     return (
-        <div className='relative mt-2'>
+        <div className='relative mt-2 w-full'>
             <select
                 className={clsx(
                     'border border-black h-14 w-full rounded-lg pl-4',

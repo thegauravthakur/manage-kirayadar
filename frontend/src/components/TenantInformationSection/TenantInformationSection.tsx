@@ -10,15 +10,14 @@ import { useSlidesPerView } from '../../pages';
 
 interface TenantInformationSectionProps {
     space: Space;
-    initialTenants: Tenant[];
+    tenants: Tenant[];
 }
 
 export function TenantInformationSection({
     space,
-    initialTenants,
+    tenants,
 }: TenantInformationSectionProps) {
     const [showModal, setShowModal] = useState(false);
-    const { tenants } = useTenants(space.id, initialTenants);
     const slidesPerView = useSlidesPerView();
     return (
         <section className='space-y-5'>
