@@ -6,16 +6,14 @@ import {
 } from '../../../helpers/fetchHelper';
 import { setCookies } from 'cookies-next';
 import { cookiesConfig } from '../../../helpers/cookiesHelper';
+import { withSentry, captureException } from '@sentry/nextjs';
 
 interface Response {
     access_token: string;
     user: {};
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         const response = await postWithData(
             createEndpoint('user/login'),
@@ -32,9 +30,12 @@ export default async function handler(
         });
         return res.json({ errorMessage: null, data: null });
     } catch (error) {
+        captureException(error);
         res.status(500).json({
             errorMessage: 'somethning went worng! please try again',
             data: null,
         });
     }
 }
+
+export default withSentry(handler);

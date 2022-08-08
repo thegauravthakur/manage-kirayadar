@@ -9,6 +9,7 @@ import { AppBar } from '../../../../../../components/AppBar';
 import { ProfileSection } from '../../../../../../components/ProfileSection';
 import { QuickInformation } from '../../../../../../components/QuickInformation';
 import { DocumentsSection } from '../../../../../../components/DocumentsSection';
+import { captureException } from '@sentry/nextjs';
 
 interface TenantViewProp {
     tenant: Tenant;
@@ -42,6 +43,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         if (tenant) return { props: { tenant } };
         else return { notFound: true };
     } catch (e) {
+        captureException(e);
         return { notFound: true };
     }
 };

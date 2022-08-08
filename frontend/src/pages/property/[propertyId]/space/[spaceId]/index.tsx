@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { BsArrowLeft } from 'react-icons/bs';
 import { NoDataToShow } from '../../../../../components/NoDataToShow/NoDataToShow';
 import { useTenants } from '../../../../../hooks/react-query/query/useTenants';
+import { captureException } from '@sentry/nextjs';
 
 interface SpaceProps {
     space: Space;
@@ -69,7 +70,9 @@ export const getServerSideProps: GetServerSideProps = async ({
                 return { props: { space, tenants } };
             } else return { notFound: true };
         }
-    } catch (error) {}
+    } catch (error) {
+        captureException(error);
+    }
     return { notFound: true };
 };
 

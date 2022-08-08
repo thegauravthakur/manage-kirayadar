@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import { SignupFormDialog } from '../components/SignupFormDialog';
 import Link from 'next/link';
+import { captureException } from '@sentry/nextjs';
 
 export default function Signup() {
     const [showDialog, setShowDialog] = useState(false);
@@ -69,7 +70,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
                     },
                 };
         }
-    } catch (error) {}
+    } catch (error) {
+        captureException(error);
+    }
 
     return { props: {} };
 };

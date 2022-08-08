@@ -13,6 +13,7 @@ import { AddNewPropertyDialog } from '../components/AddNewPropertyDialog';
 import { useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { NoDataToShow } from '../components/NoDataToShow/NoDataToShow';
+import { captureException } from '@sentry/nextjs';
 
 export function useSlidesPerView() {
     // need to look into this in order to make it dynamic
@@ -105,6 +106,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
             if (!user) return redirect;
         }
     } catch (error) {
+        captureException(error);
         return redirect;
     }
     return {

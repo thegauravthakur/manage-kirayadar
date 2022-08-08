@@ -11,6 +11,7 @@ import { LoginFormDialog } from '../components/LoginFormDialog';
 import { useState } from 'react';
 import Link from 'next/link';
 import { CustomHead } from '../components/CustomHead';
+import { captureException } from '@sentry/nextjs';
 
 export default function Login() {
     const [showDialog, setShowDialog] = useState(false);
@@ -74,7 +75,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
                     },
                 };
         }
-    } catch (error) {}
+    } catch (error) {
+        captureException(error);
+    }
 
     return { props: {} };
 };
