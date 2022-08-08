@@ -1,17 +1,15 @@
-import { CookieOptions, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { z } from 'zod';
 import { prismaClient } from '../../utils/server';
 import { compareHash } from '../../utils/bcrypt';
 import { signToken } from '../../utils/jwt';
+import * as Sentry from '@sentry/node';
 
 const UserData = z.object({
     email: z.string().email(),
     password: z.string().min(5),
 });
 
-/*
- * Controller responsible for creating a new user
- */
 export async function loginUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
@@ -44,11 +42,13 @@ export async function loginUser(req: Request, res: Response) {
                 errorMessage: 'wrong combination of email/password',
                 data: null,
             });
-        } else
+        } else {
+            Sentry.captureException(error);
             res.status(500).json({
                 errorMessage:
                     'An error occurred while logging in, please try again later',
                 data: null,
             });
+        }
     }
 }

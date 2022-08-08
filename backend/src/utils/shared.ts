@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { z } from 'zod';
 import { CorsOptions } from 'cors';
+import * as Sentry from '@sentry/node';
 
 export function sendError(res: Response, error: unknown, errorMessage: string) {
     if (error instanceof z.ZodError) {
@@ -8,7 +9,10 @@ export function sendError(res: Response, error: unknown, errorMessage: string) {
             errorMessage: error.issues[0].message,
             data: null,
         });
-    } else res.status(500).json({ errorMessage, data: null });
+    } else {
+        Sentry.captureException(error);
+        res.status(500).json({ errorMessage, data: null });
+    }
 }
 
 type ENV = 'development' | 'production';
