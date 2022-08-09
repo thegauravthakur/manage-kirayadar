@@ -1,11 +1,4 @@
-import {
-    Dispatch,
-    MutableRefObject,
-    SetStateAction,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useForm } from 'react-hook-form';
@@ -17,6 +10,7 @@ import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
 import { useCreateNewTenantMutation } from '../../hooks/react-query/mutation/useCreateNewTenantMutation';
 import { Space } from '../../types';
 import { IncreaseShareLimitDialog } from './components/IncreaseShareLimitDialog';
+import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 
 interface AddNewTenantDialogProps {
     showDialog: boolean;
@@ -45,6 +39,7 @@ export function AddNewTenantDialog({
     } = useForm<CreateNewTenantSchema>({
         resolver: zodResolver(formSchema),
     });
+    const snackbar = useSnackbar();
     const [showIncreaseShareLimitDialog, setShowIncreaseShareLimitDialog] =
         useState(false);
     const mutation = useCreateNewTenantMutation(space.id, closeAndResetDialog);
@@ -54,6 +49,8 @@ export function AddNewTenantDialog({
         createNewTenantData.current = formData;
         if (space.sharingType < space.totalTenants) {
             mutation.mutate(formData);
+        } else if (space.sharingType === 10) {
+            snackbar.show("Can't add tenants more than 10", 'error');
         } else setShowIncreaseShareLimitDialog(true);
     });
 
