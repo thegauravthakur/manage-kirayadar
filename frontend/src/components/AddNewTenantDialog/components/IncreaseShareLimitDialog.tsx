@@ -27,7 +27,7 @@ export function IncreaseShareLimitDialog({
                     <h3 className='font-semibold text-lg'>Room Occupied</h3>
                     <p>
                         The room is already occupied, do you want to bump up the
-                        sharing type?
+                        room-share type?
                     </p>
                 </div>
                 <div className='space-y-3'>
