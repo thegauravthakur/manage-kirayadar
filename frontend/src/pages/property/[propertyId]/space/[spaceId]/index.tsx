@@ -13,19 +13,27 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { NoDataToShow } from '../../../../../components/NoDataToShow/NoDataToShow';
 import { useTenants } from '../../../../../hooks/react-query/query/useTenants';
 import { captureException } from '@sentry/nextjs';
+import { useRouter } from 'next/router';
+import { useSpace } from '../../../../../hooks/react-query/query/useSpace';
 
 interface SpaceProps {
     space: Space;
     tenants: Tenant[];
 }
-function Space({ space, tenants: initialTenants }: SpaceProps) {
-    const { tenants } = useTenants(space.id, initialTenants);
+function Space({ space: initialSpace, tenants: initialTenants }: SpaceProps) {
+    const { spaceId, propertyId } = useRouter().query;
+    const { tenants } = useTenants(Number(spaceId), initialTenants);
+    const { space } = useSpace(
+        Number(propertyId),
+        Number(spaceId),
+        initialSpace
+    );
     return (
         <div className='bg-base-200 min-h-screen space-y-5'>
-            <CustomHead title={`Manage ${space.name}`} />
+            <CustomHead title={`Manage ${space?.name}`} />
             <AppBar />
             <div className='p-5 space-y-5'>
-                <Link href={`/property/${space.propertyId}`}>
+                <Link href={`/property/${space?.propertyId}`}>
                     <a className='flex items-center space-x-4 uppercase text-xs text-secondary font-semibold'>
                         <BsArrowLeft size={24} />
                         <span>Back to all spaces</span>
@@ -33,10 +41,10 @@ function Space({ space, tenants: initialTenants }: SpaceProps) {
                 </Link>
                 <div className='space-y-5 ml-0 sm:ml-10'>
                     <h2 className='text-2xl font-semibold'>
-                        Room: {space.name}
+                        Room: {space?.name}
                     </h2>
                     <TenantInformationSection
-                        space={space}
+                        space={space!}
                         tenants={tenants!}
                     />
                     {tenants?.length === 0 && (

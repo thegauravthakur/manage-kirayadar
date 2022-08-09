@@ -6,7 +6,7 @@ import { useSession } from '../../useSession';
 export function useSpaces(propertyId: number, initialData?: Space[]) {
     const { token } = useSession();
     const { data: spaces, isLoading } = useQuery<Space[]>(
-        ['spaces', propertyId],
+        [propertyId, 'spaces'],
         async () => {
             await new Promise((res) => setTimeout(res, 5000));
             const response = await postWithToken(

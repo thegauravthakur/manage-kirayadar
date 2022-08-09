@@ -42,7 +42,7 @@ export function AddNewTenantDialog({
     const snackbar = useSnackbar();
     const [showIncreaseShareLimitDialog, setShowIncreaseShareLimitDialog] =
         useState(false);
-    const mutation = useCreateNewTenantMutation(space.id, closeAndResetDialog);
+    const mutation = useCreateNewTenantMutation(space, closeAndResetDialog);
     const createNewTenantData = useRef<CreateNewTenantSchema | null>(null);
 
     const onSubmit = handleSubmit((formData) => {

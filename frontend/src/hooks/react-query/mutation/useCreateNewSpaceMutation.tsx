@@ -35,7 +35,7 @@ export function useCreateNewSpaceMutation(
         {
             onSuccess: async () => {
                 snackbar.show('New Space Created Successfully!', 'success');
-                await queryClient.invalidateQueries(['spaces', propertyId]);
+                await queryClient.invalidateQueries([propertyId, 'spaces']);
                 onSuccess();
             },
             onError(error: CustomError) {

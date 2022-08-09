@@ -4,7 +4,7 @@ import { createEndpoint, postWithToken } from '../../../helpers/fetchHelper';
 import { CreateNewTenantSchema } from '../../../components/AddNewTenantDialog';
 import { useGlobalSpinner } from '../../zustand/useGlobalSpinner';
 import { useSnackbar } from '../../zustand/useSnackbar';
-import { CustomError } from '../../../types';
+import { CustomError, Space } from '../../../types';
 
 async function addNewTenant(
     formSchema: CreateNewTenantSchema,
@@ -22,7 +22,7 @@ async function addNewTenant(
 
 const errorMessage = 'Error occurred while adding a new tenant';
 export function useCreateNewTenantMutation(
-    spaceId: number,
+    space: Space,
     onSuccess: () => void
 ) {
     const queryClient = useQueryClient();
@@ -32,12 +32,21 @@ export function useCreateNewTenantMutation(
     return useMutation(
         async (formData: CreateNewTenantSchema) => {
             globalSpinner.show();
-            return addNewTenant(formData, token!, spaceId);
+            return addNewTenant(formData, token!, space.id);
         },
         {
             onSuccess: async () => {
                 snackbar.show('New Tenant Created Successfully!', 'success');
-                await queryClient.invalidateQueries(['tenants', spaceId]);
+                const tenantQuery = queryClient.invalidateQueries([
+                    'tenants',
+                    space.id,
+                ]);
+                const spaceQuery = queryClient.invalidateQueries([
+                    space.propertyId,
+                    'spaces',
+                    space.id,
+                ]);
+                await Promise.all([tenantQuery, spaceQuery]);
                 onSuccess();
             },
             onSettled() {
