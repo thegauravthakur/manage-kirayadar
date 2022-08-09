@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { RiHotelBedLine, RiHotelBedFill } from 'react-icons/ri';
 import { getFormattedSpaceType } from '../../../helpers/spaceHelper';
 import { createEmptyArray } from '../../../helpers/pageHelper';
+import { pluralize } from '../../../helpers/shared';
 
 interface SpaceCardProps {
     space: Space;
@@ -15,9 +16,7 @@ export function SpaceCard({ space }: SpaceCardProps) {
     const vacantRooms = sharingType - totalTenants;
     const filledBedsToShow = createEmptyArray(Math.min(totalTenants, 5));
     const emptyBedsToShow = createEmptyArray(
-        Math.abs(
-            filledBedsToShow.length - Math.min(sharingType - totalTenants, 5)
-        )
+        Math.min(sharingType - totalTenants, 5 - filledBedsToShow.length)
     );
     const extraBeds =
         sharingType - (filledBedsToShow.length + emptyBedsToShow.length);
@@ -44,7 +43,11 @@ export function SpaceCard({ space }: SpaceCardProps) {
                             )}
                         >
                             {totalTenants < sharingType
-                                ? `${vacantRooms} rooms vacant`
+                                ? `${vacantRooms} ${pluralize(
+                                      'Room',
+                                      'Rooms',
+                                      vacantRooms
+                                  )} vacant`
                                 : 'occupied'}
                         </p>
                     </div>

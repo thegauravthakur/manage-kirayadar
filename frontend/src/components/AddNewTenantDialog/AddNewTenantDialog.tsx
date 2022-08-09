@@ -47,7 +47,7 @@ export function AddNewTenantDialog({
 
     const onSubmit = handleSubmit((formData) => {
         createNewTenantData.current = formData;
-        if (space.sharingType < space.totalTenants) {
+        if (space.totalTenants < space.sharingType) {
             mutation.mutate(formData);
         } else if (space.sharingType === 10) {
             snackbar.show("Can't add tenants more than 10", 'error');
@@ -57,6 +57,7 @@ export function AddNewTenantDialog({
     function closeAndResetDialog() {
         reset();
         setShowDialog(false);
+        setShowIncreaseShareLimitDialog(false);
     }
 
     useEffect(() => {
@@ -73,6 +74,9 @@ export function AddNewTenantDialog({
                     className={clsx('modal', {
                         'modal-open': showDialog,
                     })}
+                    onKeyDown={({ key }) => {
+                        if (key === 'Escape') setShowDialog(false);
+                    }}
                 >
                     <form
                         className='modal-box w-full mx-2  px-3.5 sm:px-5 max-w-md'
