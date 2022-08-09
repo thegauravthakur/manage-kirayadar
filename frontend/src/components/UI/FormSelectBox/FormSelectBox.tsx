@@ -20,7 +20,7 @@ export function FormSelectBox({
         <div className='relative mt-2 w-full'>
             <select
                 className={clsx(
-                    'border border-black h-14 w-full rounded-lg pl-4',
+                    'border border-black h-14 w-full rounded-lg pl-4 bg-transparent',
                     'outline-none focus:border-blue-700 placeholder-gray-400',
                     {
                         'border-red-600 focus:border-red-600': !!error,
