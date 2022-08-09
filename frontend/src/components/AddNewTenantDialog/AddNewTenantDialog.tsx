@@ -1,4 +1,11 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import {
+    Dispatch,
+    MutableRefObject,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import clsx from 'clsx';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useForm } from 'react-hook-form';
@@ -8,11 +15,13 @@ import FocusTrap from 'focus-trap-react';
 import { FormInputBox } from '../UI/FormInputBox';
 import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
 import { useCreateNewTenantMutation } from '../../hooks/react-query/mutation/useCreateNewTenantMutation';
+import { Space } from '../../types';
+import { IncreaseShareLimitDialog } from './components/IncreaseShareLimitDialog';
 
 interface AddNewTenantDialogProps {
     showDialog: boolean;
     setShowDialog: Dispatch<SetStateAction<boolean>>;
-    spaceId: number;
+    space: Space;
 }
 
 const formSchema = z.object({
@@ -25,7 +34,7 @@ export type CreateNewTenantSchema = z.infer<typeof formSchema>;
 export function AddNewTenantDialog({
     showDialog,
     setShowDialog,
-    spaceId,
+    space,
 }: AddNewTenantDialogProps) {
     const {
         register,
@@ -36,9 +45,16 @@ export function AddNewTenantDialog({
     } = useForm<CreateNewTenantSchema>({
         resolver: zodResolver(formSchema),
     });
-    const mutation = useCreateNewTenantMutation(spaceId, closeAndResetDialog);
+    const [showIncreaseShareLimitDialog, setShowIncreaseShareLimitDialog] =
+        useState(false);
+    const mutation = useCreateNewTenantMutation(space.id, closeAndResetDialog);
+    const createNewTenantData = useRef<CreateNewTenantSchema | null>(null);
+
     const onSubmit = handleSubmit((formData) => {
-        mutation.mutate(formData);
+        createNewTenantData.current = formData;
+        if (space.sharingType < space.totalTenants) {
+            mutation.mutate(formData);
+        } else setShowIncreaseShareLimitDialog(true);
     });
 
     function closeAndResetDialog() {
@@ -102,31 +118,18 @@ export function AddNewTenantDialog({
                             create new tenant
                         </button>
                     </form>
-                    <IncreaseShareLimitDialog />
+                    <IncreaseShareLimitDialog
+                        createMutation={mutation}
+                        createNewTenantData={createNewTenantData}
+                        setShowIncreaseShareLimitDialog={
+                            setShowIncreaseShareLimitDialog
+                        }
+                        showIncreaseShareLimitDialog={
+                            showIncreaseShareLimitDialog
+                        }
+                    />
                 </div>
             </FocusTrap>
         </ClientOnlyPortal>
-    );
-}
-
-function IncreaseShareLimitDialog() {
-    return (
-        <div className='modal modal-open'>
-            <div className='modal-box w-full mx-2  px-3.5 sm:px-5 max-w-sm'>
-                <div className='space-y-2 mb-6'>
-                    <h3 className='font-semibold text-lg'>Room Occupied</h3>
-                    <p>
-                        The room is already occupied, do you want to bump up the
-                        sharing type?
-                    </p>
-                </div>
-                <div className='space-y-3'>
-                    <button className='btn w-full btn-primary'>
-                        Bump up the sharing type
-                    </button>
-                    <button className='btn w-full btn-ghost'>Cancel</button>
-                </div>
-            </div>
-        </div>
     );
 }
