@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useForm } from 'react-hook-form';
@@ -8,11 +8,14 @@ import FocusTrap from 'focus-trap-react';
 import { FormInputBox } from '../UI/FormInputBox';
 import ClientOnlyPortal from '../ClientOnlyPortal/ClientOnlyPortal';
 import { useCreateNewTenantMutation } from '../../hooks/react-query/mutation/useCreateNewTenantMutation';
+import { Space } from '../../types';
+import { IncreaseShareLimitDialog } from './components/IncreaseShareLimitDialog';
+import { useSnackbar } from '../../hooks/zustand/useSnackbar';
 
 interface AddNewTenantDialogProps {
     showDialog: boolean;
     setShowDialog: Dispatch<SetStateAction<boolean>>;
-    spaceId: number;
+    space: Space;
 }
 
 const formSchema = z.object({
@@ -25,7 +28,7 @@ export type CreateNewTenantSchema = z.infer<typeof formSchema>;
 export function AddNewTenantDialog({
     showDialog,
     setShowDialog,
-    spaceId,
+    space,
 }: AddNewTenantDialogProps) {
     const {
         register,
@@ -36,14 +39,25 @@ export function AddNewTenantDialog({
     } = useForm<CreateNewTenantSchema>({
         resolver: zodResolver(formSchema),
     });
-    const mutation = useCreateNewTenantMutation(spaceId, closeAndResetDialog);
+    const snackbar = useSnackbar();
+    const [showIncreaseShareLimitDialog, setShowIncreaseShareLimitDialog] =
+        useState(false);
+    const mutation = useCreateNewTenantMutation(space.id, closeAndResetDialog);
+    const createNewTenantData = useRef<CreateNewTenantSchema | null>(null);
+
     const onSubmit = handleSubmit((formData) => {
-        mutation.mutate(formData);
+        createNewTenantData.current = formData;
+        if (space.totalTenants < space.sharingType) {
+            mutation.mutate(formData);
+        } else if (space.sharingType === 10) {
+            snackbar.show("Can't add tenants more than 10", 'error');
+        } else setShowIncreaseShareLimitDialog(true);
     });
 
     function closeAndResetDialog() {
         reset();
         setShowDialog(false);
+        setShowIncreaseShareLimitDialog(false);
     }
 
     useEffect(() => {
@@ -60,6 +74,9 @@ export function AddNewTenantDialog({
                     className={clsx('modal', {
                         'modal-open': showDialog,
                     })}
+                    onKeyDown={({ key }) => {
+                        if (key === 'Escape') setShowDialog(false);
+                    }}
                 >
                     <form
                         className='modal-box w-full mx-2  px-3.5 sm:px-5 max-w-md'
@@ -102,6 +119,16 @@ export function AddNewTenantDialog({
                             create new tenant
                         </button>
                     </form>
+                    <IncreaseShareLimitDialog
+                        createMutation={mutation}
+                        createNewTenantData={createNewTenantData}
+                        setShowIncreaseShareLimitDialog={
+                            setShowIncreaseShareLimitDialog
+                        }
+                        showIncreaseShareLimitDialog={
+                            showIncreaseShareLimitDialog
+                        }
+                    />
                 </div>
             </FocusTrap>
         </ClientOnlyPortal>

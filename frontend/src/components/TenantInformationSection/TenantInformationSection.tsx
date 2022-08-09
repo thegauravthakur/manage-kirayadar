@@ -3,7 +3,6 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { AddNewTenantDialog } from '../AddNewTenantDialog';
 import { useState } from 'react';
 import { Space, Tenant } from '../../types';
-import { useTenants } from '../../hooks/react-query/query/useTenants';
 import clsx from 'clsx';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useSlidesPerView } from '../../pages';
@@ -47,7 +46,7 @@ export function TenantInformationSection({
             <AddNewTenantDialog
                 setShowDialog={setShowModal}
                 showDialog={showModal}
-                spaceId={space.id}
+                space={space}
             />
         </section>
     );

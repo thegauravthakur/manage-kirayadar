@@ -32,7 +32,9 @@ function Space({ space, tenants: initialTenants }: SpaceProps) {
                     </a>
                 </Link>
                 <div className='space-y-5 ml-0 sm:ml-10'>
-                    <h2 className='text-2xl font-semibold'>{space.name}</h2>
+                    <h2 className='text-2xl font-semibold'>
+                        Room: {space.name}
+                    </h2>
                     <TenantInformationSection
                         space={space}
                         tenants={tenants!}
