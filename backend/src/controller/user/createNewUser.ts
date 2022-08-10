@@ -19,13 +19,11 @@ const UserData = z.object({
 
 type UserSchema = z.infer<typeof UserData>;
 
-const whitelist = ['gthakur581@gmail.com', 'rudra.kaniya.rk@gmail.com'];
-
 export async function createUser(req: Request, res: Response) {
     try {
         UserData.parse(req.body);
         const { name, password, email, otp } = req.body as UserSchema;
-        if (!whitelist.includes(email))
+        if (email !== 'gthakur581@gmail.com')
             return res.status(400).json({
                 errorMessage:
                     'sorry, this product is in preview currently, stay tuned!',
