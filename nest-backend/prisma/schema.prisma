@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @default(autoincrement()) @id
+  email String @unique
+  password Password?
+  avatarUrl String?
+  tenant Tenant[]
+  properties Property[]
+  name String
+}
+
+model Otp {
+  id Int @default(autoincrement()) @id
+  email String @unique
+  otp Int
+}
+
+model Password {
+  id Int @default(autoincrement()) @id
+  hash String
+  user User @relation(fields: [userId], references: [id])
+  userId Int @unique
+}
+
+model Property {
+  id Int @default(autoincrement()) @id
+  name String
+  address String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  totalFloors Int
+  spaces Space[]
+}
+
+model Space {
+  id Int @default(autoincrement()) @id
+  name String
+  property Property @relation(fields: [propertyId], references: [id])
+  propertyId Int
+  tenants Tenant[]
+  floor Int
+  spaceType SpaceType @default(room)
+  sharingType Int @default(0)
+  rent Decimal @default(0)
+}
+
+enum SpaceType {
+  room
+  one_Rk
+  two_RK
+  one_BHK
+  two_BHK
+  three_BHK
+  four_BHK
+  five_BHK
+}
+
+model Tenant {
+  id Int @default(autoincrement()) @id
+  email String @unique
+  user User? @relation(fields: [userId], references: [id])
+  userId Int? @unique
+  space Space @relation(fields: [spaceId], references: [id])
+  spaceId Int
+  name String
+  documents Document[]
+}
+
+model Document {
+  id Int @default(autoincrement()) @id
+  name String
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  tenantId Int
+}
