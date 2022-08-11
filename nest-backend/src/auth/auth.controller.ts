@@ -15,4 +15,9 @@ export class AuthController {
     login(@Body() userDetails: LoginUserDto) {
         return this.auth.login(userDetails);
     }
+
+    @Post('/sendOtp')
+    sendOtp() {
+        return this.auth.sendOtp();
+    }
 }

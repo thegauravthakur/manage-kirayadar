@@ -4,12 +4,14 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private prismaClient: PrismaService,
-        private config: ConfigService
+        private config: ConfigService,
+        private email: EmailService
     ) {}
 
     async generateHash(password: string): Promise<string> {
@@ -112,5 +114,16 @@ export class AuthService {
             data: { user: filteredUser, access_token },
             errorMessage: null,
         };
+    }
+
+    sendOtp() {
+        const otp = 12344;
+        this.email.sendEmail({
+            from: '"Manage Kirayadar" <no-reply@managekirayadar.com>',
+            to: 'gthakur581@gmail.com',
+            html: `<b>${otp} is your OTP to login to Manage Kirayadar</b>`,
+            text: `${otp} is your OTP to login to Manage Kirayadar`,
+            subject: 'Your OTP to login to Manage Kirayadar',
+        });
     }
 }
