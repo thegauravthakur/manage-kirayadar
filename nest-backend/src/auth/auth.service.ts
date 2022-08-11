@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { SignupDto } from './dto';
+import { CreateUserDto } from './dto';
 import bcrypt from 'bcrypt';
 
 @Injectable()
@@ -49,8 +49,8 @@ export class AuthService {
             });
     }
 
-    async signup(signupDetails: SignupDto) {
-        const { name, otp, password, email } = signupDetails;
+    async signup(userDetails: CreateUserDto) {
+        const { name, otp, password, email } = userDetails;
         this.checkIfEmailHasAccess(email);
         await this.checkIfOTPIsCorrect(email, otp);
         await this.checkIfUserAlreadyExists(email);
