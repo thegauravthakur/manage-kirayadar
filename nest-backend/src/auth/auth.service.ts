@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto } from './dto';
+import { CreateUserDto, LoginUserDto } from './dto';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,21 @@ export class AuthService {
                     resolve(hash);
                 });
             });
+        });
+    }
+
+    async compareHash(password: string, hash: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, hash, function (err, result) {
+                if (err) reject(err);
+                resolve(result);
+            });
+        });
+    }
+
+    signToken(payload: any) {
+        return jwt.sign(payload, process.env.TOKEN_SECRET!, {
+            expiresIn: '7 days',
         });
     }
 
@@ -49,6 +65,19 @@ export class AuthService {
             });
     }
 
+    async fetchUser(email: string) {
+        const user = await this.prismaClient.user.findUnique({
+            where: { email },
+            include: { password: true },
+        });
+        if (!user)
+            throw new BadRequestException({
+                errorMessage: 'wrong combination of email/password',
+                data: null,
+            });
+        return user;
+    }
+
     async signup(userDetails: CreateUserDto) {
         const { name, otp, password, email } = userDetails;
         this.checkIfEmailHasAccess(email);
@@ -59,5 +88,25 @@ export class AuthService {
             data: { name, email, password: { create: { hash: passwordHash } } },
         });
         return { errorMessage: null, data: { user } };
+    }
+
+    async login(userDetails: LoginUserDto) {
+        const { password, email } = userDetails;
+        const user = await this.fetchUser(email);
+        const isCorrectPassword = await this.compareHash(
+            password,
+            user.password?.hash ?? ''
+        );
+        if (!isCorrectPassword)
+            throw new BadRequestException({
+                errorMessage: 'wrong combination of email/password',
+                data: null,
+            });
+        const { password: pass, ...filteredUser } = user;
+        const access_token = this.signToken(filteredUser);
+        return {
+            data: { user: filteredUser, access_token },
+            errorMessage: null,
+        };
     }
 }
