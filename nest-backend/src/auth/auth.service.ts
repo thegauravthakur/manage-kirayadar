@@ -1,12 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, LoginUserDto } from './dto';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-    constructor(private prismaClient: PrismaService) {}
+    constructor(
+        private prismaClient: PrismaService,
+        private config: ConfigService
+    ) {}
 
     async generateHash(password: string): Promise<string> {
         const saltRounds = 10;
@@ -31,7 +35,7 @@ export class AuthService {
     }
 
     signToken(payload: any) {
-        return jwt.sign(payload, process.env.TOKEN_SECRET!, {
+        return jwt.sign(payload, this.config.get('TOKEN_SECRET'), {
             expiresIn: '7 days',
         });
     }
