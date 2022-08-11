@@ -1,44 +1,63 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SignupDto } from './dto';
-
-// const { name, password, email, otp } = req.body as UserSchema;
-// if (email !== 'gthakur581@gmail.com')
-//     return res.status(400).json({
-//         errorMessage:
-//             'sorry, this product is in preview currently, stay tuned!',
-//         data: null,
-//     });
-// const otpEntry = await prismaClient.otp.findUnique({
-//     where: { email },
-// });
-// if (otpEntry?.otp !== Number(otp))
-//     return res
-//         .status(400)
-//         .json({ errorMessage: 'wrong OTP', data: null });
-//
-// const doesUserExists = await prismaClient.user.findUnique({
-//     where: { email },
-// });
-// if (doesUserExists)
-//     return res.status(400).json({
-//         errorMessage: 'user already exists!',
-//         data: null,
-//     });
-//
-// const passwordHash = await generateHash(password);
-// const user = await prismaClient.user.create({
-//     data: { name, email, password: { create: { hash: passwordHash } } },
-// });
-// return res.json({ errorMessage: null, data: { user } });
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
     constructor(private prismaClient: PrismaService) {}
 
-    async signup(userDetails: SignupDto) {
-        const { name, otp, password, email } = userDetails;
-        if (email !== 'gthakur581@gmail.com') throw new HttpException('', 401);
-        return 'signup';
+    async generateHash(password: string): Promise<string> {
+        const saltRounds = 10;
+        return new Promise((resolve, reject) => {
+            bcrypt.genSalt(saltRounds, function (err, salt) {
+                if (err) reject(err);
+                bcrypt.hash(password, salt, function (err, hash) {
+                    if (err) reject(err);
+                    resolve(hash);
+                });
+            });
+        });
+    }
+
+    checkIfEmailHasAccess(email: string) {
+        const whitelist = ['gthakur581@gmail.com', 'rudra.kaniya.rk@gmail.com'];
+        const msg = 'sorry, the product is not available for preview currently';
+        if (!whitelist.includes(email))
+            throw new BadRequestException({ errorMessage: msg, data: null });
+    }
+
+    async checkIfOTPIsCorrect(email: string, otp: string) {
+        const otpEntry = await this.prismaClient.otp.findUnique({
+            where: { email },
+        });
+        if (otpEntry?.otp !== Number(otp))
+            throw new BadRequestException({
+                errorMessage: 'wrong OTP',
+                data: null,
+            });
+    }
+
+    async checkIfUserAlreadyExists(email: string) {
+        const doesUserExists = await this.prismaClient.user.findUnique({
+            where: { email },
+        });
+        if (doesUserExists)
+            throw new BadRequestException({
+                errorMessage: 'user already exists!',
+                data: null,
+            });
+    }
+
+    async signup(signupDetails: SignupDto) {
+        const { name, otp, password, email } = signupDetails;
+        this.checkIfEmailHasAccess(email);
+        await this.checkIfOTPIsCorrect(email, otp);
+        await this.checkIfUserAlreadyExists(email);
+        const passwordHash = await this.generateHash(password);
+        const user = await this.prismaClient.user.create({
+            data: { name, email, password: { create: { hash: passwordHash } } },
+        });
+        return { errorMessage: null, data: { user } };
     }
 }

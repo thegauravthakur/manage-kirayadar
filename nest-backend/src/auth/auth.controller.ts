@@ -9,7 +9,6 @@ export class AuthController {
 
     @Post('/signup')
     signup(@Body() body: SignupDto) {
-        console.log(this.config.get('TOKEN_SECRET'));
         return this.auth.signup(body);
     }
 }
