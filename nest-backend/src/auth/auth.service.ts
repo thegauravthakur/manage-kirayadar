@@ -1,11 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto, LoginUserDto } from './dto';
+import { CreateUserDto, LoginUserDto, SendOtpDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
-import { SendOtpDto } from './dto/sendOtp.dto';
 import { SendEmailDto } from '../email/dto';
 import { addDays, addSeconds, differenceInSeconds, isFuture } from 'date-fns';
 import { Response } from 'express';
