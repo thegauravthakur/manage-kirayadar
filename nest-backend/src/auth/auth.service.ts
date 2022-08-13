@@ -4,8 +4,11 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
 import { EmailService } from '../email/email.service';
+import { SendOtpDto } from './dto/sendOtp.dto';
+import { SendEmailDto } from '../email/dto';
+import { addDays, addSeconds, differenceInSeconds, isFuture } from 'date-fns';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -97,7 +100,11 @@ export class AuthService {
         return { errorMessage: null, data: { user } };
     }
 
-    async login(userDetails: LoginUserDto, res: Response) {
+    async login(
+        userDetails: LoginUserDto,
+        response: Response,
+        shouldGenerateCookie: boolean
+    ) {
         const { password, email } = userDetails;
         const user = await this.fetchUser(email);
         const isCorrectPassword = await this.compareHash(
@@ -111,25 +118,55 @@ export class AuthService {
             });
         const { password: pass, ...filteredUser } = user;
         const access_token = this.signToken(filteredUser);
-        res.cookie('access_token', access_token, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
+        if (shouldGenerateCookie)
+            response.cookie('access_token', access_token, {
+                httpOnly: true,
+                expires: addDays(Date.now(), 7),
+            });
         return {
-            data: { user: filteredUser },
+            data: { user: filteredUser, access_token },
             errorMessage: null,
         };
     }
 
-    sendOtp() {
-        const otp = 12344;
-        this.email.sendEmail({
-            from: '"Manage Kirayadar" <no-reply@managekirayadar.com>',
-            to: 'gthakur581@gmail.com',
-            html: `<b>${otp} is your OTP to login to Manage Kirayadar</b>`,
-            text: `${otp} is your OTP to login to Manage Kirayadar`,
-            subject: 'Your OTP to login to Manage Kirayadar',
+    generateOtpTemplate(otp: number, to: string): SendEmailDto {
+        return {
+            from: '"People App" <no-reply@peopleApp.io>',
+            to,
+            html: `<b>${otp} is your OTP to log in to People Platform</b>`,
+            text: `${otp} is your OTP to login to People App`,
+            subject: 'Your OTP to login to People App',
+        };
+    }
+
+    async checkIfPreviousOtpIsValid(email: string) {
+        const otp = await this.prismaClient.otp.findUnique({
+            where: { email },
         });
+        if (otp) {
+            if (isFuture(otp.expirationDate))
+                throw new BadRequestException({
+                    data: null,
+                    errorMessage: `Please request new OTP after ${differenceInSeconds(
+                        otp.expirationDate,
+                        Date.now()
+                    )} seconds`,
+                });
+        }
+    }
+
+    async sendOtp(config: SendOtpDto) {
+        await this.checkIfPreviousOtpIsValid(config.to);
+        // random six digit number
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        const expirationDate = addSeconds(Date.now(), 120);
+        await this.prismaClient.otp.upsert({
+            create: { otp, email: config.to, expirationDate },
+            where: { email: config.to },
+            update: { otp, expirationDate },
+        });
+        const template = this.generateOtpTemplate(otp, config.to);
+        this.email.sendEmail(template);
+        return { errorMessage: null, data: null };
     }
 }

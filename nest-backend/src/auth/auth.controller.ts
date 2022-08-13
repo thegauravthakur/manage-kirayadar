@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Query, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from './dto';
-import type { Response } from 'express';
+import { SendOtpDto } from './dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -15,13 +16,14 @@ export class AuthController {
     @Post('/login')
     login(
         @Body() userDetails: LoginUserDto,
-        @Res({ passthrough: true }) res: Response
+        @Res({ passthrough: true }) response: Response,
+        @Query('shouldGenerateCookie') shouldGenerateCookie: boolean
     ) {
-        return this.auth.login(userDetails, res);
+        return this.auth.login(userDetails, response, shouldGenerateCookie);
     }
 
     @Post('/sendOtp')
-    sendOtp() {
-        return this.auth.sendOtp();
+    sendOtp(@Body() otpDetails: SendOtpDto) {
+        return this.auth.sendOtp(otpDetails);
     }
 }

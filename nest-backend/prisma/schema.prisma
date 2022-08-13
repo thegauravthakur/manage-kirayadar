@@ -22,6 +22,7 @@ model Otp {
   id Int @default(autoincrement()) @id
   email String @unique
   otp Int
+  expirationDate DateTime
 }
 
 model Password {
