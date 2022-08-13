@@ -4,6 +4,7 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 import { EmailService } from '../email/email.service';
 
 @Injectable()
@@ -96,7 +97,7 @@ export class AuthService {
         return { errorMessage: null, data: { user } };
     }
 
-    async login(userDetails: LoginUserDto) {
+    async login(userDetails: LoginUserDto, res: Response) {
         const { password, email } = userDetails;
         const user = await this.fetchUser(email);
         const isCorrectPassword = await this.compareHash(
@@ -110,8 +111,13 @@ export class AuthService {
             });
         const { password: pass, ...filteredUser } = user;
         const access_token = this.signToken(filteredUser);
+        res.cookie('access_token', access_token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
         return {
-            data: { user: filteredUser, access_token },
+            data: { user: filteredUser },
             errorMessage: null,
         };
     }

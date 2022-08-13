@@ -5,6 +5,7 @@ import {
     ValidationError,
     ValidationPipe,
 } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 function getExceptionFactory(error: ValidationError[]) {
     return new BadRequestException({
@@ -15,12 +16,13 @@ function getExceptionFactory(error: ValidationError[]) {
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.use(cookieParser());
     app.useGlobalPipes(
         new ValidationPipe({
             whitelist: true,
             exceptionFactory: getExceptionFactory,
         })
     );
-    await app.listen(1111);
+    await app.listen(8080);
 }
 bootstrap();
