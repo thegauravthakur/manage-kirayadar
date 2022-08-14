@@ -3,11 +3,18 @@ import { useRouter } from 'next/router';
 import { useGlobalSpinner } from '../../zustand/useGlobalSpinner';
 import { useMutation } from 'react-query';
 import { CustomError } from '../../../types';
-import { JSONResponse, postWithData } from '../../../helpers/fetchHelper';
+import {
+    createEndpoint,
+    JSONResponse,
+    postWithData,
+} from '../../../helpers/fetchHelper';
 import { LoginFormSchema } from '../../../components/LoginFormDialog/components/LoginForm';
 
 async function loginUser(formData: LoginFormSchema) {
-    const response = await postWithData('api/auth/login', formData);
+    const response = await postWithData(
+        createEndpoint('auth/login?shouldGenerateCookie=true', true),
+        formData
+    );
     const result: JSONResponse = await response.json();
     if (!response.ok) throw result;
     return result;

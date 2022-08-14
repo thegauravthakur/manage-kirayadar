@@ -1,21 +1,22 @@
 import { fromEvent } from 'file-selector';
 
-function getHost() {
+function getHost(isNew: boolean) {
     const env = process.env.NEXT_PUBLIC_VERCEL_ENV || 'development';
     if (env === 'production') return 'https://manage-kirayadar.herokuapp.com/';
-    return 'http://localhost:4242/';
+    return `http://localhost:${isNew ? 8080 : 4242}/`;
 }
-export function createEndpoint(endpoint: string) {
-    const host = getHost();
+export function createEndpoint(endpoint: string, isNew: boolean = false) {
+    const host = getHost(isNew);
     return `${host}${endpoint}`;
 }
 
-export async function fetchWithToken(endpoint: string, token: string) {
+export async function fetchWithToken(endpoint: string, token?: string) {
     return await fetch(endpoint, {
         headers: {
-            Authorization: `bearer ${token}`,
+            ...(!!token && { Authorization: `bearer ${token}` }),
             'Content-Type': 'application/json',
         },
+        credentials: 'include',
     });
 }
 
@@ -31,6 +32,7 @@ export async function postWithData(endpoint: string, data: unknown) {
         headers: {
             'content-type': 'application/json',
         },
+        credentials: 'include',
     });
 }
 

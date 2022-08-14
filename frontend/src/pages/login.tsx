@@ -66,14 +66,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     try {
         const accessToken = getCookie('accessToken', { req, res });
         if (accessToken) {
-            const user = await getCurrentUser(accessToken as string);
-            if (user)
-                return {
-                    redirect: {
-                        destination: '/',
-                        permanent: false,
-                    },
-                };
+            //     const user = await getCurrentUser(accessToken as string);
+            //     if (user)
+            //         return {
+            //             redirect: {
+            //                 destination: '/',
+            //                 permanent: false,
+            //             },
+            //         };
         }
     } catch (error) {
         captureException(error);

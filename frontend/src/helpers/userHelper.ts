@@ -16,13 +16,13 @@ export async function createNewUser(formData: unknown) {
 }
 
 export async function logoutUser() {
-    const response = await fetch('/api/auth/logout');
+    const response = await fetchWithToken(createEndpoint('auth/logout', true));
     if (!response.ok) throw new Error('failed to logout!');
 }
 
-export async function getCurrentUser(accessToken: string) {
+export async function getCurrentUser(accessToken?: string) {
     const response = await fetchWithToken(
-        createEndpoint('user/current'),
+        createEndpoint('auth/validate', true),
         accessToken
     );
     if (!response.ok) return null;

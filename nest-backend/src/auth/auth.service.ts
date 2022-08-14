@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, LoginUserDto, SendOtpDto } from './dto';
 import * as bcrypt from 'bcrypt';
@@ -7,7 +11,9 @@ import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
 import { SendEmailDto } from '../email/dto';
 import { addDays, addSeconds, differenceInSeconds, isFuture } from 'date-fns';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import { Prisma } from '@prisma/client';
+import { User } from '../shared/types';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +45,7 @@ export class AuthService {
         });
     }
 
-    signToken(payload: any) {
+    signToken(payload: User) {
         return jwt.sign(payload, this.config.get('TOKEN_SECRET'), {
             expiresIn: '7 days',
         });
@@ -131,6 +137,27 @@ export class AuthService {
     async logout(response: Response) {
         response.clearCookie('access_token');
         return { data: null, errorMessage: null };
+    }
+
+    async verifyToken(token: string): Promise<User | null> {
+        try {
+            return jwt.verify(token, this.config.get('TOKEN_SECRET'));
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async validateToken(request: Request) {
+        const authHeader = request.headers['authorization'];
+        const accessToken = authHeader && authHeader.split(' ')[1];
+        const token = request.cookies['access_token'] ?? accessToken;
+        if (!token)
+            throw new UnauthorizedException({
+                data: null,
+                errorMessage: 'user not authorized',
+            });
+        const user = await this.verifyToken(token);
+        return { data: { user }, errorMessage: null };
     }
 
     generateOtpTemplate(otp: number, to: string): SendEmailDto {
