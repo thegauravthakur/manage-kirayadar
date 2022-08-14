@@ -6,5 +6,6 @@ import { AuthService } from '../auth/auth.service';
 @Module({
     controllers: [PropertyController],
     providers: [PropertyService, AuthService],
+    exports: [PropertyService],
 })
 export class PropertyModule {}

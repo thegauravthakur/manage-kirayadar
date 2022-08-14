@@ -56,7 +56,7 @@ export class PropertyService {
         const property = await this.prisma.property.findUnique({
             where: { id: propertyId },
         });
-        if (property.ownerId !== userId)
+        if (property?.ownerId !== userId)
             throw new UnauthorizedException({
                 data: null,
                 errorMessage: 'unauthorized!',

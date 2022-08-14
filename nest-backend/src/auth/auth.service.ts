@@ -146,6 +146,9 @@ export class AuthService {
         }
     }
 
+    /*
+     * Returns the user present in cookie/bearer token
+     */
     async getUserFromToken(request: Request) {
         const authHeader = request.headers['authorization'];
         const accessToken = authHeader && authHeader.split(' ')[1];

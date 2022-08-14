@@ -4,6 +4,7 @@ import {
     createEndpoint,
     fetchWithToken,
     postWithToken,
+    requestWithToken,
 } from '../../../helpers/fetchHelper';
 import { Property, Response, Space } from '../../../types';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -96,14 +97,14 @@ export const getServerSideProps: GetServerSideProps = async ({
 };
 
 async function getProperty(accessToken: string, propertyId: number) {
-    const response = await fetchWithToken(
-        createEndpoint('property/get'),
-        accessToken
+    const response = await requestWithToken(
+        createEndpoint(`property?propertyId=${propertyId}`, true),
+        { token: accessToken, method: 'GET' }
     );
     const { data } = (await response.json()) as Response<{
-        properties: Property[];
+        property: Property;
     }>;
-    return data.properties.find(({ id }) => id === propertyId);
+    return data?.property;
 }
 
 async function getSpaces(accessToken: string, propertyId: number) {
