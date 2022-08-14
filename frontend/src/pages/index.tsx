@@ -38,7 +38,7 @@ export function useSlidesPerView() {
 
 const Home: NextPage = () => {
     const [showDialog, setShowDialog] = useState(false);
-    // const { properties, isLoading } = useProperties();
+    const { properties, isLoading } = useProperties();
     const emptyArray = createEmptyArray(3);
     const slidesPerView = useSlidesPerView();
     return (
@@ -58,24 +58,24 @@ const Home: NextPage = () => {
                     slidesPerView={slidesPerView}
                     spaceBetween={20}
                 >
-                    {/*{isLoading &&*/}
-                    {/*    emptyArray.map((value) => (*/}
-                    {/*        <SwiperSlide key={value}>*/}
-                    {/*            <PropertyCardShimmer />*/}
-                    {/*        </SwiperSlide>*/}
-                    {/*    ))}*/}
-                    {/*{properties?.map((property) => (*/}
-                    {/*    <SwiperSlide key={property.id}>*/}
-                    {/*        <PropertyCard property={property} />*/}
-                    {/*    </SwiperSlide>*/}
-                    {/*))}*/}
-                    {/*{properties?.length === 0 && (*/}
-                    {/*    <NoDataToShow*/}
-                    {/*        containerStyles='mt-10'*/}
-                    {/*        heading='no properties to show'*/}
-                    {/*        subHeading='Please create a new property to continue...'*/}
-                    {/*    />*/}
-                    {/*)}*/}
+                    {isLoading &&
+                        emptyArray.map((value) => (
+                            <SwiperSlide key={value}>
+                                <PropertyCardShimmer />
+                            </SwiperSlide>
+                        ))}
+                    {properties?.map((property) => (
+                        <SwiperSlide key={property.id}>
+                            <PropertyCard property={property} />
+                        </SwiperSlide>
+                    ))}
+                    {properties?.length === 0 && (
+                        <NoDataToShow
+                            containerStyles='mt-10'
+                            heading='no properties to show'
+                            subHeading='Please create a new property to continue...'
+                        />
+                    )}
                 </Swiper>
             </div>
             <AddNewPropertyDialog

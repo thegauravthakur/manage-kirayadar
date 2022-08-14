@@ -1,16 +1,14 @@
-import { useSession } from './useSession';
 import { useQuery } from 'react-query';
-import { createEndpoint, fetchWithToken } from '../helpers/fetchHelper';
+import { createEndpoint, requestWithToken } from '../helpers/fetchHelper';
 import { CustomError, Property } from '../types';
 import { useSnackbar } from './zustand/useSnackbar';
 
 const errorMessage = 'Error occurred while getting all the properties';
 
-async function getProperties(token: string): Promise<Property[]> {
-    const response = await fetchWithToken(
-        createEndpoint('property/get'),
-        token
-    );
+async function getProperties(): Promise<Property[]> {
+    const response = await requestWithToken(createEndpoint('property', true), {
+        method: 'GET',
+    });
     const { data } = (await response.json()) as {
         data: { properties: Property[] };
     };
@@ -19,13 +17,11 @@ async function getProperties(token: string): Promise<Property[]> {
 }
 
 export function useProperties() {
-    const { token } = useSession();
     const { show } = useSnackbar();
     const { data: properties, isLoading } = useQuery<Property[]>(
         'properties',
-        async () => getProperties(token!),
+        async () => getProperties(),
         {
-            enabled: !!token,
             onError: (error) => {
                 const message =
                     (error as CustomError)?.errorMessage ?? errorMessage;
