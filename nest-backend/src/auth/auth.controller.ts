@@ -22,6 +22,11 @@ export class AuthController {
         return this.auth.login(userDetails, response, shouldGenerateCookie);
     }
 
+    @Post('/logout')
+    logout(@Res({ passthrough: true }) response: Response) {
+        return this.auth.logout(response);
+    }
+
     @Post('/sendOtp')
     sendOtp(@Body() otpDetails: SendOtpDto) {
         return this.auth.sendOtp(otpDetails);

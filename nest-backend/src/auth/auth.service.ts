@@ -128,6 +128,11 @@ export class AuthService {
         };
     }
 
+    async logout(response: Response) {
+        response.clearCookie('access_token');
+        return { data: null, errorMessage: null };
+    }
+
     generateOtpTemplate(otp: number, to: string): SendEmailDto {
         return {
             from: '"People App" <no-reply@peopleApp.io>',
