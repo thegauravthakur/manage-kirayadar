@@ -12,7 +12,6 @@ import { EmailService } from '../email/email.service';
 import { SendEmailDto } from '../email/dto';
 import { addDays, addSeconds, differenceInSeconds, isFuture } from 'date-fns';
 import { Response, Request } from 'express';
-import { Prisma } from '@prisma/client';
 import { User } from '../shared/types';
 
 @Injectable()
@@ -147,7 +146,7 @@ export class AuthService {
         }
     }
 
-    async validateToken(request: Request) {
+    async getUserFromToken(request: Request) {
         const authHeader = request.headers['authorization'];
         const accessToken = authHeader && authHeader.split(' ')[1];
         const token = request.cookies['access_token'] ?? accessToken;
@@ -156,7 +155,11 @@ export class AuthService {
                 data: null,
                 errorMessage: 'user not authorized',
             });
-        const user = await this.verifyToken(token);
+        return await this.verifyToken(token);
+    }
+
+    async validateToken(request: Request) {
+        const user = this.getUserFromToken(request);
         return { data: { user }, errorMessage: null };
     }
 
