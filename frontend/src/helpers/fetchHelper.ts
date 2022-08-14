@@ -20,6 +20,27 @@ export async function fetchWithToken(endpoint: string, token?: string) {
     });
 }
 
+interface RequestWithTokenConfig {
+    method: 'GET' | 'POST'; // can add more later
+    token?: string;
+    body?: unknown;
+}
+
+export async function requestWithToken(
+    endpoint: string,
+    { body, token, method }: RequestWithTokenConfig
+) {
+    return await fetch(endpoint, {
+        method,
+        headers: {
+            ...(!!token && { Authorization: `bearer ${token}` }),
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        ...(!!body && { body: JSON.stringify(body) }),
+    });
+}
+
 export interface JSONResponse<T = null> {
     data: null | T;
     error: null | string;

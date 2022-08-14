@@ -7,13 +7,14 @@ import {
     createEndpoint,
     JSONResponse,
     postWithData,
+    requestWithToken,
 } from '../../../helpers/fetchHelper';
 import { LoginFormSchema } from '../../../components/LoginFormDialog/components/LoginForm';
 
 async function loginUser(formData: LoginFormSchema) {
-    const response = await postWithData(
+    const response = await requestWithToken(
         createEndpoint('auth/login?shouldGenerateCookie=true', true),
-        formData
+        { body: formData, method: 'POST' }
     );
     const result: JSONResponse = await response.json();
     if (!response.ok) throw result;

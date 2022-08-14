@@ -3,6 +3,7 @@ import {
     fetchWithToken,
     JSONResponse,
     postWithData,
+    requestWithToken,
 } from './fetchHelper';
 import type { User } from '../types';
 
@@ -16,7 +17,10 @@ export async function createNewUser(formData: unknown) {
 }
 
 export async function logoutUser() {
-    const response = await fetchWithToken(createEndpoint('auth/logout', true));
+    const response = await requestWithToken(
+        createEndpoint('auth/logout', true),
+        { method: 'GET' }
+    );
     if (!response.ok) throw new Error('failed to logout!');
 }
 
